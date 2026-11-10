@@ -1,0 +1,12 @@
+**/data/
+**/logs/
+**/__pycache__/
+**/node_modules/
+.venv/
+**/pairing.json
+**/runtime.json
+**/workbench_link.json
+**/computer-file-roots.json
+**/app_link.json
+*.sqlite3
+*.log

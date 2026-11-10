@@ -1,0 +1,4 @@
+(()=>{'use strict';const allowed=new Set(["bootstrap","game_list","game_favorite","game_save","game_add","game_add_tool","game_open","materials_choose","materials_open","pick_files","pick_output","pack_previous","pack_start","pack_materials","job_status","job_open","wheel_get","wheel_save","wheel_add","wheel_import","wheel_draw","steam_open"]);
+const call=async(action,payload={})=>{if(!allowed.has(action))return {ok:false,error:'不支持的工具操作'};try{const api=parent!==window&&parent.location.origin===location.origin?parent.pywebview?.api:null;if(!api||typeof api.call!=='function')return {ok:false,error:'工作台连接尚未就绪，请重试'};return await api.call('workstation_tool_call',{action,payload});}catch{return {ok:false,error:'工作台连接尚未就绪，请重试'};}};
+Object.defineProperty(window,'pywebview',{value:Object.freeze({api:Object.freeze({call})}),writable:false,configurable:false});
+})();

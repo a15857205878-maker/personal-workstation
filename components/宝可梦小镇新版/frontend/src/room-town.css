@@ -1,0 +1,17 @@
+.room-town-app{min-height:100dvh;background:var(--paper);color:var(--ink);padding:18px;box-sizing:border-box}
+.room-town-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}
+.room-town-head small{color:var(--muted);font-size:12px}.room-town-head h1{font-size:23px;margin:3px 0}
+.room-town-path{display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:12px}.room-town-path nav{display:flex;gap:6px}
+.room-outdoor-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(230px,30%);gap:14px}.room-outdoor-layout .town-stage{min-width:0}.room-outdoor-layout .town-panel{min-width:0;max-height:calc(100dvh - 140px);overflow:auto}
+.room-alarm{max-width:640px;margin:auto;background:#fff8ed;--paper:#fff8ed;--card:#fffdf8;--ink:#514451;--ink-soft:#615766;--muted:#756e79;--line:#e2d7ca;--sage:#85719d;--sage-deep:#665281;--sage-soft:#eee6f4;--wood:#bb8d59}
+.room-alarm .focus-layout{display:block}.room-alarm .focus-console{display:block;max-width:540px;margin:auto}.room-alarm .focus-side-grid{display:none}.room-alarm .focus-console__card{border-radius:26px;border:2px solid #deccbb;box-shadow:0 12px 35px #80613c14}.room-alarm .timer{font-family:ui-monospace,monospace;font-size:clamp(45px,12vw,80px);letter-spacing:.03em}
+@media(max-width:650px){.room-town-app{padding:12px}.room-outdoor-layout{grid-template-columns:1fr}.room-outdoor-layout .town-panel{max-height:none}.room-town-path>span:first-child{display:none}.room-town-head h1{font-size:20px}}
+@media(prefers-reduced-motion:reduce){.room-town-app *{animation:none!important;transition:none!important}}
+
+.room-alarm .button--primary{background:#806294;color:#fff}.room-alarm .button--primary:hover{background:#6c4f80}.room-alarm .button--soft{color:#65506f;background:#eee4ef}
+
+body.room-embedded{min-width:0}.room-town-app .town-panel__tabs{grid-template-columns:repeat(5,minmax(0,1fr))}.room-town-app .town-tab{min-width:0}.room-town-app .shop-item__text{overflow-wrap:anywhere}
+
+.room-manage .town-panel__tabs{grid-template-columns:repeat(4,minmax(0,1fr))}
+
+.room-town-head{position:sticky;top:0;z-index:5;background:var(--paper);padding:8px 0;flex-wrap:wrap}.room-exit-actions{display:flex;gap:8px;flex-wrap:wrap;margin-left:auto}

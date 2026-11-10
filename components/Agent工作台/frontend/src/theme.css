@@ -1,0 +1,4 @@
+/* Retired palette choices: one fixed accent system shared by light and dark. */
+:root{--palette-accent:var(--app-primary,#5e9df6);--palette-soft:var(--app-primary-soft,#e6f0fe)}
+.seat-B .chat-bubble,.auto-message.role-B{background:var(--theme-alt,#f1ebfb)}
+.seat-B .chat-avatar{background:var(--theme-alt,#f1ebfb);color:var(--theme-alt-text,#6e53a5)}

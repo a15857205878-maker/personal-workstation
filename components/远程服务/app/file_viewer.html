@@ -1,0 +1,3037 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="referrer" content="no-referrer">
+  <title>文件预览·只读</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #eeebf6;
+      --surface: #fffdf9;
+      --ink: #222334;
+      --muted: #666579;
+      --blue: #3346d3;
+      --blue-strong: #2637b5;
+      --blue-soft: #e7e9fb;
+      --line: rgba(34, 35, 52, 0.16);
+      --line-strong: rgba(34, 35, 52, 0.3);
+      --soft: #f6f3ec;
+      --good: #1d6543;
+      --good-bg: #e8f5ed;
+      --bad: #972b35;
+      --bad-bg: #fcebed;
+      --warn: #755713;
+      --warn-bg: #fbf3dc;
+      --shadow: 0 1px 0 rgba(34, 35, 52, 0.05), 0 10px 24px rgba(34, 35, 52, 0.06);
+      --radius: 16px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    html,
+    body {
+      min-height: 100%;
+    }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--bg);
+      background-image: linear-gradient(180deg, #f4f1fa 0, var(--bg) 280px);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+      font-size: 15px;
+      line-height: 1.55;
+      -webkit-text-size-adjust: 100%;
+      overflow-x: hidden;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button,
+    .btn,
+    .back-link {
+      min-height: 44px;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    button:disabled,
+    select:disabled,
+    input:disabled {
+      cursor: not-allowed;
+      opacity: 0.58;
+    }
+
+    a {
+      color: var(--blue);
+    }
+
+    input,
+    select {
+      width: 100%;
+      min-height: 44px;
+      font-size: 16px;
+      color: var(--ink);
+      background: #fffefb;
+      border: 1px solid var(--line-strong);
+      border-radius: 10px;
+      padding: 9px 11px;
+    }
+
+    input:focus,
+    select:focus,
+    button:focus-visible,
+    a:focus-visible {
+      outline: 3px solid rgba(51, 70, 211, 0.24);
+      outline-offset: 2px;
+    }
+
+    .page {
+      width: 100%;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 12px 12px 28px;
+    }
+
+    .app-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 2px 0 14px;
+    }
+
+    .brand {
+      flex: 1 1 230px;
+      min-width: 0;
+    }
+
+    .eyebrow {
+      margin: 0;
+      color: var(--blue);
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    .brand h1 {
+      margin: 2px 0 3px;
+      font-size: clamp(22px, 5.6vw, 32px);
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+    }
+
+    .brand .lede {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .back-link,
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      padding: 0 15px;
+      border-radius: 11px;
+      border: 1px solid var(--line-strong);
+      background: var(--surface);
+      color: var(--ink);
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 1.2;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .back-link {
+      flex: 0 0 auto;
+      border-color: var(--ink);
+      box-shadow: 0 2px 0 rgba(34, 35, 52, 0.08);
+    }
+
+    .btn.primary {
+      color: #ffffff;
+      background: var(--blue);
+      border-color: var(--blue);
+      box-shadow: 0 2px 0 rgba(38, 55, 181, 0.2);
+    }
+
+    .btn.primary:hover {
+      background: var(--blue-strong);
+    }
+
+    .btn.secondary {
+      color: var(--blue);
+      background: var(--surface);
+      border-color: rgba(51, 70, 211, 0.42);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 12px;
+    }
+
+    .panel {
+      min-width: 0;
+      background: var(--surface);
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .files-panel {
+      padding: 14px;
+      align-self: start;
+    }
+
+    .content-panel {
+      padding: 14px;
+      min-width: 0;
+    }
+
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .panel-head h2 {
+      margin: 0;
+      font-size: 18px;
+      line-height: 1.3;
+    }
+
+    .count-badge {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      padding: 1px 8px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      background: var(--soft);
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .task-title {
+      margin: 0 0 12px;
+      color: var(--muted);
+      font-size: 13px;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+
+    .field {
+      margin: 0 0 11px;
+    }
+
+    .field label {
+      display: block;
+      margin: 0 0 4px;
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .meta {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.55;
+      overflow-wrap: anywhere;
+    }
+
+    .status {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.55;
+      overflow-wrap: anywhere;
+    }
+
+    .status.ok {
+      color: var(--good);
+    }
+
+    .status.warn {
+      color: var(--warn);
+    }
+
+    .status.error {
+      color: var(--bad);
+    }
+
+    .notice-stack {
+      display: grid;
+      gap: 7px;
+      margin: 0 0 12px;
+    }
+
+    .notice {
+      margin: 0;
+      padding: 9px 11px;
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--blue);
+      border-radius: 8px;
+      color: var(--ink);
+      background: #f5f4ff;
+      font-size: 13px;
+      line-height: 1.55;
+      overflow-wrap: anywhere;
+    }
+
+    .notice.warn {
+      border-left-color: #b18520;
+      background: var(--warn-bg);
+      color: var(--warn);
+    }
+
+    .notice.error {
+      border-left-color: var(--bad);
+      background: var(--bad-bg);
+      color: var(--bad);
+    }
+
+    .notice.info {
+      border-left-color: var(--blue);
+      background: var(--blue-soft);
+    }
+
+    .empty-state {
+      padding: 26px 12px;
+      text-align: center;
+      color: var(--muted);
+    }
+
+    .empty-state .empty-title {
+      margin: 0 0 4px;
+      color: var(--ink);
+      font-size: 17px;
+      font-weight: 800;
+    }
+
+    .empty-state p {
+      margin: 0;
+      overflow-wrap: anywhere;
+    }
+
+    .current-head {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .current-titles {
+      flex: 1 1 220px;
+      min-width: 0;
+    }
+
+    .current-titles h2 {
+      margin: 0 0 2px;
+      font-size: clamp(18px, 4.7vw, 24px);
+      line-height: 1.3;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+
+    .file-path {
+      margin: 0 0 3px;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 12px;
+      line-height: 1.55;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+
+    .download-link {
+      flex: 0 0 auto;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 4px;
+      margin: 12px 0 0;
+      border-bottom: 1px solid var(--line);
+      overflow-x: auto;
+      overflow-y: hidden;
+    }
+
+    .tab {
+      flex: 0 0 auto;
+      min-height: 44px;
+      padding: 0 13px;
+      border: 0;
+      border-bottom: 3px solid transparent;
+      border-radius: 8px 8px 0 0;
+      color: var(--muted);
+      background: transparent;
+      font-size: 14px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .tab[aria-selected="true"] {
+      color: var(--blue);
+      border-bottom-color: var(--blue);
+      background: var(--blue-soft);
+    }
+
+    .tab-badge {
+      display: inline-block;
+      margin-left: 5px;
+      padding: 0 5px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      background: var(--surface);
+      font-size: 10px;
+      line-height: 18px;
+      vertical-align: 1px;
+    }
+
+    .tools {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      gap: 9px 13px;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .search-field {
+      flex: 1 1 230px;
+      min-width: 0;
+      margin: 0;
+    }
+
+    .search-field > label {
+      display: block;
+      margin: 0 0 4px;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .search-row {
+      display: flex;
+      gap: 7px;
+      min-width: 0;
+    }
+
+    .search-row input {
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+
+    .search-row .btn {
+      flex: 0 0 auto;
+      padding: 0 11px;
+    }
+
+    .search-status {
+      margin: 5px 0 0;
+      color: var(--muted);
+      font-size: 12px;
+      overflow-wrap: anywhere;
+    }
+
+    .toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      min-height: 44px;
+      margin: 0;
+      font-size: 14px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .toggle input {
+      width: 20px;
+      height: 20px;
+      min-height: 20px;
+      margin: 0;
+      padding: 0;
+      accent-color: var(--blue);
+      flex: 0 0 auto;
+    }
+
+    .copy-button {
+      margin-left: auto;
+    }
+
+    .code-scroll {
+      max-height: 68vh;
+      margin-top: 12px;
+      overflow: auto;
+      overscroll-behavior: contain;
+      background: #fbfaf6;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+    }
+
+    .code-view {
+      display: inline-block;
+      min-width: 100%;
+      padding: 9px 0;
+      font-family: var(--mono);
+      font-size: 13px;
+      line-height: 1.6;
+      tab-size: 4;
+    }
+
+    .code-line {
+      display: flex;
+      align-items: flex-start;
+      width: max-content;
+      min-width: 100%;
+      min-height: 1.6em;
+    }
+
+    .line-no {
+      position: sticky;
+      left: 0;
+      z-index: 1;
+      flex: 0 0 auto;
+      width: 5ch;
+      padding: 0 8px 0 9px;
+      color: #89879b;
+      background: #f4f2eb;
+      border-right: 1px solid var(--line);
+      text-align: right;
+      user-select: none;
+      -webkit-user-select: none;
+      cursor: pointer;
+    }
+
+    .line-no:hover {
+      color: var(--blue);
+    }
+
+    .line-no:focus-visible {
+      outline: 2px solid var(--blue);
+      outline-offset: -2px;
+    }
+
+    .line-body {
+      flex: 1 1 auto;
+      min-width: 0;
+      padding: 0 16px 0 10px;
+      white-space: pre;
+    }
+
+    .code-scroll.wrap .code-view {
+      display: block;
+      width: 100%;
+      min-width: 0;
+    }
+
+    .code-scroll.wrap .code-line {
+      width: auto;
+      min-width: 0;
+    }
+
+    .code-scroll.wrap .line-body {
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+
+    .code-line.quote-selected {
+      background: #edf1ff;
+    }
+
+    .code-line.quote-selected .line-no {
+      color: var(--blue-strong);
+      background: #e2e8ff;
+    }
+
+    .code-line.search-hit {
+      background: #fff4c9;
+    }
+
+    .code-line.search-current {
+      background: #ffe8a3;
+      box-shadow: inset 3px 0 0 var(--blue);
+    }
+
+    .code-line.log-error .line-body {
+      color: var(--bad);
+    }
+
+    .tok-key {
+      color: var(--blue);
+      font-weight: 700;
+    }
+
+    .tok-string {
+      color: #176b4b;
+    }
+
+    .tok-comment {
+      color: #7f7c8f;
+      font-style: italic;
+    }
+
+    .markdown-body {
+      max-width: 78ch;
+      padding: 8px 1px 22px;
+      font-size: 16px;
+      line-height: 1.75;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+
+    .markdown-body h2,
+    .markdown-body h3,
+    .markdown-body h4,
+    .markdown-body h5,
+    .markdown-body h6 {
+      margin: 1.25em 0 0.45em;
+      line-height: 1.35;
+      overflow-wrap: anywhere;
+    }
+
+    .markdown-body h2 {
+      font-size: 21px;
+    }
+
+    .markdown-body h3 {
+      font-size: 19px;
+    }
+
+    .markdown-body h4,
+    .markdown-body h5,
+    .markdown-body h6 {
+      font-size: 17px;
+    }
+
+    .markdown-body p {
+      margin: 0.55em 0;
+      white-space: pre-wrap;
+    }
+
+    .markdown-body ul,
+    .markdown-body ol {
+      margin: 0.55em 0;
+      padding-left: 1.5em;
+    }
+
+    .markdown-body li {
+      margin: 0.2em 0;
+      white-space: pre-wrap;
+    }
+
+    .markdown-body blockquote {
+      margin: 0.8em 0;
+      padding: 7px 12px;
+      border-left: 4px solid var(--blue);
+      background: var(--blue-soft);
+      color: #3f4055;
+      white-space: pre-wrap;
+    }
+
+    .markdown-body pre {
+      margin: 0.8em 0;
+      padding: 10px 12px;
+      overflow: auto;
+      background: #f6f4ee;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      font-family: var(--mono);
+      font-size: 13px;
+      line-height: 1.6;
+      white-space: pre;
+    }
+
+    .markdown-body code {
+      padding: 1px 4px;
+      background: #f0edf9;
+      border-radius: 4px;
+      font-family: var(--mono);
+      font-size: 0.92em;
+    }
+
+    .markdown-body pre code {
+      padding: 0;
+      background: transparent;
+      border-radius: 0;
+    }
+
+    .markdown-body hr {
+      margin: 1.1em 0;
+      border: 0;
+      border-top: 1px solid var(--line-strong);
+    }
+
+    .link-text-note {
+      color: var(--muted);
+      font-size: 0.88em;
+    }
+
+    .raw-source {
+      max-height: 68vh;
+      margin: 12px 0 0;
+      padding: 12px;
+      overflow: auto;
+      background: #fbfaf6;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      font-family: var(--mono);
+      font-size: 13px;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+
+    .switch {
+      display: inline-flex;
+      gap: 4px;
+      margin: 12px 0 0;
+      padding: 3px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--soft);
+    }
+
+    .switch button {
+      min-height: 38px;
+      padding: 0 12px;
+      border: 1px solid transparent;
+      border-radius: 7px;
+      color: var(--muted);
+      background: transparent;
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    .switch button[aria-pressed="true"] {
+      color: var(--blue);
+      background: var(--surface);
+      border-color: var(--line);
+    }
+
+    .diff-panel {
+      padding-top: 12px;
+    }
+
+    .diff-panel > .meta {
+      margin: 0 0 8px;
+      color: var(--ink);
+      font-weight: 700;
+    }
+
+    .diff-view {
+      max-height: 68vh;
+      margin-top: 10px;
+      padding: 8px 0;
+      overflow: auto;
+      overscroll-behavior: contain;
+      background: #fbfaf6;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      font-family: var(--mono);
+      font-size: 13px;
+      line-height: 1.55;
+    }
+
+    .diff-line {
+      min-width: max-content;
+      min-height: 1.55em;
+      padding: 0 12px;
+      white-space: pre;
+    }
+
+    .diff-add {
+      color: #155c36;
+      background: #e7f5ec;
+    }
+
+    .diff-del {
+      color: #8f222a;
+      background: #fceaea;
+    }
+
+    .diff-hunk {
+      color: var(--blue);
+      background: var(--blue-soft);
+      font-weight: 700;
+    }
+
+    .table-area {
+      padding-top: 12px;
+    }
+
+    .table-tools {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-end;
+      gap: 8px 12px;
+      margin-bottom: 8px;
+    }
+
+    .table-tools label {
+      display: block;
+      width: 100%;
+      margin: 0 0 3px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .sheet-field {
+      flex: 1 1 190px;
+      min-width: 0;
+      max-width: 370px;
+    }
+
+    .head-note {
+      display: inline-flex;
+      align-items: center;
+      min-height: 32px;
+      padding: 2px 9px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      color: var(--muted);
+      background: var(--soft);
+      font-size: 12px;
+      white-space: nowrap;
+    }
+
+    .table-scroll {
+      max-width: 100%;
+      max-height: 68vh;
+      overflow: auto;
+      overscroll-behavior: contain;
+      background: #fffefb;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+    }
+
+    .data-table {
+      width: max-content;
+      min-width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .data-table caption {
+      text-align: left;
+    }
+
+    .data-table th,
+    .data-table td {
+      min-width: 92px;
+      max-width: 360px;
+      padding: 8px 10px;
+      border-right: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+
+    .data-table th:last-child,
+    .data-table td:last-child {
+      border-right: 0;
+    }
+
+    .data-table thead th {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      background: #f0edfa;
+      font-weight: 800;
+    }
+
+    .data-table tbody td:first-child,
+    .data-table thead th:first-child {
+      position: sticky;
+      left: 0;
+      background: #fbf9f3;
+    }
+
+    .data-table thead th:first-child {
+      z-index: 3;
+      background: #e9e5f7;
+    }
+
+    .image-area {
+      padding-top: 12px;
+    }
+
+    .image-frame {
+      max-width: 100%;
+      padding: 8px;
+      overflow: auto;
+      background: #f7f5ef;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+    }
+
+    .image-frame img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+      margin: 0 auto;
+      border-radius: 4px;
+    }
+
+    .pdf-area {
+      padding: 16px 0 12px;
+    }
+
+    .pdf-card {
+      max-width: 560px;
+      padding: 18px;
+      border: 1px dashed var(--line-strong);
+      border-radius: 12px;
+      background: var(--soft);
+    }
+
+    .pdf-card h3 {
+      margin: 0 0 6px;
+      font-size: 18px;
+    }
+
+    .pdf-card p {
+      margin: 0 0 12px;
+      color: var(--muted);
+      font-size: 13px;
+      overflow-wrap: anywhere;
+    }
+
+    .unsupported-box {
+      padding: 26px 12px;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    .unsupported-box strong {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--ink);
+      font-size: 17px;
+    }
+
+    .footer {
+      padding: 16px 4px 0;
+      color: var(--muted);
+      font-size: 12px;
+      text-align: center;
+    }
+
+    .visually-hidden {
+      position: absolute !important;
+      width: 1px !important;
+      height: 1px !important;
+      padding: 0 !important;
+      margin: -1px !important;
+      overflow: hidden !important;
+      clip: rect(0, 0, 0, 0) !important;
+      white-space: nowrap !important;
+      border: 0 !important;
+    }
+
+    @media (min-width: 720px) {
+      .page {
+        padding: 20px 20px 32px;
+      }
+
+      .layout {
+        grid-template-columns: minmax(230px, 300px) minmax(0, 1fr);
+        align-items: start;
+        gap: 16px;
+      }
+
+      .files-panel {
+        position: sticky;
+        top: 16px;
+        padding: 16px;
+      }
+
+      .content-panel {
+        padding: 18px;
+      }
+
+      .copy-button {
+        margin-left: auto;
+      }
+    }
+
+    @media (min-width: 1100px) {
+      .page {
+        padding: 24px 24px 36px;
+      }
+
+      .layout {
+        grid-template-columns: minmax(260px, 330px) minmax(0, 1fr);
+        gap: 20px;
+      }
+
+      .content-panel {
+        padding: 22px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .page {
+        padding-left: 10px;
+        padding-right: 10px;
+      }
+
+      .files-panel,
+      .content-panel {
+        padding: 12px;
+      }
+
+      .back-link {
+        width: 100%;
+      }
+
+      .download-link {
+        width: 100%;
+      }
+
+      .copy-button {
+        margin-left: 0;
+      }
+    }
+    .filter-details summary { cursor: pointer; min-height: 44px; padding: 10px 0; color: var(--muted); }
+    .manual-copy-dialog { width: min(92vw, 680px); max-height: 85vh; padding: 18px; border: 1px solid var(--ink); border-radius: 16px; background: var(--surface); color: var(--ink); }
+    .manual-copy-dialog::backdrop { background: #22233466; }
+    .manual-copy-dialog textarea { display: block; width: 100%; min-height: 230px; max-height: 48vh; margin: 12px 0; font: 16px/1.5 var(--mono); }
+    .code-quote-dialog { width: min(92vw, 320px); max-width: 320px; max-height: 85vh; overflow: auto; padding: 14px; }
+    .code-quote-dialog h2 { margin: 0 0 8px; font-size: 18px; }
+    .code-quote-dialog textarea { min-height: 0; max-height: 26vh; margin: 0 0 8px; font: 14px/1.5 var(--mono); }
+    .code-quote-dialog label { display: block; margin: 0 0 3px; font-size: 12px; font-weight: 700; }
+    .code-quote-dialog input { min-height: 40px; font-size: 15px; }
+    .code-quote-dialog .code-quote-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 8px; }
+    .code-quote-dialog .code-quote-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+    .code-quote-dialog .code-quote-actions .btn { flex: 1 1 auto; min-width: 0; }
+    .code-quote-dialog .status { margin: 4px 0 8px; }
+    @media (max-width: 719px) {
+      .app-header { flex-direction: row; align-items: center; gap: 8px; margin-bottom: 12px; }
+      .app-header .eyebrow, .app-header .lede { display: none; }
+      .brand h1 { font-size: 20px; margin: 0; }
+      .back-link { width: auto; flex-shrink: 0; padding: 8px 10px; font-size: 14px; }
+      .files-panel .task-title, .files-panel label[for="fileSelect"] { display: none; }
+      .files-panel .field { margin-bottom: 8px; }
+      .panel-head { margin-bottom: 4px; }
+      .current-head { align-items: start; flex-direction: row; gap: 8px; padding-bottom: 8px; }
+      .current-titles { flex: 1; min-width: 0; }
+      .current-titles h2 { font-size: 18px; }
+      .download-link { width: auto; padding: 8px; font-size: 13px; flex-shrink: 0; }
+      .tools { gap: 8px; padding-top: 8px; padding-bottom: 8px; }
+      .search-field { flex-basis: 100%; }
+      .search-field label { display: none; }
+    }
+  /* file-content-zoom */
+#currentShell{--file-scale:1}
+#currentShell .code-view,#currentShell .diff-view,#currentShell .raw-source{font-size:calc(13px * var(--file-scale,1))}
+#currentShell .data-table{font-size:calc(14px * var(--file-scale,1))}
+#currentShell .markdown-body{font-size:calc(16px * var(--file-scale,1));overflow-wrap:anywhere}
+#currentShell .markdown-body h2{font-size:calc(21px * var(--file-scale,1))}
+#currentShell .markdown-body h3{font-size:calc(19px * var(--file-scale,1))}
+#currentShell .markdown-body h4,#currentShell .markdown-body h5,#currentShell .markdown-body h6{font-size:calc(17px * var(--file-scale,1))}
+#currentShell .markdown-body pre{font-size:calc(13px * var(--file-scale,1))}
+#currentShell .image-frame{overflow:auto;max-width:100%}
+#currentShell #fileImage{max-width:100%;height:auto}
+#fileZoomTools{display:flex;align-items:center;gap:6px;flex-wrap:wrap;width:100%;max-width:100%;margin:4px 0 6px;box-sizing:border-box}
+#fileZoomTools .file-zoom-label{font-size:12px;line-height:1.3;white-space:nowrap}
+#fileZoomTools .btn{min-height:44px;min-width:44px;padding:0 10px;box-sizing:border-box;flex:0 0 auto}
+#fileZoomTools .btn:focus-visible{outline:2px solid #3346d3;outline-offset:2px}
+</style>
+</head>
+<body>
+  <div class="page">
+    <header class="app-header">
+      <div class="brand">
+        <p class="eyebrow">只读文件查看</p>
+        <h1>文件预览·只读</h1>
+        <p class="lede">代码、日志、文档与表格只在当前页面查看，不会修改任务文件。</p>
+      </div>
+      <a id="backLink" class="back-link" href="/">返回工作台</a>
+    </header>
+
+    <div id="bootNotice" class="notice error" role="alert" hidden></div>
+
+    <main id="app" class="layout" hidden>
+      <aside class="panel files-panel" aria-labelledby="filesHeading">
+        <div class="panel-head">
+          <h2 id="filesHeading">任务成果文件</h2>
+          <span id="fileCount" class="count-badge"></span>
+        </div>
+        <p id="taskTitle" class="task-title" hidden></p>
+
+        <details class="field filter-details">
+          <summary>筛选文件</summary>
+          <label for="fileFilter">筛选文件</label>
+          <input id="fileFilter" type="search" placeholder="输入文件名或路径" autocomplete="off" autocapitalize="off" spellcheck="false" disabled>
+        </details>
+
+        <div class="field">
+          <label for="fileSelect">选择文件</label>
+          <select id="fileSelect" aria-describedby="fileListMeta" disabled>
+            <option value="">正在读取文件…</option>
+          </select>
+        </div>
+
+        <p id="fileListMeta" class="meta" aria-live="polite"></p>
+        <p id="filesStatus" class="status" role="status" aria-live="polite"></p>
+        <button id="filesRetry" class="btn secondary" type="button" hidden>重试文件列表</button>
+      </aside>
+
+      <section class="panel content-panel" aria-labelledby="contentHeading">
+        <h2 id="contentHeading" class="visually-hidden">文件内容</h2>
+
+        <div id="currentEmpty" class="empty-state">
+          <p id="emptyTitle" class="empty-title">选择文件查看</p>
+          <p id="emptyText">从左侧或上方选择一个成果文件。当前页面只读，不会修改原文件。</p>
+        </div>
+
+        <div id="currentShell" hidden>
+          <div class="current-head">
+            <div class="current-titles">
+              <h2 id="fileName">文件</h2>
+              <p id="filePath" class="file-path"></p>
+              <p id="fileMeta" class="meta"></p>
+            </div>
+            <a id="downloadLink" class="btn secondary download-link" href="#" target="_blank" rel="noopener noreferrer">下载原文件</a>
+          </div>
+
+<div id='fileZoomTools' role='group' aria-label='内容缩放'>
+  <span class='file-zoom-label'>内容大小</span>
+  <button type='button' id='fileZoomOut' class='btn secondary' aria-label='缩小文件内容'>A−</button>
+  <button type='button' id='fileZoomReset' class='btn secondary' aria-label='恢复原始大小' aria-live='polite'>100%</button>
+  <button type='button' id='fileZoomIn' class='btn secondary' aria-label='放大文件内容'>A＋</button>
+</div>
+          <div id="detailNotices" class="notice-stack" hidden></div>
+          <p id="detailStatus" class="status" role="status" aria-live="polite" hidden></p>
+
+          <div id="detailError" class="notice error" role="alert" hidden>
+            <p id="detailErrorText"></p>
+            <p id="detailErrorHint" class="status error" hidden></p>
+            <button id="detailRetry" class="btn secondary" type="button">重试读取</button>
+          </div>
+
+          <div id="fileTabs" class="tabs" role="tablist" aria-label="文件内容视图" hidden>
+            <button id="tabText" class="tab" type="button" role="tab" aria-selected="true" aria-controls="textPanel">文本/预览</button>
+            <button id="tabDiff" class="tab" type="button" role="tab" aria-selected="false" aria-controls="diffPanel" hidden>
+              修改对比<span id="diffTabBadge" class="tab-badge" hidden></span>
+            </button>
+          </div>
+
+          <section id="textPanel" role="tabpanel" aria-labelledby="tabText" hidden>
+            <div id="contentTools" class="tools" hidden>
+              <div id="searchWrap" class="search-field" hidden>
+                <label for="searchInput">文件内搜索</label>
+                <div class="search-row">
+                  <input id="searchInput" type="search" placeholder="输入要查找的文字" autocomplete="off" spellcheck="false">
+                  <button id="nextMatch" class="btn secondary" type="button" disabled>下一处</button>
+                </div>
+                <p id="searchStatus" class="search-status" aria-live="polite" hidden></p>
+              </div>
+              <label id="wrapLabel" class="toggle" hidden>
+                <input id="wrapToggle" type="checkbox">
+                自动换行
+              </label>
+              <label id="errorsOnlyLabel" class="toggle" hidden>
+                <input id="errorsOnly" type="checkbox">
+                只看报错
+              </label>
+              <button id="quoteCodeButton" class="btn secondary" type="button" hidden>引用代码</button>
+              <button id="copyButton" class="btn secondary copy-button" type="button" hidden>复制</button>
+            </div>
+
+            <p id="copyStatus" class="status" role="status" aria-live="polite" hidden></p>
+            <p id="logFilterStatus" class="status warn" role="status" aria-live="polite" hidden></p>
+            <p id="contentNotice" class="notice warn" hidden></p>
+
+            <div id="markdownSwitch" class="switch" hidden>
+              <button id="mdPreviewBtn" type="button" aria-pressed="true">预览</button>
+              <button id="mdSourceBtn" type="button" aria-pressed="false">原文</button>
+            </div>
+
+            <div id="codeScroller" class="code-scroll" hidden>
+              <div id="codeView" class="code-view"></div>
+            </div>
+
+            <div id="mdView" class="markdown-body" hidden></div>
+            <pre id="mdRaw" class="raw-source" hidden></pre>
+
+            <div id="tableArea" class="table-area" hidden>
+              <div class="table-tools">
+                <div class="sheet-field">
+                  <label for="sheetSelect">工作表</label>
+                  <select id="sheetSelect"></select>
+                </div>
+                <span id="tableHeadNote" class="head-note">首行作表头</span>
+              </div>
+              <p id="sheetNotice" class="notice warn" hidden></p>
+              <div id="tableScroll" class="table-scroll">
+                <table id="dataTable" class="data-table"></table>
+              </div>
+            </div>
+
+            <div id="imageArea" class="image-area" hidden>
+              <div class="image-frame">
+                <img id="fileImage" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer">
+              </div>
+              <p id="imageStatus" class="status" role="status" aria-live="polite" hidden></p>
+            </div>
+
+            <div id="pdfArea" class="pdf-area" hidden>
+              <div class="pdf-card">
+                <h3>PDF 只读预览</h3>
+                <p>需要由电脑先转换成只读预览。点击按钮后才会请求，不会自动打开。</p>
+                <button id="pdfPreviewBtn" class="btn primary" type="button">转换并预览 PDF</button>
+                <p id="pdfStatus" class="status" role="status" aria-live="polite" hidden></p>
+              </div>
+            </div>
+
+            <div id="unsupportedArea" class="unsupported-box" hidden>
+              <strong>暂不支持在线预览</strong>
+              <p>该文件类型不能在这里直接查看，请下载原文件。</p>
+            </div>
+
+            <div id="textEmpty" class="empty-state" hidden>
+              <p id="textEmptyTitle" class="empty-title">暂无可显示内容</p>
+              <p id="textEmptyText"></p>
+            </div>
+          </section>
+
+          <section id="diffPanel" class="diff-panel" role="tabpanel" aria-labelledby="tabDiff" hidden>
+            <p id="diffState" class="meta"></p>
+            <p id="diffMessage" class="notice" hidden></p>
+            <div id="diffView" class="diff-view" aria-label="服务器修改对比"></div>
+          </section>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer">只读预览 · 常见凭据字段已遮盖，原文件不变。</footer>
+  </div>
+
+  <dialog id="codeQuoteDialog" class="manual-copy-dialog code-quote-dialog" aria-labelledby="codeQuoteTitle">
+    <h2 id="codeQuoteTitle">引用代码</h2>
+    <div class="code-quote-grid">
+      <div>
+        <label for="quoteStartLine">起始行</label>
+        <input id="quoteStartLine" type="number" inputmode="numeric" min="1" step="1" autocomplete="off">
+      </div>
+      <div>
+        <label for="quoteEndLine">结束行</label>
+        <input id="quoteEndLine" type="number" inputmode="numeric" min="1" step="1" autocomplete="off">
+      </div>
+    </div>
+    <label for="quoteInstruction">处理要求</label>
+    <textarea id="quoteInstruction" rows="3" maxlength="2000" placeholder="例如：解释这段代码并指出风险" autocomplete="off"></textarea>
+    <label for="quotePreview">引用片段</label>
+    <textarea id="quotePreview" rows="6" readonly spellcheck="false"></textarea>
+    <p id="quoteStatus" class="status" role="status" aria-live="polite" hidden></p>
+    <div class="code-quote-actions">
+      <button id="quoteToWorkbench" class="btn primary" type="button">带到工作台</button>
+      <button id="quoteCopy" class="btn secondary" type="button">复制引用</button>
+      <button id="quoteClose" class="btn secondary" type="button">关闭</button>
+    </div>
+  </dialog>
+
+  <script>
+    (() => {
+      'use strict';
+
+      const params = new URLSearchParams(location.search);
+      const token = params.get('token') || '';
+      const taskId = (params.get('task_id') || '').trim();
+      const initialPath = params.get('path') || '';
+      const workbenchMode = params.get('owner') === 'workbench';
+      const workbenchKind=params.get('kind')||'task';
+      const MAX_FILES = 200;
+      const MAX_TEXT = 30000;
+      const MAX_LINES = 2000;
+      const QUOTE_MAX_LINES = 100;
+      const QUOTE_MAX_CHARS = 6000;
+      const QUOTE_MAX_INSTRUCTION = 2000;
+      const QUOTE_STORAGE_PREFIX = 'workbench.codeReference.v1.';
+      const QUOTE_TASK_ID_RE = /^[0-9a-f]{32}$/i;
+      const QUOTE_DEFAULT_INSTRUCTION = '请解释这段代码，并指出需要注意的问题。';
+      const KIND_LABELS = {
+        code: '代码',
+        markdown: 'Markdown',
+        log: '日志',
+        text: '文本',
+        table: '表格',
+        image: '图片',
+        pdf: 'PDF',
+        unsupported: '文件'
+      };
+      const ALLOWED_KINDS = new Set(['code', 'markdown', 'log', 'text', 'table', 'image', 'pdf', 'unsupported']);
+      const state = {
+        files: [],
+        totalFileCount: 0,
+        overLimit: false,
+        filter: '',
+        pathNotice: '',
+        taskTitle: '',
+        selectedPath: '',
+        filesBusy: false,
+        filesSeq: 0,
+        detail: null,
+        detailSeq: 0,
+        currentKind: '',
+        hasDiff: false,
+        activeTab: 'text',
+        lineTexts: [],
+        lineNodes: [],
+        matchLines: [],
+        matchCursor: 0,
+        searchQuery: '',
+        sheets: [],
+        activeSheetIndex: 0,
+        mdMode: 'preview',
+        copyPayload: null,
+        imageSrc: '',
+        quoteAnchor: null,
+        quoteStart: null,
+        quoteEnd: null
+      };
+
+      const KEYWORDS = [
+        'as', 'async', 'await', 'break', 'case', 'catch', 'class', 'const', 'continue',
+        'default', 'def', 'delete', 'do', 'elif', 'else', 'except', 'export', 'extends',
+        'false', 'finally', 'for', 'from', 'function', 'if', 'import', 'in', 'instanceof',
+        'interface', 'let', 'new', 'null', 'of', 'pass', 'raise', 'return', 'static',
+        'super', 'switch', 'this', 'throw', 'true', 'try', 'type', 'typeof', 'undefined',
+        'var', 'void', 'while', 'with', 'yield', 'foreach', 'echo', 'namespace', 'use',
+        'public', 'private', 'protected', 'fn', 'impl', 'match', 'mut', 'struct', 'enum',
+        'trait', 'package', 'func', 'go', 'defer', 'chan', 'nil', 'and', 'or', 'not',
+        'TRACE', 'DEBUG', 'INFO', 'WARN', 'WARNING', 'ERROR', 'FATAL', 'CRITICAL'
+      ];
+      const KEYWORD_PATTERN = KEYWORDS.map(escapeRegExp).join('|');
+      const TOKEN_RE = new RegExp(
+        '(' + [
+          '\\/\\/[^\\n]*',
+          '^[ \\t]*#[^\\n]*',
+          '\\/\\*[^\\n]*?\\*\\/',
+          "'(?:\\\\.|[^'\\\\])*'",
+          '"(?:\\\\.|[^"\\\\])*"',
+          '`(?:\\\\.|[^`\\\\])*`',
+          '\\b(?:' + KEYWORD_PATTERN + ')\\b'
+        ].join('|') + ')',
+        'g'
+      );
+      const ERROR_LINE_RE = /(?:\berror\b|\bfatal\b|\bpanic\b|\bexception\b|\btraceback\b|\bfail(?:ed|ure|s)?\b|\bcritical\b|\bdenied\b|错误|失败|异常|报错)/i;
+      const INLINE_RE = /(!?\[[^\]\n]*\]\([^)\n]*\)|`[^`\n]+`|\*\*[^*\n]+\*\*)/g;
+
+      const $ = (id) => document.getElementById(id);
+
+      function el(tag, className, text) {
+        const node = document.createElement(tag);
+        if (className) node.className = className;
+        if (text !== undefined && text !== null) node.textContent = String(text);
+        return node;
+      }
+
+      function clear(node) {
+        if (!node) return;
+        while (node.firstChild) node.removeChild(node.firstChild);
+      }
+
+      function escapeRegExp(value) {
+        return String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      }
+
+      function api(path) {
+        return path + (path.indexOf('?') >= 0 ? '&' : '?') + 'token=' + encodeURIComponent(token);
+      }
+
+      function workbenchHref() {
+        return '/' + (token ? '?token=' + encodeURIComponent(token) : '');
+      }
+
+      function normalizePath(path) {
+        return String(path || '').replace(/^\/+/, '');
+      }
+
+      function encodedPath(path) {
+        return normalizePath(path).split('/').filter(Boolean).map(encodeURIComponent).join('/');
+      }
+
+      function artifactHref(path) {
+        if(workbenchMode)return api('/api/workbench-artifact?id='+encodeURIComponent(taskId)+'&name='+encodeURIComponent(path)+'&kind='+encodeURIComponent(workbenchKind));
+        return api('/artifact/' + encodeURIComponent(taskId) + '/' + encodedPath(path));
+      }
+
+      function imageHref(path) {
+        return api('/file-image?task_id=' + encodeURIComponent(taskId) + '&path=' + encodeURIComponent(path));
+      }
+
+      function basename(path) {
+        const parts = String(path || '').split('/');
+        return parts[parts.length - 1] || String(path || '文件');
+      }
+
+      function sizeText(value) {
+        const number = Number(value);
+        if (!isFinite(number) || number < 0) return '';
+        if (number >= 1024 * 1024) return (number / (1024 * 1024)).toFixed(1) + ' MB';
+        if (number >= 1024) return Math.ceil(number / 1024) + ' KB';
+        return number + ' B';
+      }
+
+      function normalizeKind(value, path) {
+        const kind = String(value || '');
+        if (ALLOWED_KINDS.has(kind)) return kind;
+        const ext = String(path || '').toLowerCase().match(/\.([a-z0-9]+)$/);
+        if (!ext) return 'unsupported';
+        if (['js', 'jsx', 'ts', 'tsx', 'py', 'rb', 'go', 'rs', 'java', 'c', 'h', 'cpp', 'cs', 'php', 'sh', 'ps1', 'css', 'html', 'htm', 'json', 'yaml', 'yml', 'xml', 'sql'].indexOf(ext[1]) >= 0) return 'code';
+        if (ext[1] === 'md' || ext[1] === 'markdown') return 'markdown';
+        if (ext[1] === 'log') return 'log';
+        if (ext[1] === 'csv' || ext[1] === 'tsv' || ext[1] === 'xlsx') return 'table';
+        if (['png', 'jpg', 'jpeg', 'webp', 'gif', 'bmp', 'svg'].indexOf(ext[1]) >= 0) return 'image';
+        if (ext[1] === 'pdf') return 'pdf';
+        if (['txt', 'rst', 'ini', 'conf', 'toml'].indexOf(ext[1]) >= 0) return 'text';
+        return 'unsupported';
+      }
+
+      function kindText(kind) {
+        return KIND_LABELS[kind] || KIND_LABELS.unsupported;
+      }
+
+      function errorText(error) {
+        return error && error.message ? String(error.message) : '未知错误';
+      }
+
+      function authHint(error) {
+        if (error && (error.status === 401 || error.status === 403)) {
+          return '访问令牌可能已失效，请返回工作台重新打开文件预览。';
+        }
+        return '';
+      }
+
+      function setStatus(node, text, tone) {
+        if (!node) return;
+        node.hidden = !text;
+        node.textContent = text || '';
+        node.classList.remove('ok', 'warn', 'error');
+        if (tone) node.classList.add(tone);
+      }
+
+      function setDetailNotice(container, text, tone) {
+        if (!container || !text) return;
+        container.hidden = false;
+        container.append(el('p', 'notice ' + (tone || ''), text));
+      }
+
+      async function fetchJson(path, options) {
+        const controller = new AbortController();
+        let timedOut = false;
+        const timer = setTimeout(() => {
+          timedOut = true;
+          try { controller.abort(); } catch (error) { /* ignore */ }
+        }, 20000);
+        try {
+          let response;
+          try {
+            response = await fetch(api(path), Object.assign({ cache: 'no-store' }, options || {}, { signal: controller.signal }));
+          } catch (error) {
+            if (timedOut) throw new Error('请求超时，请检查连接后重试。');
+            const failure = new Error('网络连接中断，请检查连接后重试。');
+            failure.status = 0;
+            throw failure;
+          }
+          let raw = '';
+          try {
+            raw = await response.text();
+          } catch (error) {
+            throw new Error('电脑返回的内容没有读取完整，请重试。');
+          }
+          let data = null;
+          if (raw) {
+            try { data = JSON.parse(raw); } catch (error) { data = null; }
+          }
+          if (!response.ok) {
+            const message = data && typeof data.error === 'string' && data.error
+              ? data.error
+              : '请求失败（HTTP ' + response.status + '）';
+            const failure = new Error(message);
+            failure.status = response.status;
+            throw failure;
+          }
+          if (!data || typeof data !== 'object') {
+            throw new Error('电脑返回了无法识别的文件数据。');
+          }
+          if (typeof data.error === 'string' && data.error) {
+            const failure = new Error(data.error);
+            failure.status = response.status;
+            throw failure;
+          }
+          return data;
+        } finally {
+          clearTimeout(timer);
+        }
+      }
+
+      function showBootProblem(text) {
+        const node = $('bootNotice');
+        if (!node) return;
+        clear(node);
+        node.append(el('p', '', text));
+        node.hidden = false;
+        $('app').hidden = true;
+      }
+
+      function showCurrentEmpty(title, text) {
+        $('currentShell').hidden = true;
+        $('currentEmpty').hidden = false;
+        $('emptyTitle').textContent = title;
+        $('emptyText').textContent = text;
+      }
+
+      function normalizeFiles(raw) {
+        const seen = new Set();
+        const list = [];
+        for (const item of raw) {
+          if (!item || typeof item.path !== 'string' || !item.path) continue;
+          const path = item.path;
+          if (seen.has(path)) continue;
+          seen.add(path);
+          const name = typeof item.name === 'string' && item.name ? item.name : basename(path);
+          const number = Number(item.size);
+          const size = isFinite(number) && number >= 0 ? number : 0;
+          list.push({
+            path: path,
+            name: name,
+            size: size,
+            kind: normalizeKind(item.kind, path)
+          });
+        }
+        return list.sort((left, right) => left.path.localeCompare(right.path));
+      }
+
+      function updateFileListMeta() {
+        const meta = $('fileListMeta');
+        if (!meta) return;
+        if (!state.files.length) {
+          meta.textContent = '';
+          return;
+        }
+        const query = state.filter.trim().toLowerCase();
+        const matches = state.files.filter((file) => {
+          if (!query) return true;
+          return file.path.toLowerCase().indexOf(query) >= 0 || file.name.toLowerCase().indexOf(query) >= 0;
+        });
+        const parts = [];
+        parts.push('共 ' + (state.totalFileCount || state.files.length) + ' 个文件');
+        if (query) parts.push('筛选匹配 ' + matches.length + ' 个');
+        if (state.pathNotice) parts.push(state.pathNotice);
+        if (state.overLimit) parts.push('仅显示前 ' + MAX_FILES + ' 个（按路径排序）');
+        const current = state.files.find((file) => file.path === state.selectedPath);
+        if (current && query && matches.indexOf(current) < 0) parts.push('当前文件在筛选结果外，仍保留显示');
+        meta.textContent = parts.join(' · ');
+      }
+
+      function renderFileOptions() {
+        const select = $('fileSelect');
+        if (!select) return;
+        clear(select);
+        if (!state.files.length) {
+          select.append(el('option', '', '暂无可查看文件'));
+          select.disabled = true;
+          return;
+        }
+
+        const query = state.filter.trim().toLowerCase();
+        const matches = state.files.filter((file) => {
+          if (!query) return true;
+          return file.path.toLowerCase().indexOf(query) >= 0 || file.name.toLowerCase().indexOf(query) >= 0;
+        });
+        const current = state.files.find((file) => file.path === state.selectedPath) || null;
+        const currentOutside = current && matches.indexOf(current) < 0;
+        let optionCount = 0;
+
+        if (currentOutside) {
+          const group = document.createElement('optgroup');
+          group.label = '当前文件（筛选外）';
+          const option = el('option', '', current.path);
+          option.value = current.path;
+          group.append(option);
+          select.append(group);
+          optionCount += 1;
+        }
+
+        if (matches.length) {
+          const groups = new Map();
+          for (const file of matches) {
+            const cut = file.path.lastIndexOf('/');
+            const dir = cut >= 0 ? file.path.slice(0, cut) : '';
+            if (!groups.has(dir)) groups.set(dir, []);
+            groups.get(dir).push(file);
+          }
+          const dirs = Array.from(groups.keys()).sort();
+          for (const dir of dirs) {
+            const group = document.createElement('optgroup');
+            group.label = dir ? dir + '/' : '根目录';
+            for (const file of groups.get(dir)) {
+              const option = el('option', '', file.path);
+              option.value = file.path;
+              group.append(option);
+              optionCount += 1;
+            }
+            select.append(group);
+          }
+        }
+
+        if (!optionCount) {
+          const option = el('option', '', '没有匹配的文件');
+          option.value = '';
+          select.append(option);
+          select.disabled = true;
+          select.value = '';
+        } else {
+          select.disabled = false;
+          if (state.selectedPath && state.files.some((file) => file.path === state.selectedPath)) {
+            select.value = state.selectedPath;
+          }
+          if (!select.value) {
+            const first = matches[0] || current;
+            if (first) select.value = first.path;
+          }
+        }
+        updateFileListMeta();
+      }
+
+      function updateHeader(file) {
+        const name = file && file.name ? String(file.name) : '文件';
+        const path = file && file.path ? String(file.path) : '';
+        const kind = file && file.kind ? normalizeKind(file.kind, path) : 'unsupported';
+        $('fileName').textContent = name;
+        $('filePath').textContent = path;
+        $('filePath').hidden = path === name;
+        const metaParts = [kindText(kind)];
+        if (file && file.size !== undefined && file.size !== null) {
+          const size = sizeText(file.size);
+          if (size) metaParts.push(size);
+        }
+        $('fileMeta').textContent = metaParts.join(' · ');
+        if (path) {
+          $('downloadLink').href = artifactHref(path);
+          $('downloadLink').hidden = false;
+        } else {
+          $('downloadLink').removeAttribute('href');
+          $('downloadLink').hidden = true;
+        }
+        document.title = name + ' · 文件预览只读';
+      }
+
+      function resetDetailPanels() {
+        state.detail = null;
+        state.currentKind = '';
+        state.hasDiff = false;
+        state.activeTab = 'text';
+        state.lineTexts = [];
+        state.lineNodes = [];
+        state.matchLines = [];
+        state.matchCursor = 0;
+        state.searchQuery = '';
+        state.sheets = [];
+        state.activeSheetIndex = 0;
+        state.mdMode = 'preview';
+        state.copyPayload = null;
+        state.imageSrc = '';
+
+        clear($('detailNotices'));
+        $('detailNotices').hidden = true;
+        setStatus($('detailStatus'), '');
+        $('detailError').hidden = true;
+        $('detailErrorText').textContent = '';
+        $('detailErrorHint').hidden = true;
+        $('detailErrorHint').textContent = '';
+        $('detailRetry').hidden = true;
+
+        $('fileTabs').hidden = true;
+        $('tabText').setAttribute('aria-selected', 'true');
+        $('tabDiff').setAttribute('aria-selected', 'false');
+        $('tabDiff').hidden = true;
+        $('diffTabBadge').hidden = true;
+        $('diffTabBadge').textContent = '';
+        $('textPanel').hidden = true;
+        $('diffPanel').hidden = true;
+
+        $('contentTools').hidden = true;
+        $('searchWrap').hidden = true;
+        setStatus($('searchStatus'), '');
+        $('searchInput').value = '';
+        $('nextMatch').disabled = true;
+        $('wrapLabel').hidden = true;
+        $('errorsOnlyLabel').hidden = true;
+        $('errorsOnly').checked = false;
+        setStatus($('logFilterStatus'), '');
+        $('copyButton').hidden = true;
+        $('copyButton').textContent = '复制';
+        setStatus($('copyStatus'), '');
+        $('quoteCodeButton').hidden = true;
+        resetQuoteSelection(true);
+
+        $('contentNotice').hidden = true;
+        $('contentNotice').textContent = '';
+
+        $('markdownSwitch').hidden = true;
+        $('mdPreviewBtn').setAttribute('aria-pressed', 'true');
+        $('mdSourceBtn').setAttribute('aria-pressed', 'false');
+
+        clear($('codeView'));
+        $('codeScroller').hidden = true;
+        $('codeScroller').classList.remove('wrap');
+        $('codeScroller').scrollTop = 0;
+        $('codeScroller').scrollLeft = 0;
+
+        clear($('mdView'));
+        $('mdView').hidden = true;
+        $('mdRaw').textContent = '';
+        $('mdRaw').hidden = true;
+
+        $('tableArea').hidden = true;
+        clear($('sheetSelect'));
+        $('sheetSelect').disabled = false;
+        clear($('dataTable'));
+        $('tableScroll').hidden = false;
+        $('tableScroll').scrollTop = 0;
+        $('tableScroll').scrollLeft = 0;
+        setStatus($('sheetNotice'), '');
+        $('tableHeadNote').hidden = false;
+
+        $('imageArea').hidden = true;
+        $('fileImage').onload = null;
+        $('fileImage').onerror = null;
+        $('fileImage').removeAttribute('src');
+        $('fileImage').alt = '';
+        setStatus($('imageStatus'), '');
+
+        $('pdfArea').hidden = true;
+        $('pdfPreviewBtn').disabled = false;
+        $('pdfPreviewBtn').textContent = '转换并预览 PDF';
+        setStatus($('pdfStatus'), '');
+
+        $('unsupportedArea').hidden = true;
+        $('textEmpty').hidden = true;
+      }
+
+      function beginDetail(file) {
+        $('currentEmpty').hidden = true;
+        $('currentShell').hidden = false;
+        resetDetailPanels();
+        updateHeader(file);
+        setStatus($('detailStatus'), '正在读取文件…');
+      }
+
+      function showDetailError(error) {
+        $('detailErrorText').textContent = '读取文件失败：' + errorText(error);
+        const hint = authHint(error);
+        $('detailErrorHint').textContent = hint;
+        $('detailErrorHint').hidden = !hint;
+        $('detailError').hidden = false;
+        $('detailRetry').hidden = false;
+        setStatus($('detailStatus'), '');
+        $('textPanel').hidden = true;
+        $('diffPanel').hidden = true;
+      }
+
+      async function loadFiles() {
+        if (state.filesBusy) return;
+        state.filesBusy = true;
+        const seq = ++state.filesSeq;
+        state.detailSeq += 1;
+        state.selectedPath = '';
+        $('fileFilter').disabled = true;
+        $('fileSelect').disabled = true;
+        $('filesRetry').hidden = true;
+        $('fileCount').textContent = '';
+        $('taskTitle').hidden = true;
+        setStatus($('filesStatus'), '正在读取任务文件…');
+        showCurrentEmpty('正在读取文件列表', '请稍候，页面正在向当前电脑读取任务成果文件。');
+
+        try {
+          let data;
+          if(workbenchMode){
+            const response=await fetchJson('/api/workbench?action='+(workbenchKind==='collaboration'?'collaboration_get':'task_get')+'&id='+encodeURIComponent(taskId));
+            if(response.ok!==true||!response.data)throw new Error('无法读取此任务成果，请返回任务检查。');
+            data={title:response.data.title,files:(response.data.files||[]).filter(f=>typeof f.name==='string'&&/\.xlsx$/i.test(f.name)).map(f=>({...f,path:f.name,kind:'table'}))};
+          }else data = await fetchJson('/api/bot/files?task_id=' + encodeURIComponent(taskId));
+          if (seq !== state.filesSeq) return;
+          if (!Array.isArray(data.files)) throw new Error('文件列表格式不正确。');
+
+          const normalized = normalizeFiles(data.files);
+          state.totalFileCount = normalized.length;
+          state.overLimit = normalized.length > MAX_FILES;
+          state.files = state.overLimit ? normalized.slice(0, MAX_FILES) : normalized;
+          state.taskTitle = typeof data.title === 'string' ? data.title : '';
+          state.pathNotice = '';
+
+          if (state.taskTitle) {
+            $('taskTitle').textContent = '任务：' + state.taskTitle;
+            $('taskTitle').title = state.taskTitle;
+            $('taskTitle').hidden = false;
+          }
+
+          if (!state.files.length) {
+            $('fileCount').textContent = '0';
+            $('fileFilter').disabled = true;
+            $('fileSelect').disabled = true;
+            clear($('fileSelect'));
+            $('fileSelect').append(el('option', '', '暂无可查看文件'));
+            setStatus($('filesStatus'), '该任务暂无可查看的成果文件。');
+            $('fileListMeta').textContent = '';
+            showCurrentEmpty('暂无可查看文件', '任务没有返回可预览的成果文件。可以返回工作台确认任务结果。');
+            return;
+          }
+
+          $('fileFilter').disabled = false;
+          $('fileCount').textContent = String(state.files.length) + (state.overLimit ? '/' + state.totalFileCount : '');
+
+          let nextPath = '';
+          if (initialPath && state.files.some((file) => file.path === initialPath)) {
+            nextPath = initialPath;
+          } else {
+            if (initialPath) state.pathNotice = '地址中的文件未在列表中，已打开第一个文件';
+            nextPath = state.files[0].path;
+          }
+          state.selectedPath = nextPath;
+          state.filter = $('fileFilter').value || '';
+          renderFileOptions();
+          $('fileSelect').value = nextPath;
+          updateFileListMeta();
+          setStatus($('filesStatus'), '');
+          $('filesRetry').hidden = true;
+          loadFile(nextPath);
+        } catch (error) {
+          if (seq !== state.filesSeq) return;
+          state.files = [];
+          state.totalFileCount = 0;
+          state.overLimit = false;
+          state.pathNotice = '';
+          $('fileCount').textContent = '';
+          $('fileFilter').disabled = true;
+          $('fileSelect').disabled = true;
+          clear($('fileSelect'));
+          $('fileSelect').append(el('option', '', '文件列表读取失败'));
+          $('fileListMeta').textContent = '';
+          const hint = authHint(error);
+          setStatus($('filesStatus'), '读取文件列表失败：' + errorText(error) + (hint ? ' ' + hint : ''), 'error');
+          $('filesRetry').hidden = false;
+          showCurrentEmpty('文件列表读取失败', errorText(error) + (hint ? ' ' + hint : '') + ' 请重试读取，或返回工作台。');
+        } finally {
+          if (seq === state.filesSeq) state.filesBusy = false;
+        }
+      }
+
+      async function loadFile(path) {
+        if (!path) return;
+        const file = state.files.find((item) => item.path === path);
+        if (!file) return;
+        const seq = ++state.detailSeq;
+        state.selectedPath = path;
+        $('fileSelect').value = path;
+        beginDetail(file);
+        setStatus($('detailStatus'), '正在读取文件…');
+
+        try {
+          const data = await fetchJson(
+            workbenchMode?'/api/workbench-sheet?id='+encodeURIComponent(taskId)+'&name='+encodeURIComponent(path)+'&kind='+encodeURIComponent(workbenchKind):'/api/bot/file?task_id=' + encodeURIComponent(taskId) + '&path=' + encodeURIComponent(path)
+          );
+          if (seq !== state.detailSeq || state.selectedPath !== path) return;
+          if (!data || typeof data !== 'object') throw new Error('电脑返回了空的文件数据。');
+          if (typeof data.path !== 'string' || data.path !== path) {
+            throw new Error('返回的文件与所选文件不一致，已忽略这次结果。');
+          }
+          state.detail = data;
+          renderDetail(data, file);
+        } catch (error) {
+          if (seq !== state.detailSeq || state.selectedPath !== path) return;
+          showDetailError(error);
+        }
+      }
+
+      function renderDetail(data, file) {
+        const kind = normalizeKind(data.kind, data.path || (file && file.path));
+        state.currentKind = kind;
+        state.hasDiff = Object.prototype.hasOwnProperty.call(data, 'diff');
+        const name = typeof data.name === 'string' && data.name ? data.name : ((file && file.name) || basename(data.path));
+        const number = Number(data.size);
+        const headFile = {
+          name: name,
+          path: data.path,
+          kind: kind,
+          size: isFinite(number) && number >= 0 ? number : (file ? file.size : 0)
+        };
+        updateHeader(headFile);
+
+        clear($('detailNotices'));
+        $('detailNotices').hidden = true;
+        if (typeof data.message === 'string' && data.message) {
+          setDetailNotice($('detailNotices'), data.message, 'info');
+        }
+        if (data.truncated === true) {
+          setDetailNotice($('detailNotices'), '服务器返回的内容已截断，请下载原文件查看完整内容。', 'warn');
+        }
+
+        if (state.hasDiff) {
+          $('tabDiff').hidden = false;
+          $('fileTabs').hidden = false;
+        } else {
+          $('tabDiff').hidden = true;
+          $('diffTabBadge').hidden = true;
+          $('diffTabBadge').textContent = '';
+          $('fileTabs').hidden = false;
+        }
+
+        $('detailError').hidden = true;
+        $('detailRetry').hidden = true;
+        setStatus($('detailStatus'), '');
+        $('textPanel').hidden = false;
+        $('diffPanel').hidden = true;
+        state.activeTab = 'text';
+        $('tabText').setAttribute('aria-selected', 'true');
+        $('tabDiff').setAttribute('aria-selected', 'false');
+
+        renderDiff(data, state.hasDiff);
+        renderPrimary(data, kind);
+        selectTab('text');
+        $('fileZoomTools').hidden = kind === 'pdf' || kind === 'unsupported';
+        applyFileZoom();
+      }
+
+      function selectTab(tab) {
+        const next = tab === 'diff' && state.hasDiff ? 'diff' : 'text';
+        state.activeTab = next;
+        const textSelected = next === 'text';
+        $('tabText').setAttribute('aria-selected', textSelected ? 'true' : 'false');
+        $('tabDiff').setAttribute('aria-selected', textSelected ? 'false' : 'true');
+        $('textPanel').hidden = !textSelected;
+        $('diffPanel').hidden = textSelected;
+      }
+
+      function renderDiff(data, hasDiff) {
+        const view = $('diffView');
+        clear(view);
+        $('diffMessage').hidden = true;
+        $('diffMessage').textContent = '';
+        $('diffMessage').classList.remove('warn', 'error', 'info');
+        $('diffTabBadge').hidden = true;
+        $('diffTabBadge').textContent = '';
+
+        if (!hasDiff) {
+          $('diffState').textContent = '';
+          view.hidden = false;
+          return;
+        }
+
+        const diff = data && data.diff;
+        if (!diff || typeof diff !== 'object') {
+          $('diffState').textContent = '服务器状态：未知';
+          $('diffTabBadge').hidden = false;
+          $('diffTabBadge').textContent = '未知';
+          $('diffMessage').textContent = '服务器未提供可用的修改对比信息，无法判断是否存在修改；这不代表没有变化。';
+          $('diffMessage').hidden = false;
+          view.hidden = true;
+          return;
+        }
+
+        const available = diff.available === true;
+        const unavailable = diff.available === false;
+        if (available) {
+          $('diffState').textContent = '服务器状态：修改对比可用';
+          $('diffTabBadge').hidden = false;
+          $('diffTabBadge').textContent = '可用';
+        } else if (unavailable) {
+          $('diffState').textContent = '服务器状态：修改对比不可用';
+          $('diffTabBadge').hidden = false;
+          $('diffTabBadge').textContent = '不可用';
+        } else {
+          $('diffState').textContent = '服务器状态：未知';
+          $('diffTabBadge').hidden = false;
+          $('diffTabBadge').textContent = '未知';
+        }
+
+        const message = typeof diff.message === 'string' && diff.message ? diff.message : '';
+        if (available) {
+          if (typeof diff.text === 'string' && diff.text.length) {
+            const lines = diff.text.replace(/\r\n?/g, '\n').split('\n');
+            for (const line of lines) {
+              const row = el('div', 'diff-line', line);
+              if (line.charAt(0) === '+') row.classList.add('diff-add');
+              else if (line.charAt(0) === '-') row.classList.add('diff-del');
+              else if (line.charAt(0) === '@') row.classList.add('diff-hunk');
+              view.append(row);
+            }
+            view.hidden = false;
+          } else {
+            view.hidden = true;
+            if (!message) {
+              $('diffMessage').textContent = '服务器标记对比可用，但没有返回对比文本。';
+              $('diffMessage').hidden = false;
+            }
+          }
+        } else {
+          view.hidden = true;
+        }
+
+        if (message) {
+          $('diffMessage').textContent = message;
+          $('diffMessage').hidden = false;
+        } else if (!available) {
+          $('diffMessage').textContent = '服务器未提供修改对比，无法判断是否存在修改；这不代表没有变化。';
+          $('diffMessage').hidden = false;
+        }
+      }
+
+      function showTextEmpty(title, text) {
+        $('textEmptyTitle').textContent = title;
+        $('textEmptyText').textContent = text;
+        $('textEmpty').hidden = false;
+      }
+
+      function renderPrimary(data, kind) {
+        $('contentTools').hidden = true;
+        $('searchWrap').hidden = true;
+        $('wrapLabel').hidden = true;
+        $('errorsOnlyLabel').hidden = true;
+        $('copyButton').hidden = true;
+        $('quoteCodeButton').hidden = true;
+        $('markdownSwitch').hidden = true;
+
+        if (kind === 'code' || kind === 'text' || kind === 'log') {
+          renderTextContent(data, kind);
+          return;
+        }
+        if (kind === 'markdown') {
+          renderMarkdownContent(data);
+          return;
+        }
+        if (kind === 'table') {
+          renderTableContent(data);
+          return;
+        }
+        if (kind === 'image') {
+          renderImageContent(data);
+          return;
+        }
+        if (kind === 'pdf') {
+          renderPdfContent(data);
+          return;
+        }
+        $('unsupportedArea').hidden = false;
+      }
+
+      function prepareText(raw) {
+        let text = String(raw === undefined || raw === null ? '' : raw).replace(/\r\n?/g, '\n');
+        let limited = false;
+        if (text.length > MAX_TEXT) {
+          text = text.slice(0, MAX_TEXT);
+          limited = true;
+        }
+        let lines = text.split('\n');
+        if (lines.length > MAX_LINES) {
+          lines = lines.slice(0, MAX_LINES);
+          limited = true;
+        }
+        return { text: text, lines: lines, limited: limited };
+      }
+
+      function appendHighlighted(parent, line, kind) {
+        if (!line) return;
+        TOKEN_RE.lastIndex = 0;
+        let last = 0;
+        let match;
+        while ((match = TOKEN_RE.exec(line)) !== null) {
+          if (!match[0]) {
+            TOKEN_RE.lastIndex += 1;
+            continue;
+          }
+          if (match.index > last) parent.append(document.createTextNode(line.slice(last, match.index)));
+          const token = match[0];
+          let tokenClass = 'tok-key';
+          const trimmed = token.replace(/^\s+/, '');
+          if (trimmed.indexOf('//') === 0 || trimmed.indexOf('#') === 0 || trimmed.indexOf('/*') === 0) {
+            tokenClass = 'tok-comment';
+          } else if (trimmed.charAt(0) === '"' || trimmed.charAt(0) === "'" || trimmed.charAt(0) === '`') {
+            tokenClass = 'tok-string';
+          }
+          if (kind === 'log' && /^(TRACE|DEBUG|INFO|WARN|WARNING|ERROR|FATAL|CRITICAL)$/.test(trimmed)) {
+            tokenClass = 'tok-key log-level';
+          }
+          parent.append(el('span', tokenClass, token));
+          last = TOKEN_RE.lastIndex;
+        }
+        if (last < line.length) parent.append(document.createTextNode(line.slice(last)));
+      }
+
+      function renderTextContent(data, kind) {
+        const source = typeof data.text === 'string' ? data.text : '';
+        if (!source) {
+          showTextEmpty('没有文本内容', typeof data.text === 'string' ? '这个文件是空的。' : '服务器没有返回可显示的文本内容。');
+          return;
+        }
+
+        const prepared = prepareText(source);
+        state.lineTexts = prepared.lines.slice();
+        state.lineNodes = [];
+        state.matchLines = [];
+        state.matchCursor = 0;
+        state.searchQuery = '';
+        state.copyPayload = { text: source, label: '复制' };
+
+        $('contentTools').hidden = false;
+        $('searchWrap').hidden = false;
+        $('wrapLabel').hidden = false;
+        $('errorsOnlyLabel').hidden = kind !== 'log';
+        $('copyButton').hidden = false;
+        $('copyButton').textContent = '复制';
+        $('quoteCodeButton').hidden = false;
+        $('searchInput').value = '';
+        $('nextMatch').disabled = true;
+        setStatus($('searchStatus'), '');
+        setStatus($('copyStatus'), '');
+        setStatus($('logFilterStatus'), '');
+        $('errorsOnly').checked = false;
+
+        if (prepared.limited) {
+          $('contentNotice').textContent = '内容较长，页面仅展示前 ' + MAX_TEXT + ' 字符、最多 ' + MAX_LINES + ' 行；复制仍使用服务器返回的原文。';
+          $('contentNotice').hidden = false;
+        } else {
+          $('contentNotice').hidden = true;
+          $('contentNotice').textContent = '';
+        }
+
+        const fragment = document.createDocumentFragment();
+        for (let index = 0; index < prepared.lines.length; index += 1) {
+          const lineText = prepared.lines[index];
+          const line = el('div', 'code-line');
+          line.dataset.line = String(index + 1);
+          if (kind === 'log' && ERROR_LINE_RE.test(lineText)) line.classList.add('log-error');
+          const number = el('span', 'line-no', String(index + 1));
+          number.setAttribute('role', 'button');
+          number.tabIndex = 0;
+          number.setAttribute('aria-label', '选择第 ' + (index + 1) + ' 行作为引用范围');
+          const body = el('span', 'line-body');
+          appendHighlighted(body, lineText, kind);
+          line.append(number, body);
+          fragment.append(line);
+          state.lineNodes.push(line);
+        }
+        clear($('codeView'));
+        $('codeView').append(fragment);
+        $('codeScroller').hidden = false;
+        $('codeScroller').classList.remove('wrap');
+        applyWrap();
+        $('codeScroller').scrollTop = 0;
+        $('codeScroller').scrollLeft = 0;
+      }
+
+      function renderMarkdownContent(data) {
+        const source = typeof data.text === 'string' ? data.text : '';
+        if (!source) {
+          showTextEmpty('没有 Markdown 内容', typeof data.text === 'string' ? '这个文件是空的。' : '服务器没有返回可显示的 Markdown 原文。');
+          return;
+        }
+        const prepared = prepareText(source);
+        state.copyPayload = { text: source, label: '复制' };
+        $('contentTools').hidden = false;
+        $('copyButton').hidden = false;
+        $('copyButton').textContent = '复制';
+        $('markdownSwitch').hidden = false;
+        $('searchWrap').hidden = true;
+        $('wrapLabel').hidden = true;
+        $('errorsOnlyLabel').hidden = true;
+        setStatus($('copyStatus'), '');
+        setStatus($('searchStatus'), '');
+
+        if (prepared.limited) {
+          $('contentNotice').textContent = '内容较长，页面仅展示前 ' + MAX_TEXT + ' 字符、最多 ' + MAX_LINES + ' 行；复制仍使用服务器返回的原文。';
+          $('contentNotice').hidden = false;
+        } else {
+          $('contentNotice').hidden = true;
+          $('contentNotice').textContent = '';
+        }
+
+        renderMarkdownPreview($('mdView'), prepared.text);
+        $('mdRaw').textContent = prepared.text;
+        setMarkdownMode('preview');
+      }
+
+      function setMarkdownMode(mode) {
+        const source = mode === 'source';
+        state.mdMode = source ? 'source' : 'preview';
+        $('mdView').hidden = source;
+        $('mdRaw').hidden = !source;
+        $('mdPreviewBtn').setAttribute('aria-pressed', source ? 'false' : 'true');
+        $('mdSourceBtn').setAttribute('aria-pressed', source ? 'true' : 'false');
+      }
+
+      function appendInline(parent, text) {
+        INLINE_RE.lastIndex = 0;
+        let last = 0;
+        let match;
+        while ((match = INLINE_RE.exec(text)) !== null) {
+          if (match.index > last) parent.append(document.createTextNode(text.slice(last, match.index)));
+          const token = match[0];
+          if (token.charAt(0) === '!') {
+            const close = token.indexOf(']');
+            const alt = close > 2 ? token.slice(2, close) : '图片';
+            parent.append(document.createTextNode((alt || '图片') + '（图片未加载）'));
+          } else if (token.charAt(0) === '[') {
+            const close = token.indexOf(']');
+            const label = close > 1 ? token.slice(1, close) : '';
+            parent.append(document.createTextNode(label));
+          } else if (token.charAt(0) === '`') {
+            const code = el('code', '', token.slice(1, -1));
+            parent.append(code);
+          } else if (token.slice(0, 2) === '**') {
+            const strong = el('strong', '', token.slice(2, -2));
+            parent.append(strong);
+          } else {
+            parent.append(document.createTextNode(token));
+          }
+          last = INLINE_RE.lastIndex;
+        }
+        if (last < text.length) parent.append(document.createTextNode(text.slice(last)));
+      }
+
+      function isBlockStart(line) {
+        if (!line || !line.trim()) return true;
+        if (/^\s*(```|~~~)/.test(line)) return true;
+        if (/^#{1,6}\s+/.test(line)) return true;
+        if (/^\s*>\s?/.test(line)) return true;
+        if (/^\s*([-*+])\s+/.test(line)) return true;
+        if (/^\s*\d+[.)]\s+/.test(line)) return true;
+        if (/^\s{0,3}([-*_])(?:\s*\1){2,}\s*$/.test(line)) return true;
+        return false;
+      }
+
+      function renderMarkdownPreview(container, source) {
+        clear(container);
+        const lines = String(source || '').replace(/\r\n?/g, '\n').split('\n');
+        let index = 0;
+        while (index < lines.length) {
+          const line = lines[index];
+          if (!line.trim()) {
+            index += 1;
+            continue;
+          }
+
+          const fence = /^\s*(```|~~~)\s*([^`\n]*)$/.exec(line);
+          if (fence) {
+            const marker = fence[1];
+            const close = new RegExp('^\\s*' + marker + '\\s*$');
+            const codeLines = [];
+            index += 1;
+            while (index < lines.length && !close.test(lines[index])) {
+              codeLines.push(lines[index]);
+              index += 1;
+            }
+            if (index < lines.length) index += 1;
+            const pre = el('pre');
+            pre.append(el('code', '', codeLines.join('\n')));
+            container.append(pre);
+            continue;
+          }
+
+          const heading = /^(#{1,6})\s+(.*)$/.exec(line);
+          if (heading) {
+            const level = Math.min(6, heading[1].length + 1);
+            const node = el('h' + level);
+            appendInline(node, heading[2]);
+            container.append(node);
+            index += 1;
+            continue;
+          }
+
+          if (/^\s*>\s?/.test(line)) {
+            const quote = el('blockquote');
+            const quoteLines = [];
+            while (index < lines.length && /^\s*>\s?/.test(lines[index])) {
+              quoteLines.push(lines[index].replace(/^\s*>\s?/, ''));
+              index += 1;
+            }
+            appendInline(quote, quoteLines.join('\n'));
+            container.append(quote);
+            continue;
+          }
+
+          const bullet = /^\s*([-*+])\s+(.*)$/.exec(line);
+          if (bullet) {
+            const list = el('ul');
+            while (index < lines.length) {
+              const item = /^\s*([-*+])\s+(.*)$/.exec(lines[index]);
+              if (!item) break;
+              const li = el('li');
+              appendInline(li, item[2]);
+              list.append(li);
+              index += 1;
+            }
+            container.append(list);
+            continue;
+          }
+
+          const ordered = /^\s*(\d+)[.)]\s+(.*)$/.exec(line);
+          if (ordered) {
+            const list = el('ol');
+            while (index < lines.length) {
+              const item = /^\s*(\d+)[.)]\s+(.*)$/.exec(lines[index]);
+              if (!item) break;
+              const li = el('li');
+              appendInline(li, item[2]);
+              list.append(li);
+              index += 1;
+            }
+            container.append(list);
+            continue;
+          }
+
+          if (/^\s{0,3}([-*_])(?:\s*\1){2,}\s*$/.test(line)) {
+            container.append(el('hr'));
+            index += 1;
+            continue;
+          }
+
+          const paragraphLines = [];
+          while (index < lines.length && lines[index].trim() && !isBlockStart(lines[index])) {
+            paragraphLines.push(lines[index]);
+            index += 1;
+          }
+          if (!paragraphLines.length) {
+            paragraphLines.push(line);
+            index += 1;
+          }
+          const paragraph = el('p');
+          appendInline(paragraph, paragraphLines.join('\n'));
+          container.append(paragraph);
+        }
+      }
+
+      function renderTableContent(data) {
+        const source = Array.isArray(data.sheets) ? data.sheets : [];
+        const sheets = [];
+        for (const rawSheet of source) {
+          if (!rawSheet || typeof rawSheet !== 'object') continue;
+          const rows = Array.isArray(rawSheet.rows)
+            ? rawSheet.rows.filter((row) => Array.isArray(row)).map((row) => row.map((cell) => (
+              cell === undefined || cell === null ? '' : String(cell)
+            )))
+            : [];
+          sheets.push({
+            name: typeof rawSheet.name === 'string' && rawSheet.name ? rawSheet.name : '工作表' + (sheets.length + 1),
+            rows: rows,
+            truncated: rawSheet.truncated === true
+          });
+        }
+
+        if (!sheets.length) {
+          showTextEmpty('没有表格数据', '服务器没有返回可显示的表格内容。可以下载原文件查看。');
+          return;
+        }
+
+        state.sheets = sheets;
+        state.activeSheetIndex = 0;
+        state.copyPayload = { table: true, label: '复制表格' };
+        $('tableArea').hidden = false;
+        $('contentTools').hidden = false;
+        $('copyButton').hidden = false;
+        $('copyButton').textContent = '复制表格';
+        $('searchWrap').hidden = true;
+        $('wrapLabel').hidden = true;
+        $('errorsOnlyLabel').hidden = true;
+        setStatus($('copyStatus'), '');
+        setStatus($('searchStatus'), '');
+        $('contentNotice').hidden = true;
+        $('contentNotice').textContent = '';
+
+        clear($('sheetSelect'));
+        sheets.forEach((sheet, index) => {
+          const option = el('option', '', sheet.name);
+          option.value = String(index);
+          $('sheetSelect').append(option);
+        });
+        $('sheetSelect').value = '0';
+        $('sheetSelect').disabled = sheets.length <= 1;
+        renderSheet(0);
+      }
+
+      function renderSheet(index) {
+        const sheet = state.sheets[index];
+        if (!sheet) return;
+        state.activeSheetIndex = index;
+        $('sheetSelect').value = String(index);
+        clear($('dataTable'));
+        $('tableScroll').scrollTop = 0;
+        $('tableScroll').scrollLeft = 0;
+
+        const caption = el('caption', 'visually-hidden', '工作表：' + sheet.name + '；首行作表头');
+        $('dataTable').append(caption);
+
+        if (!sheet.rows.length) {
+          $('tableScroll').hidden = true;
+          $('tableHeadNote').hidden = true;
+          setStatus($('sheetNotice'), '该工作表为空。', 'warn');
+          return;
+        }
+
+        $('tableScroll').hidden = false;
+        $('tableHeadNote').hidden = false;
+        const head = document.createElement('thead');
+        const headRow = document.createElement('tr');
+        for (const cell of sheet.rows[0]) {
+          const th = el('th', '', cell);
+          th.scope = 'col';
+          headRow.append(th);
+        }
+        head.append(headRow);
+        $('dataTable').append(head);
+
+        if (sheet.rows.length > 1) {
+          const body = document.createElement('tbody');
+          for (let rowIndex = 1; rowIndex < sheet.rows.length; rowIndex += 1) {
+            const tr = document.createElement('tr');
+            for (const cell of sheet.rows[rowIndex]) {
+              tr.append(el('td', '', cell));
+            }
+            body.append(tr);
+          }
+          $('dataTable').append(body);
+        }
+
+        if (sheet.truncated) {
+          setStatus($('sheetNotice'), '仅预览部分，下载查看全部。', 'warn');
+        } else {
+          setStatus($('sheetNotice'), '');
+        }
+      }
+
+      function tableAsText(sheet) {
+        if (!sheet || !sheet.rows.length) return '';
+        return sheet.rows.map((row) => row.map((cell) => (
+          String(cell === undefined || cell === null ? '' : cell)
+            .replace(/\t/g, ' ')
+            .replace(/\r?\n/g, ' ')
+        )).join('\t')).join('\n');
+      }
+
+      function renderImageContent(data) {
+        const src = imageHref(data.path);
+        state.imageSrc = src;
+        state.copyPayload = null;
+        $('imageArea').hidden = false;
+        $('contentTools').hidden = true;
+        $('fileImage').alt = typeof data.name === 'string' && data.name ? data.name : '任务图片';
+        setStatus($('imageStatus'), '正在加载图片…');
+        $('fileImage').onload = () => {
+          if (state.imageSrc !== src) return;
+          setStatus($('imageStatus'), '图片已加载。', 'ok');
+        };
+        $('fileImage').onerror = () => {
+          if (state.imageSrc !== src) return;
+          setStatus($('imageStatus'), '图片加载失败，可能已损坏或暂时无法读取。请下载原文件查看。', 'error');
+        };
+        $('fileImage').removeAttribute('src');
+        $('fileImage').src = src;
+      }
+
+      function renderPdfContent(data) {
+        state.copyPayload = null;
+        $('pdfArea').hidden = false;
+        $('contentTools').hidden = true;
+        $('pdfPreviewBtn').disabled = false;
+        $('pdfPreviewBtn').textContent = '转换并预览 PDF';
+        setStatus($('pdfStatus'), '');
+      }
+
+      function applyWrap() {
+        $('codeScroller').classList.toggle('wrap', $('wrapToggle').checked);
+      }
+
+      function runSearch(scrollToFirst) {
+        const query = $('searchInput').value;
+        state.searchQuery = query;
+        state.matchLines = [];
+        state.matchCursor = 0;
+        for (const node of state.lineNodes) node.classList.remove('search-hit', 'search-current');
+        $('nextMatch').disabled = true;
+        setStatus($('searchStatus'), '');
+
+        if (!query) return;
+        if (!state.lineTexts.length) {
+          setStatus($('searchStatus'), '没有可搜索的文本。', 'warn');
+          return;
+        }
+
+        const needle = query.toLowerCase();
+        let occurrences = 0;
+        const lines = [];
+        for (let index = 0; index < state.lineTexts.length; index += 1) {
+          const haystack = state.lineTexts[index].toLowerCase();
+          let position = haystack.indexOf(needle);
+          let lineHasMatch = false;
+          while (position >= 0) {
+            occurrences += 1;
+            lineHasMatch = true;
+            position = haystack.indexOf(needle, position + Math.max(1, needle.length));
+          }
+          if (lineHasMatch) {
+            lines.push(index);
+            state.lineNodes[index].classList.add('search-hit');
+          }
+        }
+        state.matchLines = lines;
+        $('nextMatch').disabled = lines.length === 0;
+        if (!lines.length) {
+          setStatus($('searchStatus'), '没有找到匹配文字。', 'warn');
+          return;
+        }
+
+        state.matchCursor = 0;
+        highlightCurrentMatch(scrollToFirst);
+        setStatus(
+          $('searchStatus'),
+          '命中 ' + occurrences + ' 处，涉及 ' + lines.length + ' 行；当前第 1/' + lines.length + ' 个匹配行。',
+          'ok'
+        );
+      }
+
+      function highlightCurrentMatch(scroll) {
+        if (!state.matchLines.length) return;
+        for (const node of state.lineNodes) node.classList.remove('search-current');
+        const index = state.matchLines[state.matchCursor];
+        const line = state.lineNodes[index];
+        if (!line) return;
+        line.classList.add('search-current');
+        if (scroll !== false) {
+          const scroller = $('codeScroller');
+          const lineRect = line.getBoundingClientRect();
+          const scrollRect = scroller.getBoundingClientRect();
+          scroller.scrollTop += lineRect.top - scrollRect.top - (scroller.clientHeight - lineRect.height) / 2;
+        }
+      }
+
+      function nextMatch() {
+        if (!state.matchLines.length) return;
+        state.matchCursor = (state.matchCursor + 1) % state.matchLines.length;
+        highlightCurrentMatch(true);
+        const status = $('searchStatus');
+        const current = status.textContent.replace(/当前第 \d+\/\d+ 个匹配行。/, '当前第 ' + (state.matchCursor + 1) + '/' + state.matchLines.length + ' 个匹配行。');
+        status.textContent = current || '当前第 ' + (state.matchCursor + 1) + '/' + state.matchLines.length + ' 个匹配行。';
+      }
+
+      function applyLogFilter() {
+        if (state.currentKind !== 'log' || !state.lineNodes.length) return;
+        const onlyErrors = $('errorsOnly').checked;
+        let visible = 0;
+        for (let index = 0; index < state.lineNodes.length; index += 1) {
+          const hide = onlyErrors && !ERROR_LINE_RE.test(state.lineTexts[index]);
+          state.lineNodes[index].hidden = hide;
+          if (!hide) visible += 1;
+        }
+        if (onlyErrors) {
+          if (visible) {
+            setStatus($('logFilterStatus'), '已开启“只看报错”；原始日志仍保留，取消勾选即可恢复全部内容。', 'warn');
+          } else {
+            setStatus($('logFilterStatus'), '没有识别到报错行；原始日志仍保留，取消勾选即可恢复全部内容。', 'warn');
+          }
+        } else {
+          setStatus($('logFilterStatus'), '');
+        }
+      }
+
+      function currentCopyText() {
+        if (state.currentKind === 'table') {
+          const sheet = state.sheets[state.activeSheetIndex];
+          return tableAsText(sheet);
+        }
+        if (state.detail && typeof state.detail.text === 'string') return state.detail.text;
+        return '';
+      }
+
+      function manualCopy(text) {
+        let dialog = $('manualCopyDialog');
+        if (!dialog) {
+          dialog = el('dialog', 'manual-copy-dialog'); dialog.id = 'manualCopyDialog';
+          const heading = el('h2', '', '复制预览内容'); heading.id = 'manualCopyTitle';
+          dialog.setAttribute('aria-labelledby', heading.id);
+          const note = el('p', '', '请长按下方文本选择“复制”。此处只读，不会修改文件。');
+          const box = el('textarea'); box.id = 'manualCopyText'; box.readOnly = true;
+          box.spellcheck = false; box.setAttribute('aria-label', '可选择复制的预览内容');
+          const close = el('button', 'btn secondary', '关闭'); close.type = 'button';
+          close.addEventListener('click', () => dialog.close());
+          dialog.append(heading, note, box, close); document.body.append(dialog);
+        }
+        $('manualCopyText').value = text;
+        if (!dialog.open) dialog.showModal();
+        $('manualCopyText').focus(); $('manualCopyText').select();
+      }
+
+      function clearQuoteHighlights() {
+        for (const node of state.lineNodes) node.classList.remove('quote-selected');
+      }
+
+      function paintQuoteSelection() {
+        clearQuoteHighlights();
+        if (!Number.isInteger(state.quoteStart) || !state.lineNodes.length) return;
+        const start = state.quoteEnd === null ? state.quoteStart : Math.min(state.quoteStart, state.quoteEnd);
+        const end = state.quoteEnd === null ? state.quoteStart : Math.max(state.quoteStart, state.quoteEnd);
+        for (let line = start; line <= end; line += 1) {
+          const node = state.lineNodes[line - 1];
+          if (node) node.classList.add('quote-selected');
+        }
+      }
+
+      function resetQuoteSelection(closeDialog) {
+        state.quoteAnchor = null;
+        state.quoteStart = null;
+        state.quoteEnd = null;
+        clearQuoteHighlights();
+        const dialog = $('codeQuoteDialog');
+        if (dialog && dialog.open && closeDialog !== false) {
+          try { dialog.close(); } catch (error) { /* ignore */ }
+        }
+        setStatus($('quoteStatus'), '');
+        $('quoteToWorkbench').disabled = true;
+        $('quotePreview').value = '';
+        $('quoteInstruction').value = '';
+        $('quoteStartLine').value = '';
+        $('quoteEndLine').value = '';
+      }
+
+      function selectQuoteLine(lineNumber) {
+        if (!Number.isInteger(lineNumber) || lineNumber < 1 || lineNumber > state.lineTexts.length) return;
+        if (state.quoteStart === null || state.quoteEnd !== null) {
+          state.quoteStart = lineNumber;
+          state.quoteEnd = null;
+          state.quoteAnchor = lineNumber;
+        } else {
+          const anchor = Number.isInteger(state.quoteAnchor) ? state.quoteAnchor : state.quoteStart;
+          state.quoteStart = Math.min(anchor, lineNumber);
+          state.quoteEnd = Math.max(anchor, lineNumber);
+          state.quoteAnchor = null;
+        }
+        paintQuoteSelection();
+        const dialog = $('codeQuoteDialog');
+        if (dialog && dialog.open) {
+          $('quoteStartLine').value = String(state.quoteStart);
+          $('quoteEndLine').value = String(state.quoteEnd === null ? state.quoteStart : state.quoteEnd);
+          updateQuotePreview();
+        }
+      }
+
+      function quoteRangeState() {
+        const count = state.lineTexts.length;
+        const startRaw = String($('quoteStartLine').value || '').trim();
+        const endRaw = String($('quoteEndLine').value || '').trim();
+        if (!count) return { error: '当前文件没有可引用的代码行。' };
+        if (!/^\d+$/.test(startRaw) || !/^\d+$/.test(endRaw)) {
+          return { error: '请输入 1–' + count + ' 之间的整数行号。' };
+        }
+        const start = Number(startRaw);
+        const end = Number(endRaw);
+        if (!Number.isSafeInteger(start) || !Number.isSafeInteger(end)) {
+          return { error: '行号必须是整数。' };
+        }
+        if (start < 1 || start > count || end < 1 || end > count) {
+          return { error: '行号必须在 1–' + count + ' 之间。' };
+        }
+        if (end < start) return { error: '结束行不能小于起始行。' };
+        if (end - start + 1 > QUOTE_MAX_LINES) {
+          return { error: '单次最多引用 ' + QUOTE_MAX_LINES + ' 行，当前选择了 ' + (end - start + 1) + ' 行。' };
+        }
+        const text = state.lineTexts.slice(start - 1, end).join('\n');
+        if (text.length > QUOTE_MAX_CHARS) {
+          return {
+            error: '选定内容共 ' + text.length + ' 字符，超过 ' + QUOTE_MAX_CHARS + ' 字符上限，请缩小范围。',
+            text: text
+          };
+        }
+        const instruction = String($('quoteInstruction').value || '');
+        if (instruction.length > QUOTE_MAX_INSTRUCTION) {
+          return { error: '处理要求最多 ' + QUOTE_MAX_INSTRUCTION + ' 字符。', text: text };
+        }
+        return { start: start, end: end, text: text, instruction: instruction };
+      }
+
+      function updateQuotePreview() {
+        const result = quoteRangeState();
+        const preview = $('quotePreview');
+        const button = $('quoteToWorkbench');
+        if (result.error) {
+          preview.value = result.text || '';
+          setStatus($('quoteStatus'), result.error, 'error');
+          button.disabled = true;
+          return;
+        }
+        preview.value = result.text;
+        setStatus(
+          $('quoteStatus'),
+          '已选 ' + (result.end - result.start + 1) + ' 行，共 ' + result.text.length + ' 字符。',
+          'ok'
+        );
+        button.disabled = false;
+      }
+
+      function quotePathProblem(path) {
+        if (typeof path !== 'string' || !path) return '引用文件路径为空，无法引用。';
+        if (path.charAt(0) === '/' || path.charAt(0) === '\\') return '引用文件路径不能是绝对路径。';
+        if (path.indexOf('\\') >= 0) return '引用文件路径不能包含反斜杠。';
+        if (path.indexOf(':') >= 0) return '引用文件路径不能包含冒号。';
+        if (/(?:^|\/)\.\.(?:\/|$)/.test(path)) return '引用文件路径不能包含上级目录。';
+        if (/[\u0000-\u001f\u007f]/.test(path)) return '引用文件路径包含控制字符。';
+        return '';
+      }
+
+      function openQuoteDialog() {
+        if (!state.detail || !state.lineTexts.length) {
+          setStatus($('copyStatus'), '当前文件没有可引用的代码行。', 'warn');
+          return;
+        }
+        const count = state.lineTexts.length;
+        let start = Number.isInteger(state.quoteStart) ? state.quoteStart : 1;
+        if (start < 1 || start > count) start = 1;
+        const dialog = $('codeQuoteDialog');
+        $('quoteStartLine').min = '1';
+        $('quoteEndLine').min = '1';
+        $('quoteStartLine').max = String(count);
+        $('quoteEndLine').max = String(count);
+        $('quoteStartLine').value = String(start);
+        $('quoteEndLine').value = String(state.quoteEnd === null || state.quoteEnd === undefined ? start : state.quoteEnd);
+        if (!dialog.open) {
+          try { dialog.showModal(); } catch (error) { /* ignore */ }
+        }
+        updateQuotePreview();
+        try { $('quoteStartLine').focus(); } catch (error) { /* ignore */ }
+      }
+
+      function manualQuoteText(result) {
+        const path = state.detail && typeof state.detail.path === 'string' ? state.detail.path : '';
+        const instruction = String(result.instruction || '').trim() || QUOTE_DEFAULT_INSTRUCTION;
+        const title = state.taskTitle || '文件预览';
+        return '请针对以下代码处理：\n' + instruction
+          + '\n\n引用文件：' + path
+          + '\n行号：L' + result.start + '–L' + result.end
+          + '\n（来自任务：' + title + '；引用为当时预览快照）'
+          + '\n--- 引用片段开始 ---\n' + result.text
+          + '\n--- 引用片段结束 ---';
+      }
+
+      function clearQuoteStorage() {
+        const keys = [];
+        // Only one handoff may be pending; clear every prior prefix key before writing the new one.
+        for (let index = sessionStorage.length - 1; index >= 0; index -= 1) {
+          const key = sessionStorage.key(index);
+          if (key && key.indexOf(QUOTE_STORAGE_PREFIX) === 0) keys.push(key);
+        }
+        for (const key of keys) sessionStorage.removeItem(key);
+      }
+
+      function newQuoteRefId() {
+        if (!window.crypto || typeof window.crypto.getRandomValues !== 'function') {
+          throw new Error('浏览器不支持安全随机编号。');
+        }
+        const bytes = new Uint8Array(16);
+        window.crypto.getRandomValues(bytes);
+        return Array.from(bytes, (value) => value.toString(16).padStart(2, '0')).join('');
+      }
+
+      function quoteTransferUnavailable(result) {
+        setStatus($('quoteStatus'), '临时传递不可用，请复制引用后手动粘贴。', 'error');
+        try { manualCopy(manualQuoteText(result)); } catch (error) { /* ignore */ }
+      }
+
+      function takeQuoteToWorkbench() {
+        const result = quoteRangeState();
+        if (result.error) {
+          updateQuotePreview();
+          return;
+        }
+        if (!token) {
+          setStatus($('quoteStatus'), '缺少访问令牌，无法带到工作台。', 'error');
+          return;
+        }
+        if (!QUOTE_TASK_ID_RE.test(taskId)) {
+          setStatus($('quoteStatus'), '任务编号格式无效，无法带到工作台。', 'error');
+          return;
+        }
+        const pathProblem = quotePathProblem(state.detail && state.detail.path);
+        if (pathProblem) {
+          setStatus($('quoteStatus'), pathProblem, 'error');
+          return;
+        }
+        let refId = '';
+        try {
+          refId = newQuoteRefId();
+          if (!/^[a-f0-9]{32}$/.test(refId)) throw new Error('随机编号格式错误。');
+          clearQuoteStorage();
+        } catch (error) {
+          quoteTransferUnavailable(result);
+          return;
+        }
+        const payload = {
+          version: 1,
+          created: Date.now(),
+          task_id: taskId,
+          path: state.detail.path,
+          start: result.start,
+          end: result.end,
+          text: result.text,
+          instruction: String(result.instruction || '')
+        };
+        try {
+          sessionStorage.setItem(QUOTE_STORAGE_PREFIX + refId, JSON.stringify(payload));
+        } catch (error) {
+          quoteTransferUnavailable(result);
+          return;
+        }
+        setStatus($('quoteStatus'), '引用已准备好，正在打开工作台…', 'ok');
+        location.assign('/?token=' + encodeURIComponent(token) + '&code_ref=' + refId);
+      }
+
+      function copyQuoteSelection() {
+        const result = quoteRangeState();
+        if (result.error) {
+          updateQuotePreview();
+          return;
+        }
+        manualCopy(manualQuoteText(result));
+      }
+
+      async function copyCurrent() {
+        const text = currentCopyText();
+        const seq = state.detailSeq;
+        if (!text) {
+          setStatus($('copyStatus'), '当前没有可复制的原文。', 'warn');
+          return;
+        }
+        if (!navigator.clipboard || typeof navigator.clipboard.writeText !== 'function') {
+          manualCopy(text);
+          return;
+        }
+        setStatus($('copyStatus'), '正在复制…');
+        try {
+          await navigator.clipboard.writeText(text);
+          if (seq !== state.detailSeq) return;
+          setStatus($('copyStatus'), state.currentKind === 'table' ? '已复制当前工作表。' : '已复制当前原文。', 'ok');
+        } catch (error) {
+          if (seq !== state.detailSeq) return;
+          manualCopy(text);
+        }
+      }
+
+      function previewViewerHref(id) {
+        if (!/^[a-f0-9]{64}$/i.test(String(id || ''))) return '';
+        return '/preview-viewer?preview_id=' + encodeURIComponent(id) + '&token=' + encodeURIComponent(token);
+      }
+
+      async function requestPdfPreview() {
+        const detail = state.detail;
+        const button = $('pdfPreviewBtn');
+        if (!detail || state.currentKind !== 'pdf' || button.disabled) return;
+        const seq = state.detailSeq;
+        const path = detail.path;
+        button.disabled = true;
+        button.textContent = '正在准备预览…';
+        setStatus($('pdfStatus'), '正在请求电脑生成只读预览…');
+        try {
+          const receipt = await fetchJson('/api/bot/preview', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            },
+            body: JSON.stringify({ task_id: taskId, path: path })
+          });
+          if (seq !== state.detailSeq || !state.detail || state.detail.path !== path) return;
+          const id = receipt && typeof receipt.id === 'string' ? receipt.id : '';
+          const href = previewViewerHref(id);
+          if (!href) throw new Error('预览返回的编号无效。');
+          setStatus($('pdfStatus'), '预览已准备好，正在打开…', 'ok');
+          location.assign(href);
+        } catch (error) {
+          if (seq !== state.detailSeq) return;
+          const hint = authHint(error);
+          setStatus($('pdfStatus'), '预览失败：' + errorText(error) + (hint ? ' ' + hint : ''), 'error');
+        } finally {
+          if (seq === state.detailSeq) {
+            button.disabled = false;
+            button.textContent = '转换并预览 PDF';
+          }
+        }
+      }
+
+let fileZoom=100;
+const FILE_ZOOM_MIN=50;
+const FILE_ZOOM_MAX=200;
+const FILE_ZOOM_STEP=25;
+
+function applyFileZoom(){
+  const shell=$('currentShell');
+  if(!shell)return;
+  const scale=fileZoom/100;
+  shell.style.setProperty('--file-scale',String(scale));
+  const img=$('fileImage');
+  if(!img||!img.naturalWidth)return;
+  const frame=img.closest('.image-frame')||shell.querySelector('.image-frame');
+  if(!frame)return;
+  const baseWidth=Math.max(1,Math.min(img.naturalWidth,frame.clientWidth-16));
+  img.style.width=baseWidth*scale+'px';
+  img.style.maxWidth='none';
+}
+
+function initializeFileZoom(){
+  const out=$('fileZoomOut');
+  const reset=$('fileZoomReset');
+  const inc=$('fileZoomIn');
+  const sync=()=>{
+    if(reset){reset.textContent=fileZoom+'%';}
+    if(out){out.disabled=fileZoom<=FILE_ZOOM_MIN;}
+    if(inc){inc.disabled=fileZoom>=FILE_ZOOM_MAX;}
+    applyFileZoom();
+  };
+  const change=(delta)=>{
+    fileZoom=Math.min(FILE_ZOOM_MAX,Math.max(FILE_ZOOM_MIN,fileZoom+delta));
+    sync();
+  };
+  if(out){out.addEventListener('click',()=>change(-FILE_ZOOM_STEP));}
+  if(reset){reset.addEventListener('click',()=>{fileZoom=100;sync();});}
+  if(inc){inc.addEventListener('click',()=>change(FILE_ZOOM_STEP));}
+  const img=$('fileImage');
+  if(img){img.addEventListener('load',applyFileZoom);}
+  window.addEventListener('resize',applyFileZoom);
+  sync();
+}
+      function initialize() {
+        $('backLink').href = workbenchHref();
+        if(workbenchMode)$('backLink').hidden=true;
+
+        if (!taskId || !token) {
+          const missing = [];
+          if (!taskId) missing.push('task_id');
+          if (!token) missing.push('token');
+          showBootProblem('地址缺少 ' + missing.join(' 和 ') + '。请返回工作台重新打开文件预览。');
+          return;
+        }
+
+        $('app').hidden = false;
+        initializeFileZoom();
+        $('fileFilter').addEventListener('input', () => {
+          state.filter = $('fileFilter').value;
+          renderFileOptions();
+          updateFileListMeta();
+        });
+
+        $('fileSelect').addEventListener('change', () => {
+          const path = $('fileSelect').value;
+          if (!path || path === state.selectedPath) return;
+          loadFile(path);
+        });
+
+        $('filesRetry').addEventListener('click', () => loadFiles());
+        $('detailRetry').addEventListener('click', () => {
+          if (state.selectedPath) loadFile(state.selectedPath);
+        });
+
+        $('tabText').addEventListener('click', () => selectTab('text'));
+        $('tabDiff').addEventListener('click', () => {
+          if (state.hasDiff) selectTab('diff');
+        });
+
+        $('wrapToggle').addEventListener('change', applyWrap);
+        $('errorsOnly').addEventListener('change', applyLogFilter);
+        $('searchInput').addEventListener('input', () => runSearch(false));
+        $('searchInput').addEventListener('keydown', (event) => {
+          if (event.key === 'Enter') {
+            event.preventDefault();
+            if (state.matchLines.length) nextMatch();
+            else runSearch(true);
+          } else if (event.key === 'Escape') {
+            $('searchInput').value = '';
+            runSearch(false);
+          }
+        });
+        $('nextMatch').addEventListener('click', nextMatch);
+        $('copyButton').addEventListener('click', copyCurrent);
+        $('quoteCodeButton').addEventListener('click', openQuoteDialog);
+        $('quoteStartLine').addEventListener('input', updateQuotePreview);
+        $('quoteEndLine').addEventListener('input', updateQuotePreview);
+        $('quoteInstruction').addEventListener('input', updateQuotePreview);
+        $('quoteStartLine').addEventListener('change', updateQuotePreview);
+        $('quoteEndLine').addEventListener('change', updateQuotePreview);
+        $('quoteInstruction').addEventListener('change', updateQuotePreview);
+        $('quoteToWorkbench').addEventListener('click', takeQuoteToWorkbench);
+        $('quoteCopy').addEventListener('click', copyQuoteSelection);
+        $('quoteClose').addEventListener('click', () => {
+          const dialog = $('codeQuoteDialog');
+          if (dialog && dialog.open) dialog.close();
+        });
+        $('codeView').addEventListener('click', (event) => {
+          const target = event.target;
+          const number = target && target.closest ? target.closest('.line-no') : null;
+          if (!number || !$('codeView').contains(number)) return;
+          const line = number.closest('.code-line');
+          const value = Number(line && line.dataset ? line.dataset.line : '');
+          if (Number.isInteger(value)) selectQuoteLine(value);
+        });
+        $('codeView').addEventListener('keydown', (event) => {
+          if (event.key !== 'Enter' && event.key !== ' ') return;
+          const target = event.target;
+          const number = target && target.closest ? target.closest('.line-no') : null;
+          if (!number || !$('codeView').contains(number)) return;
+          event.preventDefault();
+          const line = number.closest('.code-line');
+          const value = Number(line && line.dataset ? line.dataset.line : '');
+          if (Number.isInteger(value)) selectQuoteLine(value);
+        });
+        $('mdPreviewBtn').addEventListener('click', () => setMarkdownMode('preview'));
+        $('mdSourceBtn').addEventListener('click', () => setMarkdownMode('source'));
+        $('sheetSelect').addEventListener('change', () => {
+          const index = Number($('sheetSelect').value);
+          if (isFinite(index) && index >= 0 && index < state.sheets.length) renderSheet(index);
+        });
+        $('pdfPreviewBtn').addEventListener('click', requestPdfPreview);
+
+        loadFiles();
+      }
+
+      initialize();
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+/* Presentation only: actual task and model messages retain their original data. */
+.app-shell .conversation-details{font-size:11px;color:var(--theme-muted,#647a92);margin:10px 0}
+.app-shell .conversation-details summary{cursor:pointer;padding:7px 0;font-size:11px}
+.app-shell .station-user-message{max-width:88%;margin:20px 0 24px auto;padding:16px 20px;background:var(--theme-accent-soft,#e6f0fe);border:1px solid var(--theme-border,#d4dfec);border-radius:18px 18px 5px 18px}
+.app-shell .station-user-message>span{font-size:11px;font-weight:600;color:var(--theme-muted,#647a92)}
+.app-shell .station-user-message pre{font-family:inherit;font-size:14px;line-height:1.85;white-space:pre-wrap;overflow-wrap:anywhere;margin:8px 0 0;max-height:240px;overflow:auto;color:var(--theme-text,#24354c)}
+.app-shell .station-assistant-message{background:var(--theme-surface,#fff);border:1px solid var(--theme-border,#d4dfec);padding:18px 20px;border-radius:5px 18px 18px 18px;min-width:0}
+.app-shell .station-assistant-message h3{font-size:14px}.app-shell .station-assistant-message .station-pre{background:transparent;border:0;padding:0;font-size:14px;line-height:1.85}
+.app-shell .auto-message{border-radius:5px 18px 18px 18px}.app-shell .auto-message.role-B{border-radius:18px 5px 18px 18px;background:var(--theme-accent-soft,#e6f0fe)}
+.app-shell .auto-message-content{font-size:14px;line-height:1.85}.app-shell .auto-message-details .auto-message-meta{margin-top:8px}
+.app-shell .auto-session-brief{padding:16px 20px;border-radius:18px 18px 5px 18px;background:var(--theme-accent-soft,#e6f0fe)}
+.app-shell .station-main-request textarea,.app-shell .auto-task{border-radius:16px;padding:16px;font-size:15px;line-height:1.8}
+
+.app-shell .partner-guidance{margin:16px 0;padding:12px 16px;border-left:3px solid var(--theme-accent,#3f7fdf);border-radius:0 12px 12px 0;background:var(--theme-surface,#fff)}.app-shell .partner-guidance>span{font-size:10px;color:var(--theme-muted,#647a92)}.app-shell .partner-guidance p{margin:6px 0 0;font-size:13px;line-height:1.8;color:var(--theme-text,#24354c)}

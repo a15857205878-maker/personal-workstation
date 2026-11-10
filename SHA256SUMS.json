@@ -1,0 +1,2945 @@
+{
+  "algorithm": "SHA256",
+  "files": [
+    {
+      "path": ".gitignore",
+      "bytes": 186,
+      "sha256": "991bf92a952113fc536c8d7aabe255d530898534327601436e39ed7efcf75256"
+    },
+    {
+      "path": "build.ps1",
+      "bytes": 715,
+      "sha256": "fee93fc0c00a59a477938f0e1757e72e4a894a3ffef739c354ecc21ff4c8e91a"
+    },
+    {
+      "path": "components/Agent工作台/app.py",
+      "bytes": 16112,
+      "sha256": "061dbf2e2ab22e2261eeaab13b36869b727bcf6b1be8e46a25a29d4047bcb3f4"
+    },
+    {
+      "path": "components/Agent工作台/app_link_client.py",
+      "bytes": 7425,
+      "sha256": "aaf322b89f77911de55dfc04bf46fa344525bfafe205217114fcc80f0a827d47"
+    },
+    {
+      "path": "components/Agent工作台/appearance_store.py",
+      "bytes": 1559,
+      "sha256": "8fb180e4b8b1c611a63954076c8b6440e9b198d6ce9b93afc07fba68c1587951"
+    },
+    {
+      "path": "components/Agent工作台/artifact_browser.py",
+      "bytes": 9810,
+      "sha256": "fa0e3d096f85e1311fda9eb103b380c33ce3462cbfce72f0b3070a0403456fd2"
+    },
+    {
+      "path": "components/Agent工作台/assets/station.ico",
+      "bytes": 2133,
+      "sha256": "85e860fa148de3eccb4795c489d552dde6092f51e92157e61a7d3a870c9b8e04"
+    },
+    {
+      "path": "components/Agent工作台/auto_service.py",
+      "bytes": 4390,
+      "sha256": "633c6a2738c3c0c7e0277fef57762f5267b6aeac74445fe9f716703f2bedb70b"
+    },
+    {
+      "path": "components/Agent工作台/backend.py",
+      "bytes": 12895,
+      "sha256": "e5f6648c712d480598b807b3b35a7720fe8d48f597ccc0a037d62acda5a85d1f"
+    },
+    {
+      "path": "components/Agent工作台/butler_center.py",
+      "bytes": 2747,
+      "sha256": "59ad4362085d2cf610e434666694fb5cff06fd4340f3ad38288b95f3c52b7b57"
+    },
+    {
+      "path": "components/Agent工作台/chat_service.py",
+      "bytes": 15549,
+      "sha256": "2304883ca4b8e68c22ef7e4cbb516cbdcc5440693f28a13d03863fcbe61bd3f9"
+    },
+    {
+      "path": "components/Agent工作台/codex_channel.py",
+      "bytes": 15566,
+      "sha256": "67dd8face897e3ccfcbd381208abed44f594b58ca8973d30e544e89fd62f2f0a"
+    },
+    {
+      "path": "components/Agent工作台/collaboration_files.py",
+      "bytes": 5335,
+      "sha256": "1d9d9feb652307add7a3acf7e360e39f2eed97d68dc4d29bbf546058b6b5c3b0"
+    },
+    {
+      "path": "components/Agent工作台/companion_adapter.py",
+      "bytes": 3657,
+      "sha256": "951155c1eb6a81e2e0ad046691f67841076e88478db3450685a425bc109f8ba5"
+    },
+    {
+      "path": "components/Agent工作台/companion_room.py",
+      "bytes": 4014,
+      "sha256": "7a061df49108f7d3f540424ee2bc216a13c7beb974368faa9be43d95c2cafde6"
+    },
+    {
+      "path": "components/Agent工作台/credential_store.py",
+      "bytes": 7339,
+      "sha256": "40638afe1e9483cbc6b8392b1694f3d2349fd56c9afb293404faabfda154584a"
+    },
+    {
+      "path": "components/Agent工作台/desktop_assistant.py",
+      "bytes": 2627,
+      "sha256": "9e91a2d1ee97855557b9181ce4b8e1ccb9890260a96c70a153702fda9fed4828"
+    },
+    {
+      "path": "components/Agent工作台/desktop_chrome.py",
+      "bytes": 5509,
+      "sha256": "6c1b9efc152e0cf65ac074e83ca36ec12d3703c24317ac0a2cdc5d6730429f19"
+    },
+    {
+      "path": "components/Agent工作台/examples/collab/bin/room-check.ps1",
+      "bytes": 12984,
+      "sha256": "0e8dc4cd90e9fbc8899109bcdd1afd67d556ace7b95a2c09df2c4db10e545ede"
+    },
+    {
+      "path": "components/Agent工作台/examples/collab/bin/room-core.ps1",
+      "bytes": 12393,
+      "sha256": "a5c1591a93799b2e8899e74dfdf400589cf9a825c2fa6667676e5cc79c2ee511"
+    },
+    {
+      "path": "components/Agent工作台/examples/collab/bin/room.ps1",
+      "bytes": 731,
+      "sha256": "438bbbbd8c857c946e1abf0e851200a316fe7a0812ba5926be6d921c4af94843"
+    },
+    {
+      "path": "components/Agent工作台/examples/collab/persona/conductor.md",
+      "bytes": 143,
+      "sha256": "36394744aabde0f472dbbff7773838fd4711dce550266236b3ae6d0d3aa2519b"
+    },
+    {
+      "path": "components/Agent工作台/examples/collab/PROTOCOL.md",
+      "bytes": 75,
+      "sha256": "703887c3be5473bf8ea2cc997ab2733ef06c9fa6f6964c6e2ca5eefefef49153"
+    },
+    {
+      "path": "components/Agent工作台/examples/collab/room/brief.md",
+      "bytes": 223,
+      "sha256": "49700bcf4021d61379bb4db50284c27da47c4731254726f91f0243c3a98fc2c0"
+    },
+    {
+      "path": "components/Agent工作台/examples/collab/room/turn.md",
+      "bytes": 54,
+      "sha256": "fe85fd8a278d3fa1d10651cce9aa23d28d1c11affc27dafc01eae18f8c1634fb"
+    },
+    {
+      "path": "components/Agent工作台/examples/neutral.png",
+      "bytes": 4336,
+      "sha256": "3dbc933bc2bf594c8f9a1dff3705df6c053364800731c273fcc287b420084a72"
+    },
+    {
+      "path": "components/Agent工作台/focus_summary.py",
+      "bytes": 650,
+      "sha256": "9e1b1af18eed4e24495e10d50e34ae551f5bf38aace84f38eeb4932b16c8527a"
+    },
+    {
+      "path": "components/Agent工作台/frontend/build.mjs",
+      "bytes": 7193,
+      "sha256": "f632abe1ef1ffefeea1214c17699c50258bc672e7d6c5829d6f97c984b5ab9c4"
+    },
+    {
+      "path": "components/Agent工作台/frontend/dist/assets/app.css",
+      "bytes": 202067,
+      "sha256": "01af378c27bad2145138acb7b8ae30fd29cf599130549c6153f3a2c0e6d15a28"
+    },
+    {
+      "path": "components/Agent工作台/frontend/dist/assets/app.js",
+      "bytes": 516893,
+      "sha256": "762905d8d57435c914bd5fe0adc7626b06fa357d91d8eb8b8b562f3571678765"
+    },
+    {
+      "path": "components/Agent工作台/frontend/dist/index.html",
+      "bytes": 556,
+      "sha256": "c6a65ff464be6a24311cbef833c45c41f9ca524fe4c7708450698bd343742e4f"
+    },
+    {
+      "path": "components/Agent工作台/frontend/dist/PHOSPHOR-LICENSE.txt",
+      "bytes": 1071,
+      "sha256": "b5b1f1da112d18ea2147decfd48ddc1bf2b5aeb6c265381579340e95b15a2bb2"
+    },
+    {
+      "path": "components/Agent工作台/frontend/dist/quick.html",
+      "bytes": 556,
+      "sha256": "c6a65ff464be6a24311cbef833c45c41f9ca524fe4c7708450698bd343742e4f"
+    },
+    {
+      "path": "components/Agent工作台/frontend/dist/tools/assets/app.css",
+      "bytes": 69852,
+      "sha256": "c647370ae225b3a9f01b11faa119807210b97f85e8b5de38f9ff5e1b7dfcef24"
+    },
+    {
+      "path": "components/Agent工作台/frontend/dist/tools/assets/app.js",
+      "bytes": 315846,
+      "sha256": "c5bf7d4004e37d22953bd50a697e3e1ddd372d2ae4a970501273a1fe97e6d64e"
+    },
+    {
+      "path": "components/Agent工作台/frontend/dist/tools/assets/workstation-bridge.js",
+      "bytes": 937,
+      "sha256": "bf9ada3df6ae6e3aa8515b1f7c25ab4da2f9ed3ec689f43ab3ea229189061b3e"
+    },
+    {
+      "path": "components/Agent工作台/frontend/dist/tools/index.html",
+      "bytes": 571,
+      "sha256": "415d3ded913272ac16a280518a4e43c58418fcf3bf5a0a2ea8772bf66ef42c46"
+    },
+    {
+      "path": "components/Agent工作台/frontend/dist/town/assets/app.css",
+      "bytes": 36388,
+      "sha256": "09dcaa44b7f7306267cf2343dfb0bae10c7180fa8099a55bc8ff8a4260f92321"
+    },
+    {
+      "path": "components/Agent工作台/frontend/dist/town/assets/app.js",
+      "bytes": 252712,
+      "sha256": "6d19a04c6727d8a8dba2b32f5b36284f678cf49a60fdc1cc6bd2779875ea2407"
+    },
+    {
+      "path": "components/Agent工作台/frontend/dist/town/assets/workstation-bridge.js",
+      "bytes": 1863,
+      "sha256": "6127baf8c6615e50654eb29041c12bd46080154761b8e56441b5885517cd3c9c"
+    },
+    {
+      "path": "components/Agent工作台/frontend/dist/town/index.html",
+      "bytes": 1637,
+      "sha256": "0f458b74ccef171849e463598d4bc232758265d80c2716871f118bad69e496d6"
+    },
+    {
+      "path": "components/Agent工作台/frontend/dist/town/yard/index.html",
+      "bytes": 1697259,
+      "sha256": "e381cb9a0a4da35b3e7be4e6dccbdcddda95b2c566187d1a11f12d83afce1351"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/app-interaction.mjs",
+      "bytes": 472,
+      "sha256": "b7f195f8e2d0ca579c40060dab289deebabaf531021e57170eab25f739d51261"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/app-layout.css",
+      "bytes": 15926,
+      "sha256": "8478ed3a080ab1ecafd95d56d419fc29580854152eba65c74cb3faebe884dc8f"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/artifact-browser.jsx",
+      "bytes": 3855,
+      "sha256": "a12be21f1f8da55f1275c1503cdd7eb2bde6d2ecb5110194fcfbc87fa7ce57c4"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/attachments.jsx",
+      "bytes": 3413,
+      "sha256": "86033fe10cb0ade2d18b157817238e5c13336ea50193c646c4da0c9c2d1caf97"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/auto-model.mjs",
+      "bytes": 2743,
+      "sha256": "2b9f03781cba75ab5b080a66982ca927369e3adecb524edf08dc8f6dbb8ad9ec"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/auto.css",
+      "bytes": 22436,
+      "sha256": "7d55055893798bd693e1f69aaebd61362ed1c5065e0300cb23a6faa5125edc0c"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/auto.jsx",
+      "bytes": 38824,
+      "sha256": "b04ed6f78d41d096e87cdd7cde46ac0446e4737a5fd4f481b0bc8ab3eec713d0"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/base.css",
+      "bytes": 620,
+      "sha256": "7a0180490df59f9a4dc562cfbc0870e9090e164d95f8bd940f846c39f018a8c9"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/chat-layout.mjs",
+      "bytes": 196,
+      "sha256": "cbd71d6aa7e3e2df15ff00996867b9b73f9ac705561f698c54fc7a4defd93fbc"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/chat-markers.mjs",
+      "bytes": 845,
+      "sha256": "1c300ebcdc3c69cb0dadb2529f343fa5e2c47c2b93fc1f584cebb7acaa45a6a8"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/claude-quota.jsx",
+      "bytes": 2949,
+      "sha256": "9f1f91aa3b31b194b3445f59723124b9bf54886c98abb03b12b4d644a51ce4b2"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/coastal-ui.css",
+      "bytes": 17534,
+      "sha256": "141c4bc5e2bc847766842594cfdf23a3fbfa96876c48b0eed1d4e2eb2df4e402"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/collaboration-files.jsx",
+      "bytes": 2395,
+      "sha256": "cdc5b874fbd94397c428cded93449d1dce20fa2ca50f50266320319fe50f6664"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/companion-page.jsx",
+      "bytes": 4735,
+      "sha256": "d5977d8dcbe881d373bf68422178b9d1678f9315c1974104594bccfae8efe297"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/companion-room-model.mjs",
+      "bytes": 921,
+      "sha256": "c666cb05c160fa47b152fb0baaf36efa4271ad0691e5791a3ec38d90d0741aef"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/companion-room.css",
+      "bytes": 2563,
+      "sha256": "3bb1e5d2e1f36c350a8c20521b59d6a10078bdd698591230f7bb5a848d385a1c"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/companion-room.jsx",
+      "bytes": 4078,
+      "sha256": "107dbb6d6cc4aab1d4640a83f897760f1456d1c4eac301c831e3afacb82a773f"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/conversation-ui.css",
+      "bytes": 2098,
+      "sha256": "0df656f24a573e3ca6fce0f0204e49cd7c7a73c694c429ccb12db486dd09e62a"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/desktop-titlebar.jsx",
+      "bytes": 3607,
+      "sha256": "659ac10ba9971180a9c5fd6c5fbcdf8cee753965e9553657f3ddf0cc57abd905"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/finish.css",
+      "bytes": 1867,
+      "sha256": "b18b69bcadd731b9bb598422e5ccaa085658ecbabe007e88a129ba89f8ffc94f"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/group-chat.css",
+      "bytes": 11505,
+      "sha256": "b912caeccfac38c3c981df9848bdee9b12659caf7b576cc0004ce24df6ff8364"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/group-chat.jsx",
+      "bytes": 16838,
+      "sha256": "9af619b1d2ed6f6d5f5f3839b6e335240162eb122b6591672c10c551ff3b4c3c"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/handoff-model.mjs",
+      "bytes": 2798,
+      "sha256": "ee2e348f9976f25350d1f5f9dfcb191b2553ac62b6a4d33a824a39a15dfb9145"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/handoff.css",
+      "bytes": 1458,
+      "sha256": "6c910c505a0beb446902c8f5ef0347a03c1feeb4133c24587e1499fdd7a76a01"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/handoff.jsx",
+      "bytes": 1457,
+      "sha256": "ef13c9a8625a6705a660f9093cceda246ec92ec9642ed7ab26440fbfea63af34"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/icon-studio.css",
+      "bytes": 2092,
+      "sha256": "acafd2594d32c52ce9b5792c17a239dfa9c64c4a749c01a06fe5ed98f0edf602"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/icon-studio.jsx",
+      "bytes": 6179,
+      "sha256": "bf60f88db3fa90c003cc2cf1262940c026746e304d80891c6c60bee35dc1597a"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/incoming-tasks.jsx",
+      "bytes": 2230,
+      "sha256": "38c5e2ed0929f9fa484c599a0c15278d4ca241bdb06ed585505a5c2e0318eeda"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/index.html",
+      "bytes": 556,
+      "sha256": "c6a65ff464be6a24311cbef833c45c41f9ca524fe4c7708450698bd343742e4f"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/main.jsx",
+      "bytes": 8836,
+      "sha256": "a89e55e3d20ff5c33c4cdd42fb4405fe612e1a8a503183d718d5ff29d3242403"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/memory-panel.css",
+      "bytes": 2607,
+      "sha256": "35dd1d3afc3ca9a926046f288554854cd33ca6a63e70a78b3021de7b363d9b0a"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/memory-panel.jsx",
+      "bytes": 6066,
+      "sha256": "651991a670e485782b0964625ae6dccea54f4d4d1ee2aa0960e7c32a531a5336"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/model.mjs",
+      "bytes": 480,
+      "sha256": "d48f60e477ce7492e95f42dbea46802458bc461c0abe50d3c5a5e3a54d1376a5"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/original-tools-entry.jsx",
+      "bytes": 6852,
+      "sha256": "5d1f54e931d82d271c0d79075eef13753581f1ea2836fb1d49ff7ef2078ffe91"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/original-tools-frame.css",
+      "bytes": 588,
+      "sha256": "a8b7151a63d38f0de49bff5c2fc6c2642072862bcd39a51850fd2d6a8d76c191"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/partner-art.css",
+      "bytes": 27065,
+      "sha256": "ad1ce67422c7324e7d5a7d9a3553ab676841966c98e3aa30a59edf5d0e54c703"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/partner-guidance.mjs",
+      "bytes": 2099,
+      "sha256": "9e4550772b7c2b5de5732fec561ca055c970531c5d701086fbbc73452441b411"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/partner-model.mjs",
+      "bytes": 5501,
+      "sha256": "abeae06a74d2174cb3b3b2d6ada56e09ff257227a462fb6418ffc14c2eff772a"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/partner-page.jsx",
+      "bytes": 5399,
+      "sha256": "e0d82fd0d65482b465fa2417d778190c4349f58f8ee411afc98c6e4983fd66ab"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/partner-ui.css",
+      "bytes": 23869,
+      "sha256": "d68899b0140f3f85cd78799c7deb74ee393db69fa9e837ead060f4731057454c"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/persona-editor.jsx",
+      "bytes": 2810,
+      "sha256": "6f53495d12feefb153cce4af6b2ef4f4220a24977fbd6a8bf5a7faf00c026105"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/persona-editor.mjs",
+      "bytes": 3383,
+      "sha256": "977eb1fa9df655a1c1bedc831bbbf22fcb321aa1e7acb38752ccea74296bac64"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/PHOSPHOR-LICENSE.txt",
+      "bytes": 1071,
+      "sha256": "b5b1f1da112d18ea2147decfd48ddc1bf2b5aeb6c265381579340e95b15a2bb2"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/quick.css",
+      "bytes": 8069,
+      "sha256": "759921b5b845a6993d354d7758bc4ce04918f80c6bbf2ccb7443a09811d685aa"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/quick.jsx",
+      "bytes": 4197,
+      "sha256": "678e15c69e61099c52d9e894c3091e601e03a271ca2a2f9f6b3833c762e064d3"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/reading-room.css",
+      "bytes": 5873,
+      "sha256": "731613c9584ef24ba6bb6effe15ee4db0e73771590dcc1594a5cf9bda1ab6d7e"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/reading-room.jsx",
+      "bytes": 12339,
+      "sha256": "e03ca0974267f7bb237aacc7f21fce823f67d45b522e26f24d398eaed6a5734c"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/remote-workspace.css",
+      "bytes": 4132,
+      "sha256": "cabc402c5db32c31bb49d518082552c646b5b5c80e008b60d41dce2725dda236"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/remote-workspace.jsx",
+      "bytes": 9132,
+      "sha256": "0fce17dc93b351ca9484e2835803a2ca0886bac176c7b3f585d3357ebe4ab346"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/responsive.css",
+      "bytes": 507,
+      "sha256": "2d9cb235b45ad1d88268fb3b982994a22f5e0632c1a94784774dab365d0a2d31"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/seat-style.css",
+      "bytes": 3075,
+      "sha256": "a798736928f6379835d946c7012f8bfde4f6fb1768526d0a687f05be80ed06e2"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/seat-style.jsx",
+      "bytes": 3333,
+      "sha256": "a88cc9a11eecfedf289b4aa6bea60735f279963c85ffba60d59230f41f9f4684"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/site-materials-model.mjs",
+      "bytes": 571,
+      "sha256": "358a87cdc8cdcf018c5df26b00744d801ab65960a1512cd0ad407d60c8c51e3e"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/site-materials.css",
+      "bytes": 6649,
+      "sha256": "5e12908fc03f1d0e28c0da77ea8ec36589b83d5b02b4fdaba3d6ccf250c061dd"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/site-materials.jsx",
+      "bytes": 15295,
+      "sha256": "37aeeaf821198ba4604f739c2eab3e0d7180ea5ea0d49a95513b6ab7395bd204"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/startup-welcome.css",
+      "bytes": 1215,
+      "sha256": "836348315243c1dd0f79abdb1b790b60ce6bd8569bcfdd7333afaba40d76e8ff"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/startup-welcome.jsx",
+      "bytes": 1002,
+      "sha256": "15d9429bfdf63aecfec4d747e80fcca73899f29b614eba6e0ea255127a128318"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/station-model.mjs",
+      "bytes": 1736,
+      "sha256": "ea176af02a7dfeafc691abd81411f99c3dc9b80ddb41a8cee8282aa94f1ad46c"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/station.css",
+      "bytes": 12682,
+      "sha256": "1f8b8b72faf82684c0f49d4f2e51aad78317437dd5a81b8d62213f42d917b99e"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/station.jsx",
+      "bytes": 47075,
+      "sha256": "69eeaf8a45d3fa29626403a8eeae580a8bfdefaffcb9072f8a159be12b1c6cef"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/style-catalog.mjs",
+      "bytes": 1146,
+      "sha256": "e374fa106cf8d9e7a3e56b4c51c653ea0a69e9c33f9342cf6bef75bfd0884786"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/style-export.jsx",
+      "bytes": 2059,
+      "sha256": "91351d88ef565a1f32f70d91a25cfc81a5aca5d256466ae244bcd09b9d6f1329"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/style.css",
+      "bytes": 11303,
+      "sha256": "d79b7addc433cefb58c7a2b3ca1ecb927b172993354357242e0e1dcbd37563f7"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/task-panel.jsx",
+      "bytes": 2678,
+      "sha256": "be2f41ae1b3d16fc9d403a0f9b632bfc646c6cbdb61e15c1ab22951fe502e43c"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/theme-picker.jsx",
+      "bytes": 5371,
+      "sha256": "566ce681e0d4365daaf734d6c52f7f020a17bd201feff9eebf9c56d0c188e9dd"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/theme.css",
+      "bytes": 356,
+      "sha256": "6692707ef371a1e9c4c52ad241bfbcc82e8901016ff07a9f679e7938e655587e"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/town-portal.jsx",
+      "bytes": 697,
+      "sha256": "b1f5743c30a83e2e0e1b5122252a3ac1ccc1e0362aaa9b04ad7548a311d2c08e"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/unified-theme.css",
+      "bytes": 31292,
+      "sha256": "fbd30ea432f275328004a66e7f5540240ea53c0b391ba21a90debf6dce3b459a"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/use-dialog.js",
+      "bytes": 2089,
+      "sha256": "32de991d8ccc25d590d9fbc4d3c35df13cfe6ef53e40579b64cda5ca3b062db0"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/workspace-transfer.mjs",
+      "bytes": 1551,
+      "sha256": "54103449def8cb9710c4a07a59b5ff20ce49b1c8ee14396ab7b39aba4b716657"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/workstation-layout.jsx",
+      "bytes": 3182,
+      "sha256": "cf838c463e132b5ac59991640c45fa0ac08845e8d836cbc40412e42bff14d79e"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/workstation-navigation.mjs",
+      "bytes": 2988,
+      "sha256": "eda6f8f0779283949f0bfd2f3c766d4e28dd4fd248975ae37e2a9fac89a4bc4e"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/workstation-pages.css",
+      "bytes": 4425,
+      "sha256": "90b9ebed1cff1db18184b09331a272143fae046bd77942e424c2e8ab34762b46"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/workstation-pages.jsx",
+      "bytes": 6990,
+      "sha256": "9b48c9bb18dc37259b03718c80bd04f8a8fb207fd116ce553efb021fa03f311c"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/workstation-preferences.jsx",
+      "bytes": 4951,
+      "sha256": "57fa2e3698098891a5cd8116e99f6cef4b7150bd97c2441222a7212040f5699c"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/workstation-shell.css",
+      "bytes": 185,
+      "sha256": "69ed8584bad1e293af219554b2c44bb2b0cd912a54a6b0aba5d4b0ab26b28077"
+    },
+    {
+      "path": "components/Agent工作台/frontend/test/app-interaction.test.mjs",
+      "bytes": 1560,
+      "sha256": "ad24ea09fcb19e2ae54b1c026b6b1347bad5b98efcdff563a115730c96774814"
+    },
+    {
+      "path": "components/Agent工作台/frontend/test/auto-model.test.mjs",
+      "bytes": 3914,
+      "sha256": "f5625c95c8f2ef9a28d973b6c7716f6f35cc3ebd6c84336e4e8dee25351e85e9"
+    },
+    {
+      "path": "components/Agent工作台/frontend/test/chat-layout.test.mjs",
+      "bytes": 413,
+      "sha256": "30f1805a09d60270d86e33263d080c795e917c98b027d7f91f013e6ffd8c9620"
+    },
+    {
+      "path": "components/Agent工作台/frontend/test/chat-markers.test.mjs",
+      "bytes": 1402,
+      "sha256": "d464e4deee2eabe932ea4a3978ce50b23b6dc43e802afdd5fea94a27016918db"
+    },
+    {
+      "path": "components/Agent工作台/frontend/test/companion-room.test.mjs",
+      "bytes": 857,
+      "sha256": "807ce9b1e0b1c1b1621b71eb57a55cf9a823ad9fe8773351dfbb9ad0d0f1c90c"
+    },
+    {
+      "path": "components/Agent工作台/frontend/test/desktop-titlebar.test.mjs",
+      "bytes": 3264,
+      "sha256": "cab3863a0e98baad972cf2688dd9c435ab9e6c230d4d8e94e3c3c2738f639d8f"
+    },
+    {
+      "path": "components/Agent工作台/frontend/test/handoff.test.mjs",
+      "bytes": 2334,
+      "sha256": "a9b592e352edf7c1b29a5f1a9bea2a49d477ae3f2ebd29a7473b6548ced23d5c"
+    },
+    {
+      "path": "components/Agent工作台/frontend/test/model.test.mjs",
+      "bytes": 782,
+      "sha256": "2959ce0c2c1660f940cbc67fe58350b3f165cc508831be5e9c32550e7055416a"
+    },
+    {
+      "path": "components/Agent工作台/frontend/test/original-tools-bridge.test.mjs",
+      "bytes": 1647,
+      "sha256": "c9bcf05a74b244d8fdc4dd0145db2d324505d64ab8b9323a2f864a2a04815f34"
+    },
+    {
+      "path": "components/Agent工作台/frontend/test/partner-guidance.test.mjs",
+      "bytes": 1299,
+      "sha256": "b00cbf5f9f202c8ff04ead8a66ed09b25a382e1a58090480c36978611a00c0e8"
+    },
+    {
+      "path": "components/Agent工作台/frontend/test/partner-model.test.mjs",
+      "bytes": 4310,
+      "sha256": "47371c6c65169b6d3a4c35c5e2d6b334d08da9d6c71e80c02e0330062b23a7cd"
+    },
+    {
+      "path": "components/Agent工作台/frontend/test/persona-editor.test.mjs",
+      "bytes": 1924,
+      "sha256": "a03a037b28f6d93f96bcf3cdac2c7c1685d54953dbc7d1c832a79aadb44b04d8"
+    },
+    {
+      "path": "components/Agent工作台/frontend/test/remote-embedded-theme.test.mjs",
+      "bytes": 2838,
+      "sha256": "e4a56e8494be1e63db07e4a02ab70efb810089ccc8bc545fbbe737e1a80b288e"
+    },
+    {
+      "path": "components/Agent工作台/frontend/test/site-materials.test.mjs",
+      "bytes": 1220,
+      "sha256": "c5e2fcfb5240175aae7f930f1827d9ef1c08e754e4b004d01fc021349493dd0f"
+    },
+    {
+      "path": "components/Agent工作台/frontend/test/station-model.test.mjs",
+      "bytes": 2755,
+      "sha256": "534b23df81fb5e2011e7000dd9f8f481c9cf1ee8547add59b4f5a45adcccc6a0"
+    },
+    {
+      "path": "components/Agent工作台/frontend/test/style-catalog.test.mjs",
+      "bytes": 1649,
+      "sha256": "6d3c0351f95840c409ec6b6c620be7c51d356b328994c62d45a8dd2be0ea7518"
+    },
+    {
+      "path": "components/Agent工作台/frontend/test/theme-integration.test.mjs",
+      "bytes": 5215,
+      "sha256": "dda7b547f3124942a0e77307a1f9dbf45c82db808f33456e8e8e470bfa0c1af6"
+    },
+    {
+      "path": "components/Agent工作台/frontend/test/theme-picker.test.mjs",
+      "bytes": 4555,
+      "sha256": "4fd95842a74a37e4196f8f454b3040bf83938099a4bc51115f3ec7d8a8cf5adb"
+    },
+    {
+      "path": "components/Agent工作台/frontend/test/workspace-transfer.test.mjs",
+      "bytes": 1466,
+      "sha256": "b4164fd0bab27ebaa2cf3c771f0e720804ad4c2881c251a8954885cd0ca09512"
+    },
+    {
+      "path": "components/Agent工作台/frontend/test/workstation-navigation.test.mjs",
+      "bytes": 1341,
+      "sha256": "63e2cc9f1ae49bbaa13443dc8899013e54e3319aea969084583ea859eb596ca7"
+    },
+    {
+      "path": "components/Agent工作台/frontend/test/workstation-pages.test.mjs",
+      "bytes": 3043,
+      "sha256": "fcb5a83570e8205792a280bdc5798d30bb032d8ea75a67876d4c0b40d62f4430"
+    },
+    {
+      "path": "components/Agent工作台/launch.pyw",
+      "bytes": 117,
+      "sha256": "950aaf603bfc2c3fbe9a7fd38fe2cf781a209bf2bcbb2ae17bc5f615529019db"
+    },
+    {
+      "path": "components/Agent工作台/LICENSE",
+      "bytes": 1106,
+      "sha256": "bd771cc526a163ecdad6019b5bffab59983d890380abe2a747118e4fd80e491b"
+    },
+    {
+      "path": "components/Agent工作台/memory_store.py",
+      "bytes": 5338,
+      "sha256": "84be13b5e52699e72135d57712c5a285f19a14814d25210acbfb8f702c70bf96"
+    },
+    {
+      "path": "components/Agent工作台/mobile_room_status.py",
+      "bytes": 2974,
+      "sha256": "86138ea0eb01808165702aec70fd64782324cfee2cb14ad0625b8aaf55ca8554"
+    },
+    {
+      "path": "components/Agent工作台/model_channels.py",
+      "bytes": 818,
+      "sha256": "304c751e9ba0a5225dc0607c402f9a6d60cc83e56f4c7f16098c4fa19d3c9258"
+    },
+    {
+      "path": "components/Agent工作台/orchestrator.py",
+      "bytes": 15894,
+      "sha256": "9ffbd6ab34db9ff75bbed777e88372ad16d0b8781c02fca8619631e5775e7673"
+    },
+    {
+      "path": "components/Agent工作台/persona_catalog.json",
+      "bytes": 4406,
+      "sha256": "d9097783cad956e93eb2fcfb7b913fe10ac2f6208a7c04cd13b6f5e447e3fa5c"
+    },
+    {
+      "path": "components/Agent工作台/persona_catalog.py",
+      "bytes": 1080,
+      "sha256": "aa1c0886ba91a2fa1be09dfaa45587896ef1e5d57d870ede4c6d928542ad84c8"
+    },
+    {
+      "path": "components/Agent工作台/provider_client.py",
+      "bytes": 7953,
+      "sha256": "d47103e90c370c8519e4414df62c21f8d03780d7dc8be37a5da8f1b7ac12b887"
+    },
+    {
+      "path": "components/Agent工作台/quick_commands.py",
+      "bytes": 2214,
+      "sha256": "08d9eb828735cf34e1aa430e41a760ad0c10f2e67aff7acc76f6765493e5287a"
+    },
+    {
+      "path": "components/Agent工作台/quick_window.py",
+      "bytes": 6142,
+      "sha256": "135206a0ee5fd9fae746c3c2f7a1d5b6c55311b8bba4854a7ba7ed7886b8769a"
+    },
+    {
+      "path": "components/Agent工作台/quota_monitor.py",
+      "bytes": 837,
+      "sha256": "bfac0cf6b2df2530c93fa39ab7460e0f85a028000aacf20c0e0e78498668c199"
+    },
+    {
+      "path": "components/Agent工作台/reading_room.py",
+      "bytes": 8599,
+      "sha256": "43200177327e6c534bd0a2274aefaee35c955ee8908a6bf4c47570f7118e0eff"
+    },
+    {
+      "path": "components/Agent工作台/remote_gateway.py",
+      "bytes": 25447,
+      "sha256": "320eaf530bcb535dcf485ecfa0fcb2bc56892aecf4eefc759866830d8379f14c"
+    },
+    {
+      "path": "components/Agent工作台/remote_programs.py",
+      "bytes": 11930,
+      "sha256": "bba4a3c7d50e8dd3d232372ea6fc5823d02a84ddef4cbf8866fe620883231d25"
+    },
+    {
+      "path": "components/Agent工作台/remote_surface.py",
+      "bytes": 8144,
+      "sha256": "798cd04a2731f00702e35e04b96ce439833edd067db91143f94842d8d3d1c522"
+    },
+    {
+      "path": "components/Agent工作台/room_store.py",
+      "bytes": 7048,
+      "sha256": "14e13a061947cb648233427c7c206fecb875e9ba51ba5510430894187e98b07a"
+    },
+    {
+      "path": "components/Agent工作台/room_town.py",
+      "bytes": 916,
+      "sha256": "0d86c2996bbf84b587c1aecd012f60838898f398f4800d7bbe6e82b8a196547d"
+    },
+    {
+      "path": "components/Agent工作台/runner.py",
+      "bytes": 2023,
+      "sha256": "54029a3c140fdfb6bfd07463faef5def8d28125700c86f3411c09a3e2ae92ee9"
+    },
+    {
+      "path": "components/Agent工作台/seat_styles.py",
+      "bytes": 1345,
+      "sha256": "6499cc1dd7d7f3f2b501a9205d651504518f87ee00d61443bab8c6ee439d3241"
+    },
+    {
+      "path": "components/Agent工作台/session_store.py",
+      "bytes": 4292,
+      "sha256": "c1ba7635cd95e1a814023688238fe2227e1d1d1e05a32ba933ea68a95e2c6f91"
+    },
+    {
+      "path": "components/Agent工作台/site_materials.py",
+      "bytes": 10990,
+      "sha256": "fb0b213114d6f35fb65173b7b85162559bffdfe151bbe4da81798502c13a5c3a"
+    },
+    {
+      "path": "components/Agent工作台/site_materials_api.py",
+      "bytes": 4458,
+      "sha256": "0fad3b3d4105157974f586654bf2ede3ce30ebd7d5b8ae167e7ca0514e5fbc2d"
+    },
+    {
+      "path": "components/Agent工作台/site_materials_export.py",
+      "bytes": 4403,
+      "sha256": "a1987888b216a1dc59411b1fcb08cc6bf4bc6c76d4c076fe78c0c0202abb2266"
+    },
+    {
+      "path": "components/Agent工作台/task_station/__init__.py",
+      "bytes": 78,
+      "sha256": "281beae8fa9aa7aecf3fe88f3f5ae4718fe9715812be6cb90dc73088c2b25ef8"
+    },
+    {
+      "path": "components/Agent工作台/task_station/adapters.py",
+      "bytes": 15434,
+      "sha256": "a125717e6e5942d41fa79ce0190d5491cec666ace1b32fcf353f56dd872ec161"
+    },
+    {
+      "path": "components/Agent工作台/task_station/attachment_worker.py",
+      "bytes": 7014,
+      "sha256": "31da2716fa60393dc94a30ad9c2b6024a66990843e595f7e3d2b2fff6bf95f3b"
+    },
+    {
+      "path": "components/Agent工作台/task_station/attachments.py",
+      "bytes": 5414,
+      "sha256": "0b5f70f6e7270d41f706c2b7945e861452c1c3bca2f8bb7fbf9ac48609da6f20"
+    },
+    {
+      "path": "components/Agent工作台/task_station/catalog.py",
+      "bytes": 850,
+      "sha256": "5b92260525272a1be6fd6ec49cf5b4983be880ef4c7c371257c5bdd1a3e65db6"
+    },
+    {
+      "path": "components/Agent工作台/task_station/client_handoff.py",
+      "bytes": 7903,
+      "sha256": "64f6a6cc224a2ef98b2cb7daa7ded4d62fe00a309cc770fe630a000258b82420"
+    },
+    {
+      "path": "components/Agent工作台/task_station/core.py",
+      "bytes": 29074,
+      "sha256": "161811de110924b118acf942e6a3b2a1f984ef96136a72dfd291f204ff69b9f0"
+    },
+    {
+      "path": "components/Agent工作台/task_station/document_export.py",
+      "bytes": 3201,
+      "sha256": "49d75fbb7bf910f394be8280deddb5427be0967a22128a44f6b976605aec9987"
+    },
+    {
+      "path": "components/Agent工作台/task_station/generation_channels.py",
+      "bytes": 10712,
+      "sha256": "a8e9919bae4cf33d3ae6377d21a177ed1f7e947de311c45297cb01df4ad3fd22"
+    },
+    {
+      "path": "components/Agent工作台/task_station/host.py",
+      "bytes": 8108,
+      "sha256": "599af16120f67c6510c534562be0f2f2bc98decb066b4ce8247b6dd641acfa05"
+    },
+    {
+      "path": "components/Agent工作台/task_station/image_ocr.ps1",
+      "bytes": 1762,
+      "sha256": "a858500e2e74fd4bfa4191d6d1d1aab2bd6a44a2190de279010d0b75a03c8858"
+    },
+    {
+      "path": "components/Agent工作台/task_station/integration/dispatch.py",
+      "bytes": 7729,
+      "sha256": "b976fe48b090d747ec6c7ebedd37616f4bfe25c34ed9b886eef67a7f931c3960"
+    },
+    {
+      "path": "components/Agent工作台/task_station/migration.py",
+      "bytes": 4608,
+      "sha256": "294c80ffa9592ec2624864ed5c3b1b202147f4ec2c489ba994c32bd2fa061a0e"
+    },
+    {
+      "path": "components/Agent工作台/task_station/presentation_assets.py",
+      "bytes": 3944,
+      "sha256": "3ce45d5e2067997b14cb423e089f7e0a03c2adbf127149e862b9a72a6e0dc33e"
+    },
+    {
+      "path": "components/Agent工作台/task_station/presentation_export.py",
+      "bytes": 14438,
+      "sha256": "378606422de0842cf40b4cc6a0c709e6b25490438e1515cb92e378c8526daa20"
+    },
+    {
+      "path": "components/Agent工作台/task_station/quota.py",
+      "bytes": 3842,
+      "sha256": "2bad362c021cd625890049a8e5c43aab3d1ec48202e4c19d2790ac9280565fb4"
+    },
+    {
+      "path": "components/Agent工作台/task_station/review.py",
+      "bytes": 8726,
+      "sha256": "4922d590ec82d0abe4594a65d1d44cfe3f88608fee502d199b7a2df77a32fabb"
+    },
+    {
+      "path": "components/Agent工作台/task_station/spreadsheet_export.py",
+      "bytes": 13465,
+      "sha256": "7832b32d32eb50c818bb87e29b4047fb5be61a716d64cc1c43529d7c4e31f4c4"
+    },
+    {
+      "path": "components/Agent工作台/task_station/templates.json",
+      "bytes": 5892,
+      "sha256": "a6e11a96b2e8012f619742e74ab56ad5078ad4281f5ca159bd08ba218bd92b1f"
+    },
+    {
+      "path": "components/Agent工作台/tests/icon_studio_fixture.py",
+      "bytes": 1613,
+      "sha256": "786d0137f4e08cf9bb3626d5284fcd0a0cce30856e3b4efe9d0f65df1e50dd3c"
+    },
+    {
+      "path": "components/Agent工作台/tests/layout_probe.js",
+      "bytes": 1485,
+      "sha256": "a0d9cbfdde0d58b0ce66ff2aef2af5e71fe895f225a1ad8e07900a16ec4ee14f"
+    },
+    {
+      "path": "components/Agent工作台/tests/native_theme_capture.py",
+      "bytes": 813,
+      "sha256": "c6e4a86ebfb4ee035a568bbb2d65dfd388072683b8b28f18b3141f0376c09da9"
+    },
+    {
+      "path": "components/Agent工作台/tests/single_window_smoke.js",
+      "bytes": 15391,
+      "sha256": "23c7fadc7584cc7e9b9913a0df5f1464e4cd552f61a0a9f70efd86fca69e4e70"
+    },
+    {
+      "path": "components/Agent工作台/tests/test_api.py",
+      "bytes": 12603,
+      "sha256": "eeb457af6cdde9aa4379ef36d6669e4d5d53b464171161754a5b1de5b53d749e"
+    },
+    {
+      "path": "components/Agent工作台/tests/test_appearance.py",
+      "bytes": 1461,
+      "sha256": "57e8752603ea85ab7e106918aa3f55f094e0f21a666727f6060ccfe6c3c949ba"
+    },
+    {
+      "path": "components/Agent工作台/tests/test_artifact_browser.py",
+      "bytes": 4072,
+      "sha256": "0e7664afc87447ed24537d2e8fed98d7912c6cb00ac929a0ea1db184f9f6562d"
+    },
+    {
+      "path": "components/Agent工作台/tests/test_attachments.py",
+      "bytes": 3034,
+      "sha256": "a2ce1631f1af113f543e9811d6b503bb5d2c4dc8e324f970c09d1390cd2f6642"
+    },
+    {
+      "path": "components/Agent工作台/tests/test_auto_bridge.py",
+      "bytes": 5844,
+      "sha256": "b0bfb836eef2e6e8ce0ee91f1ce7d8a47e42b5170ad5155534527e5c81c8bdf7"
+    },
+    {
+      "path": "components/Agent工作台/tests/test_butler_center.py",
+      "bytes": 3574,
+      "sha256": "7874b7a646970c710cc3af1ce816a9a8289209a2fc7e1f7cc1fbadc190b23ff5"
+    },
+    {
+      "path": "components/Agent工作台/tests/test_channels.py",
+      "bytes": 6115,
+      "sha256": "4cc08ee52ff500207a509f825b5e933748ba9e343aa81b06efd7292a16a19261"
+    },
+    {
+      "path": "components/Agent工作台/tests/test_chat.py",
+      "bytes": 14789,
+      "sha256": "869d59d2d0c513e954bbcb3b47bfa8ad2b65cd0bde83c8f21154bd5c1bc98f10"
+    },
+    {
+      "path": "components/Agent工作台/tests/test_collaboration_files.py",
+      "bytes": 7749,
+      "sha256": "cd44668cc9780b4137a4301e47a143275af9436ac1c1295a58af9e4eb4b0ff25"
+    },
+    {
+      "path": "components/Agent工作台/tests/test_companion.py",
+      "bytes": 3820,
+      "sha256": "643546972f9c336912b8202316c85ef35cb2cb6a2f857eebf1dba06533a5cdf3"
+    },
+    {
+      "path": "components/Agent工作台/tests/test_companion_room.py",
+      "bytes": 4741,
+      "sha256": "842cca0eaa80c620dee5cbaae4bb2549b1b8ac4861c8fbbbaf8feb9a89fa4977"
+    },
+    {
+      "path": "components/Agent工作台/tests/test_desktop_assistant.py",
+      "bytes": 2475,
+      "sha256": "d5cb2a629cc596291b1e3b194e581f1bc7b91f46ddf91c68164957830ef789b4"
+    },
+    {
+      "path": "components/Agent工作台/tests/test_desktop_chrome.py",
+      "bytes": 3292,
+      "sha256": "b78ca8f44694b5accae248af585e3cc8e350b084ad4b867df8a4dc88b9eaeb45"
+    },
+    {
+      "path": "components/Agent工作台/tests/test_document_export.py",
+      "bytes": 3340,
+      "sha256": "ef601b43cccbc383a0a6e66bdfc4c026031c112456f74a81d42f3c405c2ce86d"
+    },
+    {
+      "path": "components/Agent工作台/tests/test_execution_modes.py",
+      "bytes": 4959,
+      "sha256": "138c729daf4407fcd0a2dc11cc86056e10e0303ca75a4723a75a826b0beeeb28"
+    },
+    {
+      "path": "components/Agent工作台/tests/test_focus_summary.py",
+      "bytes": 1334,
+      "sha256": "9fdcd3db7362889de22facde463e4a0296a7cbdbf5a2e497c43e68b2e4a210c1"
+    },
+    {
+      "path": "components/Agent工作台/tests/test_icon_import.py",
+      "bytes": 2313,
+      "sha256": "a044cad89571337c8fb436a37a0ad4e5be6f353798863565f773ac8f044c84a2"
+    },
+    {
+      "path": "components/Agent工作台/tests/test_inline_icons.py",
+      "bytes": 3807,
+      "sha256": "aee85c99254da4d39d767c8b055837a3999d5be2b4c44f9ae00b3c8c2ecaeeb6"
+    },
+    {
+      "path": "components/Agent工作台/tests/test_memory.py",
+      "bytes": 3332,
+      "sha256": "70721d232aea1dea56b06da9a9998ba813431501be43ef1a84b111f3bd3b223f"
+    },
+    {
+      "path": "components/Agent工作台/tests/test_mobile_room_status.py",
+      "bytes": 2531,
+      "sha256": "6b03b28f3aaedfd1852dab6f09954b23c3b750d89049061f330863b54d0a1ad4"
+    },
+    {
+      "path": "components/Agent工作台/tests/test_original_tools_embed.py",
+      "bytes": 1452,
+      "sha256": "caa10ca5f99fb313d788df7bad5de04c77c8f6e8cfa9b78bf3f45aaeb4da0c7a"
+    },
+    {
+      "path": "components/Agent工作台/tests/test_partner_notes.py",
+      "bytes": 1791,
+      "sha256": "4eec0a6eed3e8da36d3197c91f5de257ddf5fa667bfa58362de8acd99f3cb879"
+    },
+    {
+      "path": "components/Agent工作台/tests/test_personas.py",
+      "bytes": 2673,
+      "sha256": "a964cdf9e629add2f50fbb6eccb91791f3f0f6fcacfe42f958a140f4b48cb5e5"
+    },
+    {
+      "path": "components/Agent工作台/tests/test_pet_content_sections.py",
+      "bytes": 3945,
+      "sha256": "2cc9095a8ecfb6de867793ad97ee102bdc946696586afb0b0a0fbd50bb002059"
+    },
+    {
+      "path": "components/Agent工作台/tests/test_pet_notices.py",
+      "bytes": 2196,
+      "sha256": "4b32d3543860d2f26d8ec7bd36dac52406df2b14e652022ed25384afa7373782"
+    },
+    {
+      "path": "components/Agent工作台/tests/test_pet_workstation_client.py",
+      "bytes": 2905,
+      "sha256": "8f6dc2808e270447b7769bfca93cda176facc52db80aec7df39c9fd4a24a06b1"
+    },
+    {
+      "path": "components/Agent工作台/tests/test_presentation_export.py",
+      "bytes": 2581,
+      "sha256": "a6f86a2715918ac5ac10b78d88328482ea784e19645abaf9a21e84e0427715f9"
+    },
+    {
+      "path": "components/Agent工作台/tests/test_presentation_images.py",
+      "bytes": 3785,
+      "sha256": "683918e447d4208f1270eda93229035719e548abf367adb09dce61df3b13fd25"
+    },
+    {
+      "path": "components/Agent工作台/tests/test_provider.py",
+      "bytes": 4120,
+      "sha256": "95380f47ec67a081d8d38ecbae7774f9cf3018958e3badddb82f2419bdd7c9c9"
+    },
+    {
+      "path": "components/Agent工作台/tests/test_quick_commands.py",
+      "bytes": 1753,
+      "sha256": "4a6d931201f7d4a0425ec069c8525e406fffeb48667fc1c5cc18d157b818495f"
+    },
+    {
+      "path": "components/Agent工作台/tests/test_quota.py",
+      "bytes": 2500,
+      "sha256": "424fa8cfbaf6ac67d5d90d37d5ee5ec14e5159514b3f4d54013a23e31c2d0458"
+    },
+    {
+      "path": "components/Agent工作台/tests/test_reading_room.py",
+      "bytes": 3480,
+      "sha256": "930aee175207a5d84af35ad4a59cac9c3d2fdc8c9c61325cb1dbc3f6feb1202d"
+    },
+    {
+      "path": "components/Agent工作台/tests/test_remote_gateway.py",
+      "bytes": 19759,
+      "sha256": "557ce460ff81c5317bbc95653c3c03b64289e91cd684270961682a672854c444"
+    },
+    {
+      "path": "components/Agent工作台/tests/test_remote_programs.py",
+      "bytes": 10012,
+      "sha256": "5c16085e1a3f5cdaca5ed5091813504e35b7e263f88c8b12052fc5fcbfd9720e"
+    },
+    {
+      "path": "components/Agent工作台/tests/test_remote_surface.py",
+      "bytes": 7838,
+      "sha256": "43055506525ec1fa8fb32b9f85b25d7d16464a38190d82f1637d50bc7269c78f"
+    },
+    {
+      "path": "components/Agent工作台/tests/test_runner.py",
+      "bytes": 3084,
+      "sha256": "d833d9a964536fde9268c52049ef37dc53e070faccdf100b5de8e7226ed04424"
+    },
+    {
+      "path": "components/Agent工作台/tests/test_site_materials.py",
+      "bytes": 6241,
+      "sha256": "8276fa60871fff0806f7bb0c380c2fc2f19ffed2167baf74fd3563083a686bca"
+    },
+    {
+      "path": "components/Agent工作台/tests/test_site_materials_api.py",
+      "bytes": 5046,
+      "sha256": "2e4eb9895094de091a3c53fae8744fbc0bb55aae4e64a8df9f1bb9539f79a2e3"
+    },
+    {
+      "path": "components/Agent工作台/tests/test_spreadsheet_export.py",
+      "bytes": 5724,
+      "sha256": "859fe99d8eb4a9077cf5e36de8c303bfbff8d8e22f438d460365a6774018ec12"
+    },
+    {
+      "path": "components/Agent工作台/tests/test_station.py",
+      "bytes": 12141,
+      "sha256": "0f7fc069e2ea8aaabdf6bc607e3a93eb9dc299367be60d6223facc19de015107"
+    },
+    {
+      "path": "components/Agent工作台/tests/test_station_migration.py",
+      "bytes": 1947,
+      "sha256": "0c41ec1b9c1e6345a56e77376061b75a3ad5fec3205d0cdf9657c5b7b62a1534"
+    },
+    {
+      "path": "components/Agent工作台/tests/test_station_options.py",
+      "bytes": 3328,
+      "sha256": "716eebc9f012f38713e2cd3e66e340bed270da6a12b01822b0d26571827bc6f1"
+    },
+    {
+      "path": "components/Agent工作台/tests/test_task_allocation.py",
+      "bytes": 8034,
+      "sha256": "01706bc598d4514a77e03d150967df79f8aed9ac37d92535ffbc47a067c516d6"
+    },
+    {
+      "path": "components/Agent工作台/tests/test_town_adapter.py",
+      "bytes": 3767,
+      "sha256": "08a8ef9f7183f07b3554480bbcae1d7ef537fbc205cade7f1a5e96a19754bfeb"
+    },
+    {
+      "path": "components/Agent工作台/tests/test_tray_actions.py",
+      "bytes": 878,
+      "sha256": "b6864d8487e1323b94d92e267ca1e237b1fc0e648b8fea4b65723ea6b77ac920"
+    },
+    {
+      "path": "components/Agent工作台/tests/test_workbench.py",
+      "bytes": 5802,
+      "sha256": "5da368b47259adb7c1f909c03a90e5e72b9c0d5a3ad9673003c141f9ccaaac9c"
+    },
+    {
+      "path": "components/Agent工作台/tests/test_workstation_core.py",
+      "bytes": 11174,
+      "sha256": "9f4fb3ee8d96f6f2ba3437e00f3c7e4de98110d63e2c5e442109f281c9309f9b"
+    },
+    {
+      "path": "components/Agent工作台/tests/test_workstation_zones.py",
+      "bytes": 2564,
+      "sha256": "e7a32b6f544a25299b7f29fc5c9d844210118ebcb92aa8ed2310af7f75d3feb2"
+    },
+    {
+      "path": "components/Agent工作台/tool_worker.py",
+      "bytes": 2230,
+      "sha256": "b39ba2ab7785c8c56ba8ef7fc0c67f316d030bdd06d81e9c0d276c1ee5c55f51"
+    },
+    {
+      "path": "components/Agent工作台/town_adapter.py",
+      "bytes": 6396,
+      "sha256": "3ce2ab79e54c21b142e3f61d8791571c1fdf783f6d31d2a1cac9fc466b2616cf"
+    },
+    {
+      "path": "components/Agent工作台/workbench_notices.py",
+      "bytes": 1865,
+      "sha256": "3f011e247be8caa35159576f4688984454c1c6376b9af04aab21cd5122e101ea"
+    },
+    {
+      "path": "components/Agent工作台/workstation_core.py",
+      "bytes": 21879,
+      "sha256": "0eedde291752611ff7d34627306c0b9d91a82e1a52e7c511b28c39c6878d1bff"
+    },
+    {
+      "path": "components/Agent工作台/workstation_tray.py",
+      "bytes": 2421,
+      "sha256": "dc63b22010fbf0a38da9c450c8823780af5d94193679952bc9d5444020f5e253"
+    },
+    {
+      "path": "components/Agent工作台/workstation_zones.py",
+      "bytes": 2611,
+      "sha256": "d31db41c49bc8a7c52e0071b06252108fc7d6a1913593ab6764462b0ed51e9ab"
+    },
+    {
+      "path": "components/个人工具中心/app.py",
+      "bytes": 11873,
+      "sha256": "8d1ea2ef6d0632338b0f691627a67829d678d1158d1aa20ec385087f1a6cd6df"
+    },
+    {
+      "path": "components/个人工具中心/card_images.py",
+      "bytes": 2575,
+      "sha256": "0fefe04df8de2ad70b5aaf8f854e3b068359ebe405c53a50fad489a1ee988b30"
+    },
+    {
+      "path": "components/个人工具中心/center.py",
+      "bytes": 6720,
+      "sha256": "a18a3c00bd00545386bfbcf7d7873e104b7309812f06946374e7a9671ce31eab"
+    },
+    {
+      "path": "components/个人工具中心/focus_model.py",
+      "bytes": 2955,
+      "sha256": "8f3ff05116b5834bf19e22dfb04fb555d436146eeb794eddfa3a340185c13f20"
+    },
+    {
+      "path": "components/个人工具中心/focus_ui.py",
+      "bytes": 7777,
+      "sha256": "18b7d18063a79b6146c341742d14d749f57d3a7bcc73a6955a464be87edfe4e9"
+    },
+    {
+      "path": "components/个人工具中心/game_icons.py",
+      "bytes": 1440,
+      "sha256": "0ff074cb1f34e4858402ab1a62412a9b21ebb3297f046ff7569e6c5de6a79275"
+    },
+    {
+      "path": "components/个人工具中心/icon_cards.py",
+      "bytes": 7865,
+      "sha256": "9dc0130d6ef6fe16319cbc6dcf8fb72e77b3535f6af3f099a5c67601536c2ed9"
+    },
+    {
+      "path": "components/个人工具中心/icon_import.py",
+      "bytes": 2434,
+      "sha256": "0e9ea3bd666494d1e71dbc29aa42addd33bd4353d49fb2583fa8c6b86958008e"
+    },
+    {
+      "path": "components/个人工具中心/icon_studio_api.py",
+      "bytes": 5895,
+      "sha256": "9fd82675c57c12bf1e6ff77fc141f2e75f4388da91d988e04aaa90032591a6cb"
+    },
+    {
+      "path": "components/个人工具中心/launch.ps1",
+      "bytes": 3630,
+      "sha256": "81401381190c6026921c64003ff9f5832a0ba666441f8765a566431497998ab1"
+    },
+    {
+      "path": "components/个人工具中心/LICENSE",
+      "bytes": 1106,
+      "sha256": "bd771cc526a163ecdad6019b5bffab59983d890380abe2a747118e4fd80e491b"
+    },
+    {
+      "path": "components/个人工具中心/materials.py",
+      "bytes": 1834,
+      "sha256": "dd8afa769b2aa44651c807f902f565c6b40ab4b86e3fe06920f15c1b1fcf4d9e"
+    },
+    {
+      "path": "components/个人工具中心/materials_ui.py",
+      "bytes": 6868,
+      "sha256": "7024e4e8c543e13ff603440dd6bbdaa19f8ec574f68eb910e9abb399ad102e1d"
+    },
+    {
+      "path": "components/个人工具中心/playful_layout.py",
+      "bytes": 520,
+      "sha256": "2ab9102ddec221c3ec22a6ca68e6d8e1d8e1577fcb1db19bdd21f20b5831575b"
+    },
+    {
+      "path": "components/个人工具中心/playful_store.py",
+      "bytes": 1142,
+      "sha256": "8d25333a014f2294908fb80322ec944e09f9ab81232469c2974349a05a5558e0"
+    },
+    {
+      "path": "components/个人工具中心/playful_tools.py",
+      "bytes": 1272,
+      "sha256": "24ee1cac3616eb0686a25a039f95f742ea036a5d2e8fe5d920c1b9ee4f907f0f"
+    },
+    {
+      "path": "components/个人工具中心/pokemon_assets.py",
+      "bytes": 646,
+      "sha256": "fed777a53e3b1983d3478bc5158d321ea2705b47a21ad76a25a4c7f139532264"
+    },
+    {
+      "path": "components/个人工具中心/quickpack.py",
+      "bytes": 2071,
+      "sha256": "2d7b3a5a32b7149c1ab7284d752d9e464619e256fbd8522337a365fbb9da642d"
+    },
+    {
+      "path": "components/个人工具中心/shell_icon_check.py",
+      "bytes": 2242,
+      "sha256": "1ac994551fe112ca71610d087eeead1730a6d0a240ee5b5f80aed28d6f564408"
+    },
+    {
+      "path": "components/个人工具中心/shortcut_bridge.ps1",
+      "bytes": 3400,
+      "sha256": "6ff68ae3821e26e91c42751f8232aaec42ff3ab418840260f984eed3802eae82"
+    },
+    {
+      "path": "components/个人工具中心/shortcut_model.py",
+      "bytes": 13461,
+      "sha256": "6684359bf94e93f6a098275ef3c6074fb757b6c9c2a28cc6623871cd41d21f0f"
+    },
+    {
+      "path": "components/个人工具中心/shortcut_ui.py",
+      "bytes": 13276,
+      "sha256": "6daab95112011c8fd9b49bdebb006a2698a91c3d4d2e5005be0ac6d7778b61dc"
+    },
+    {
+      "path": "components/个人工具中心/soft_background.py",
+      "bytes": 3780,
+      "sha256": "00e3458956075c4bbb669001264ff566377aa46b7d1cebf201e56f780ea97ff2"
+    },
+    {
+      "path": "components/个人工具中心/steam_reader.py",
+      "bytes": 3702,
+      "sha256": "bedca428f57c54b488d1b8f303985b7b915a6f260d587b33928eb3da409675ce"
+    },
+    {
+      "path": "components/个人工具中心/system_icons.py",
+      "bytes": 7924,
+      "sha256": "f13b50847d0927a57bcb064e5b466684315fbb243e9975e24957371f1c3471ec"
+    },
+    {
+      "path": "components/个人工具中心/tests/test_center.py",
+      "bytes": 4864,
+      "sha256": "68345559a898adf34aae1d70a8aef64ff3c4de26fb59c8a05528fb62a8549dea"
+    },
+    {
+      "path": "components/个人工具中心/tests/test_focus.py",
+      "bytes": 2029,
+      "sha256": "cc5601fd14fdf15944faec1d7a3918868e75d61778c76b475e0118c81783a72b"
+    },
+    {
+      "path": "components/个人工具中心/tests/test_icon_cards.py",
+      "bytes": 1831,
+      "sha256": "0079d43b5298f9471b0adcac875d01200a3cd2867817bdb1e6b437ff94eacdb3"
+    },
+    {
+      "path": "components/个人工具中心/tests/test_icon_preview.py",
+      "bytes": 1126,
+      "sha256": "098c5a923a05d6fdfbe1acdc7bf107f36fc9076f5c366478b26bf556a9cd84ce"
+    },
+    {
+      "path": "components/个人工具中心/tests/test_list_rows.py",
+      "bytes": 2244,
+      "sha256": "a3aa89a20932b05b052be36005e0802d709310b04dd981886c31d69b0f8be3ce"
+    },
+    {
+      "path": "components/个人工具中心/tests/test_materials.py",
+      "bytes": 4093,
+      "sha256": "ec9626438744c925adf7d37d89fb7f3d0bfe89740144366ef92294470c87ff3c"
+    },
+    {
+      "path": "components/个人工具中心/tests/test_playful_tools.py",
+      "bytes": 4644,
+      "sha256": "ef3aa81b28d1fdf464745bb1169baaf3247ccf50f782b56be71abb2562f73524"
+    },
+    {
+      "path": "components/个人工具中心/tests/test_shortcut_windows.py",
+      "bytes": 2720,
+      "sha256": "d5e120a0f045e9cccd2da310b556423ffa457c699b77ff13718c8e669480754a"
+    },
+    {
+      "path": "components/个人工具中心/tests/test_shortcuts.py",
+      "bytes": 9279,
+      "sha256": "04720eb7093597750521974021a8934ee76d6b3fc02f06360169230c32d11c0d"
+    },
+    {
+      "path": "components/个人工具中心/tests/test_system_icons.py",
+      "bytes": 4706,
+      "sha256": "db8b5b00bf66c1afeb6513897e0e7d799de7e39a5169d175a0dabd50d366db64"
+    },
+    {
+      "path": "components/个人工具中心/tests/test_ui.py",
+      "bytes": 2775,
+      "sha256": "185bf7d506cf5c918f5f979ee11beb457e274b2047828ac8f93037ff4ec20281"
+    },
+    {
+      "path": "components/个人工具中心/tests/test_wheel.py",
+      "bytes": 2179,
+      "sha256": "5c81e08834f873e544d13c8d6b868fffacbb85021a30d6a9918d3c57613f487d"
+    },
+    {
+      "path": "components/个人工具中心/ui_preferences.py",
+      "bytes": 7876,
+      "sha256": "419fc2da7b1065136d1513bc8d32e84b3a3711094afd1f1483b689be591cba8b"
+    },
+    {
+      "path": "components/个人工具中心/wheel_model.py",
+      "bytes": 1575,
+      "sha256": "a2221265684346b232e452b7ac4e06c7adff0fe7aab6bff1017b4b58f01f0a6c"
+    },
+    {
+      "path": "components/个人工具中心/wheel_steam.py",
+      "bytes": 1367,
+      "sha256": "3aa71326d2d34315e22973a2ec0ac3539faac8751117c349f5c9032066a8b6eb"
+    },
+    {
+      "path": "components/个人工具中心/wheel_ui.py",
+      "bytes": 11656,
+      "sha256": "992789dffb0f1d543688e6e9c1fc6144ca43ae2abbcd5550a87ef64517e76029"
+    },
+    {
+      "path": "components/个人工具中心/win_icons.py",
+      "bytes": 4593,
+      "sha256": "457ca14dc779e8fe7683ef9dcd5940195f5c0af9d8ddd429983b59a5133c587c"
+    },
+    {
+      "path": "components/个人工具中心新版/app.py",
+      "bytes": 4616,
+      "sha256": "566fdcfe01524e48b4799d5403536cc80c70b4a9bdfa314fed5da1f38d1b7acd"
+    },
+    {
+      "path": "components/个人工具中心新版/app_link_client.py",
+      "bytes": 7425,
+      "sha256": "aaf322b89f77911de55dfc04bf46fa344525bfafe205217114fcc80f0a827d47"
+    },
+    {
+      "path": "components/个人工具中心新版/assets/app.ico",
+      "bytes": 2133,
+      "sha256": "85e860fa148de3eccb4795c489d552dde6092f51e92157e61a7d3a870c9b8e04"
+    },
+    {
+      "path": "components/个人工具中心新版/backend.py",
+      "bytes": 23508,
+      "sha256": "ee80f5ec661b1ead57b0b75771422d127426c7d0eee278d9614b0e2c1a50d863"
+    },
+    {
+      "path": "components/个人工具中心新版/bridge_boundary.py",
+      "bytes": 1359,
+      "sha256": "5e0466803b48345ac1805d784e18fde03d65b412e28a4a411b1f49ba10f6d5e3"
+    },
+    {
+      "path": "components/个人工具中心新版/focus.py",
+      "bytes": 71,
+      "sha256": "25890dcad9c1dcb0335051f0d98ec75fe6f6452f2926b4e5ba59b21b87f91da2"
+    },
+    {
+      "path": "components/个人工具中心新版/frontend/dist/assets/app.css",
+      "bytes": 69435,
+      "sha256": "c215e4f7fd10eab7ab5a288e320a5acbaa7e172572e11265e27d1d2610f35fea"
+    },
+    {
+      "path": "components/个人工具中心新版/frontend/dist/assets/app.js",
+      "bytes": 359050,
+      "sha256": "b2a775215db5593d1364cbf133ec6d6becc6c1e2e08fe739ccb9c5af14d36360"
+    },
+    {
+      "path": "components/个人工具中心新版/frontend/dist/index.html",
+      "bytes": 1520,
+      "sha256": "533a8b4617870651265358d3615c769b8345fce9ff13730b3bf1f2364b559a13"
+    },
+    {
+      "path": "components/个人工具中心新版/frontend/package.json",
+      "bytes": 689,
+      "sha256": "b7e22b9f5e69804fd750904c0fb298aa7b71ae105fbd4ae0a9c94f1484077f50"
+    },
+    {
+      "path": "components/个人工具中心新版/frontend/pnpm-lock.yaml",
+      "bytes": 9840,
+      "sha256": "e311630f4bc4c761ae422837dd2ae04514024befb79acb963fa989959c178e93"
+    },
+    {
+      "path": "components/个人工具中心新版/frontend/pnpm-workspace.yaml",
+      "bytes": 30,
+      "sha256": "a8dbaf09fa36dd9d340ed79ee1b110240dd5dea0f269582f26a1136a2e745bbd"
+    },
+    {
+      "path": "components/个人工具中心新版/frontend/scripts/build.mjs",
+      "bytes": 2196,
+      "sha256": "e8f583d1c27d07c623e3fe6df5ff9e8d2fabaeed4137bcd38c0e35f21904f4b4"
+    },
+    {
+      "path": "components/个人工具中心新版/frontend/scripts/esbuild-binary.mjs",
+      "bytes": 1889,
+      "sha256": "8c5f281e1f4bce9a2dbf6bdfbebdf351fba77f47f52e82e2c601f212b44f5ed9"
+    },
+    {
+      "path": "components/个人工具中心新版/frontend/scripts/serve.mjs",
+      "bytes": 1803,
+      "sha256": "7ee03d4f74fc8804f55511f8d3393d7c7d22861bd5d4e8c8a231b1a8d55c2824"
+    },
+    {
+      "path": "components/个人工具中心新版/frontend/src/App.jsx",
+      "bytes": 8842,
+      "sha256": "18667d8f9c370e11625beb528fc6bece944e97eb4da09bd7519fcaf24c580185"
+    },
+    {
+      "path": "components/个人工具中心新版/frontend/src/components/AddGameDialog.jsx",
+      "bytes": 4406,
+      "sha256": "979d11048a336e0c32af8cb3531a972a43b3663db6f60258162866aa1488f312"
+    },
+    {
+      "path": "components/个人工具中心新版/frontend/src/components/Brand.jsx",
+      "bytes": 1016,
+      "sha256": "d7ed104b03cdd0e64a5d0b115b92caa9a1a1746a2a29faf68ebcaa57bc84cf8f"
+    },
+    {
+      "path": "components/个人工具中心新版/frontend/src/components/ConnectionScreen.jsx",
+      "bytes": 3238,
+      "sha256": "11c515f32ee6be9198763bd801d7023ca26ddf1dd5a9416d592fbff6569fd4d6"
+    },
+    {
+      "path": "components/个人工具中心新版/frontend/src/components/ErrorBoundary.jsx",
+      "bytes": 1208,
+      "sha256": "35a5d180c683520d47ab2969758d374dea1c832292a15a9791bfc74efc39493d"
+    },
+    {
+      "path": "components/个人工具中心新版/frontend/src/components/GameDetailDialog.jsx",
+      "bytes": 15467,
+      "sha256": "c864ad910d5db95ceb3da539dfa0e41d3ab0e37425e35e602d477dad8455947a"
+    },
+    {
+      "path": "components/个人工具中心新版/frontend/src/components/JobCard.jsx",
+      "bytes": 3623,
+      "sha256": "4be29deeff3210ff4d7366aacaf16e721f06492c06484c063dd3fcc91216a934"
+    },
+    {
+      "path": "components/个人工具中心新版/frontend/src/components/Modal.jsx",
+      "bytes": 4691,
+      "sha256": "f6da1383458eed1f237c58d33ddb6b91aeaa572609bd973a0c4c5ee7ffb768d1"
+    },
+    {
+      "path": "components/个人工具中心新版/frontend/src/components/PetButton.jsx",
+      "bytes": 1420,
+      "sha256": "8702b323a9dc4245c8a22b53270644ab7331282066ef0c42d0b055aa2b9c203c"
+    },
+    {
+      "path": "components/个人工具中心新版/frontend/src/components/Sidebar.jsx",
+      "bytes": 3013,
+      "sha256": "8663c9a9e6e2603db0097b600457bb822ff64e834bb51a02676062ae886c8802"
+    },
+    {
+      "path": "components/个人工具中心新版/frontend/src/components/Toasts.jsx",
+      "bytes": 3084,
+      "sha256": "527d2a823f7b25ad066e2efec0a2eb597b796b8cf92ade2279c149fd081ace81"
+    },
+    {
+      "path": "components/个人工具中心新版/frontend/src/components/ToolIcon.jsx",
+      "bytes": 2549,
+      "sha256": "7fef181cf226c8a7cf9e4b6783a0e40ed756c8a021d810e56120338daa769923"
+    },
+    {
+      "path": "components/个人工具中心新版/frontend/src/components/TopBar.jsx",
+      "bytes": 9786,
+      "sha256": "5c3d533f259fcd102b212e0c86e1894568093f4fe8449cf1589a3560a786378c"
+    },
+    {
+      "path": "components/个人工具中心新版/frontend/src/components/ui.jsx",
+      "bytes": 5125,
+      "sha256": "85ebed6f96c4ff0f9079cb2632eda83a282d1fe634a5f9b615e6b941d4d135da"
+    },
+    {
+      "path": "components/个人工具中心新版/frontend/src/finish.css",
+      "bytes": 1584,
+      "sha256": "113fbbb4c6df0855175908f2cca6c7e06ef6ec9d963f16a80d5058c18dfd7906"
+    },
+    {
+      "path": "components/个人工具中心新版/frontend/src/hooks/useToolCenter.js",
+      "bytes": 11610,
+      "sha256": "7b59e6ab129231fa5ff331f9996231f06b75afbe2b7cd2853220b42d63c0b76d"
+    },
+    {
+      "path": "components/个人工具中心新版/frontend/src/index.html",
+      "bytes": 1520,
+      "sha256": "533a8b4617870651265358d3615c769b8345fce9ff13730b3bf1f2364b559a13"
+    },
+    {
+      "path": "components/个人工具中心新版/frontend/src/lib/bridge.js",
+      "bytes": 2801,
+      "sha256": "fd3ee635de133abffae17cdde91f2de56f4188cc02cf85ece9988b54eb55c12e"
+    },
+    {
+      "path": "components/个人工具中心新版/frontend/src/lib/format.js",
+      "bytes": 3765,
+      "sha256": "c73f5394fb653a39003140227f6117bb014a277b935ef524b2c88e518ecb79b3"
+    },
+    {
+      "path": "components/个人工具中心新版/frontend/src/lib/gameIcon.js",
+      "bytes": 547,
+      "sha256": "3b5a47a6021e20f7e88f7affb2ee53323f0d9da1c1557bfc15c21637f7b9f3b5"
+    },
+    {
+      "path": "components/个人工具中心新版/frontend/src/lib/jobs.js",
+      "bytes": 1731,
+      "sha256": "1a333eb781cc9ce6d6a0f7a9624b988b35e2fbd62676264799570f71b91ae443"
+    },
+    {
+      "path": "components/个人工具中心新版/frontend/src/lib/pack.js",
+      "bytes": 2558,
+      "sha256": "1b1951e24753034a025be5d7fadaed8c2ea20d0084a8c36d9ac075c0fc2a283e"
+    },
+    {
+      "path": "components/个人工具中心新版/frontend/src/lib/recent.js",
+      "bytes": 702,
+      "sha256": "e02b47710fb4531858f8fe4159251372c3f2acb66df6c1cb16722f6e9b37ef0d"
+    },
+    {
+      "path": "components/个人工具中心新版/frontend/src/lib/search.js",
+      "bytes": 7078,
+      "sha256": "f2c7ffe965fbb1fce64b5572b7b3888be4771e84cc2698b3a488fd42b0ba44df"
+    },
+    {
+      "path": "components/个人工具中心新版/frontend/src/main.jsx",
+      "bytes": 352,
+      "sha256": "dc9c36b86ded3d245f16ca636bfa1ed06d40b29efa98421849398fa8b1ac6fda"
+    },
+    {
+      "path": "components/个人工具中心新版/frontend/src/pages/Games.jsx",
+      "bytes": 12673,
+      "sha256": "08cf3f16e0b75883b02374d1425fc6528c7f1027cc1efc2cfe471a209a13fb68"
+    },
+    {
+      "path": "components/个人工具中心新版/frontend/src/pages/Overview.jsx",
+      "bytes": 21473,
+      "sha256": "17c7361f3cdfb235d227882d67d40f43e32132ce86fca0e88a22029ab1c80cd2"
+    },
+    {
+      "path": "components/个人工具中心新版/frontend/src/pages/Pack.jsx",
+      "bytes": 21146,
+      "sha256": "9aefa9ed94fc9c1d8c5c4a3039c64aa258fe4c8f98b04250ee6e6bdf6a856b13"
+    },
+    {
+      "path": "components/个人工具中心新版/frontend/src/pages/Settings.jsx",
+      "bytes": 11975,
+      "sha256": "4996d302172d30810a879edfe244917b43ac194a6b7b16adbdf5bd0505de1d31"
+    },
+    {
+      "path": "components/个人工具中心新版/frontend/src/pages/Wheel.jsx",
+      "bytes": 25525,
+      "sha256": "8b7454adde737651c3db54d28a30ee9b6c6c1bb5c29060c82a7522bb014e8474"
+    },
+    {
+      "path": "components/个人工具中心新版/frontend/src/styles.css",
+      "bytes": 90611,
+      "sha256": "cb6827c145ed4126c592d661fa21e406a6fc6cce1a3ff5195d08f13bef3d7f08"
+    },
+    {
+      "path": "components/个人工具中心新版/frontend/test/bridge.test.js",
+      "bytes": 3828,
+      "sha256": "9e08f29c1881faec9e609f1737fc28495e886a6b035c819dc3183bf7491eb3ee"
+    },
+    {
+      "path": "components/个人工具中心新版/frontend/test/format.test.js",
+      "bytes": 2541,
+      "sha256": "46b7f784b04a9586d70322c643ca1f468bd9bf14c5c94421550724ad07a9ecf3"
+    },
+    {
+      "path": "components/个人工具中心新版/frontend/test/gameIcon.test.js",
+      "bytes": 871,
+      "sha256": "743d8d7f22c05443c2da18470681a92c36bb957774d24f6680555049b1a33cee"
+    },
+    {
+      "path": "components/个人工具中心新版/frontend/test/harness/serve.mjs",
+      "bytes": 10364,
+      "sha256": "f227a4d847ae9fb70fd33c87a58ce3c03e489282b1cbfdebf3942164ff4b6d8f"
+    },
+    {
+      "path": "components/个人工具中心新版/frontend/test/jobs.test.js",
+      "bytes": 3034,
+      "sha256": "1c9223a66ad9c0a2230f58181fd937fea69fbfeb9772f8427b73220c4ef417ce"
+    },
+    {
+      "path": "components/个人工具中心新版/frontend/test/pack.test.js",
+      "bytes": 3489,
+      "sha256": "cb923e2e204ef0dfc36342adb1694b8fcc2c426e12713649a096c7405714876b"
+    },
+    {
+      "path": "components/个人工具中心新版/frontend/test/recent.test.js",
+      "bytes": 975,
+      "sha256": "d509d01d671c0120888f691ac187ceb7afa2393bf1013875f8ed081591ba4d91"
+    },
+    {
+      "path": "components/个人工具中心新版/frontend/test/search.test.js",
+      "bytes": 3928,
+      "sha256": "c12216edbbd8751c5f2607d6413f8aaadeab46d7bcfd0f65bccefcf96b2ae4be"
+    },
+    {
+      "path": "components/个人工具中心新版/icons.py",
+      "bytes": 71,
+      "sha256": "35106d9ecfa6b8efab67f9a2a2aeeafd766f0a8a0006c4e77fd52e2ac1b52bf0"
+    },
+    {
+      "path": "components/个人工具中心新版/integrated_windows.py",
+      "bytes": 1176,
+      "sha256": "d735afd3a13d7ddb2700cec2bfe9e610deac927c75d9909e0264d82291c679c7"
+    },
+    {
+      "path": "components/个人工具中心新版/launch.pyw",
+      "bytes": 502,
+      "sha256": "e94b6f31a50057c6db237673e22139df217a9f15dc10fe8d9dd58b3de862f8e7"
+    },
+    {
+      "path": "components/个人工具中心新版/legacy_runner.py",
+      "bytes": 1683,
+      "sha256": "fb4ba38c114176344bd3bdfdb08f677fc831e96673b789fde70b748a3aa9e1f6"
+    },
+    {
+      "path": "components/个人工具中心新版/LICENSE",
+      "bytes": 1106,
+      "sha256": "bd771cc526a163ecdad6019b5bffab59983d890380abe2a747118e4fd80e491b"
+    },
+    {
+      "path": "components/个人工具中心新版/licenses/esbuild-LICENSE.md",
+      "bytes": 1069,
+      "sha256": "b40ec5baec7bb34fa5b1c09521fa3cd52d5fad7adafed74932a2010d3612a681"
+    },
+    {
+      "path": "components/个人工具中心新版/licenses/lucide-react-LICENSE",
+      "bytes": 3208,
+      "sha256": "b495047bd93a9b06913511076f504daba17d5bbeb3e0650f3bb53a4220329c57"
+    },
+    {
+      "path": "components/个人工具中心新版/licenses/react-dom-LICENSE",
+      "bytes": 1088,
+      "sha256": "da6d3703ed11cbe42bd212c725957c98da23cbff1998c05fa4b3d976d1a58e93"
+    },
+    {
+      "path": "components/个人工具中心新版/licenses/react-LICENSE",
+      "bytes": 1088,
+      "sha256": "da6d3703ed11cbe42bd212c725957c98da23cbff1998c05fa4b3d976d1a58e93"
+    },
+    {
+      "path": "components/个人工具中心新版/local_icons.py",
+      "bytes": 1246,
+      "sha256": "b9c77592ea0139582ea237f2ee0ec1e11dfd31687ee48b47b0f3fe41f0b5d22f"
+    },
+    {
+      "path": "components/个人工具中心新版/pet_launcher.py",
+      "bytes": 2513,
+      "sha256": "5ae284c65f82ff9728c6828678d7ce31a42e31a57c8747ccb2aec959dd7cc0fa"
+    },
+    {
+      "path": "components/个人工具中心新版/requirements.txt",
+      "bytes": 34,
+      "sha256": "94eb0f8946af9ecc90c80883db89fe5bdff41058c20bc9400c1652d26376a6a2"
+    },
+    {
+      "path": "components/个人工具中心新版/singleton.py",
+      "bytes": 3270,
+      "sha256": "cdf1075e3e4797c6da6c7231dc01c76be6edad696b49cc779bc1e90945e64a94"
+    },
+    {
+      "path": "components/个人工具中心新版/store.py",
+      "bytes": 1857,
+      "sha256": "4da462e8f1555079478f56e89330696ae74343ed64f05853079ae2060a90fd39"
+    },
+    {
+      "path": "components/个人工具中心新版/tests/test_agent_entry.py",
+      "bytes": 834,
+      "sha256": "22e3556af2116361aef30dd1bf171f6af488b9906c7eb3b6fcc67cba9a5c877e"
+    },
+    {
+      "path": "components/个人工具中心新版/tests/test_backend.py",
+      "bytes": 8048,
+      "sha256": "dfb81bb276163a5a73ba23a5a366f6c421daee7dd26388259e5b1603ea39672c"
+    },
+    {
+      "path": "components/个人工具中心新版/tests/test_boundary.py",
+      "bytes": 2479,
+      "sha256": "996548f93650126f63b5d083e0618d64d1312e58a3c57460afb9b3ab579c74b6"
+    },
+    {
+      "path": "components/个人工具中心新版/tests/test_integrated_windows.py",
+      "bytes": 1950,
+      "sha256": "5c2aa2eaecee5700da44a92bbdc5a74da7b9f60697a2f01b577695407ec092a6"
+    },
+    {
+      "path": "components/个人工具中心新版/tests/test_legacy_display.py",
+      "bytes": 1652,
+      "sha256": "b27e245bd346ca4f2f7ab487fc3333176ee8472e1941d671dc29aae8cf29bdd4"
+    },
+    {
+      "path": "components/个人工具中心新版/tests/test_library_conflict.py",
+      "bytes": 1484,
+      "sha256": "9fa9ef63c0758981bd33cee3c5378ff5b9e20b4999623869a5fbd4e11f0eced8"
+    },
+    {
+      "path": "components/个人工具中心新版/tests/test_local_icons.py",
+      "bytes": 786,
+      "sha256": "4af0624cddb0e313f10fbc9108fc8e4231257d03205e1d4d4e8c2da2002ca0e0"
+    },
+    {
+      "path": "components/个人工具中心新版/tests/test_pet_launcher.py",
+      "bytes": 1439,
+      "sha256": "880a8a72fe42a7b7561ac2d3a1cffd1c812e770a2e28a57273da835482d7f137"
+    },
+    {
+      "path": "components/个人工具中心新版/tests/test_singleton.py",
+      "bytes": 1902,
+      "sha256": "b3a9fdf5ce634d0a7f3862ffd4c3a592eeaa0d3c5a5846c98407b9c99dbac2ae"
+    },
+    {
+      "path": "components/宝可梦小镇新版/app.py",
+      "bytes": 5519,
+      "sha256": "eaf6b832f5866a11b4f314fcfcf08e97541852a64b3c50101000b8c2e027674b"
+    },
+    {
+      "path": "components/宝可梦小镇新版/assets/app.ico",
+      "bytes": 2133,
+      "sha256": "85e860fa148de3eccb4795c489d552dde6092f51e92157e61a7d3a870c9b8e04"
+    },
+    {
+      "path": "components/宝可梦小镇新版/assets/pokemon/01-派拉斯特.png",
+      "bytes": 533,
+      "sha256": "a42d8f49cf5711167bf25f604993a679567770a479b98fd62a7fce27d0c7b114"
+    },
+    {
+      "path": "components/宝可梦小镇新版/assets/pokemon/02-妙蛙种子.png",
+      "bytes": 533,
+      "sha256": "a42d8f49cf5711167bf25f604993a679567770a479b98fd62a7fce27d0c7b114"
+    },
+    {
+      "path": "components/宝可梦小镇新版/assets/pokemon/03-喷火龙.png",
+      "bytes": 533,
+      "sha256": "a42d8f49cf5711167bf25f604993a679567770a479b98fd62a7fce27d0c7b114"
+    },
+    {
+      "path": "components/宝可梦小镇新版/assets/pokemon/04-杰尼龟.png",
+      "bytes": 533,
+      "sha256": "a42d8f49cf5711167bf25f604993a679567770a479b98fd62a7fce27d0c7b114"
+    },
+    {
+      "path": "components/宝可梦小镇新版/assets/pokemon/05-小海狮.png",
+      "bytes": 533,
+      "sha256": "a42d8f49cf5711167bf25f604993a679567770a479b98fd62a7fce27d0c7b114"
+    },
+    {
+      "path": "components/宝可梦小镇新版/assets/pokemon/06-袋兽.png",
+      "bytes": 533,
+      "sha256": "a42d8f49cf5711167bf25f604993a679567770a479b98fd62a7fce27d0c7b114"
+    },
+    {
+      "path": "components/宝可梦小镇新版/assets/pokemon/07-百变怪.png",
+      "bytes": 533,
+      "sha256": "a42d8f49cf5711167bf25f604993a679567770a479b98fd62a7fce27d0c7b114"
+    },
+    {
+      "path": "components/宝可梦小镇新版/assets/pokemon/08-快龙.png",
+      "bytes": 533,
+      "sha256": "a42d8f49cf5711167bf25f604993a679567770a479b98fd62a7fce27d0c7b114"
+    },
+    {
+      "path": "components/宝可梦小镇新版/assets/pokemon/09-猫老大（阿罗拉）.png",
+      "bytes": 533,
+      "sha256": "a42d8f49cf5711167bf25f604993a679567770a479b98fd62a7fce27d0c7b114"
+    },
+    {
+      "path": "components/宝可梦小镇新版/assets/pokemon/10-多边兽Ⅱ.png",
+      "bytes": 533,
+      "sha256": "a42d8f49cf5711167bf25f604993a679567770a479b98fd62a7fce27d0c7b114"
+    },
+    {
+      "path": "components/宝可梦小镇新版/assets/pokemon/11-水跃鱼.png",
+      "bytes": 533,
+      "sha256": "a42d8f49cf5711167bf25f604993a679567770a479b98fd62a7fce27d0c7b114"
+    },
+    {
+      "path": "components/宝可梦小镇新版/assets/pokemon/12-沙奈朵.png",
+      "bytes": 533,
+      "sha256": "a42d8f49cf5711167bf25f604993a679567770a479b98fd62a7fce27d0c7b114"
+    },
+    {
+      "path": "components/宝可梦小镇新版/assets/pokemon/13-玛力露丽.png",
+      "bytes": 533,
+      "sha256": "a42d8f49cf5711167bf25f604993a679567770a479b98fd62a7fce27d0c7b114"
+    },
+    {
+      "path": "components/宝可梦小镇新版/assets/pokemon/14-煤炭龟.png",
+      "bytes": 533,
+      "sha256": "a42d8f49cf5711167bf25f604993a679567770a479b98fd62a7fce27d0c7b114"
+    },
+    {
+      "path": "components/宝可梦小镇新版/assets/pokemon/15-雷吉斯奇鲁.png",
+      "bytes": 533,
+      "sha256": "a42d8f49cf5711167bf25f604993a679567770a479b98fd62a7fce27d0c7b114"
+    },
+    {
+      "path": "components/宝可梦小镇新版/assets/pokemon/16-波加曼.png",
+      "bytes": 533,
+      "sha256": "a42d8f49cf5711167bf25f604993a679567770a479b98fd62a7fce27d0c7b114"
+    },
+    {
+      "path": "components/宝可梦小镇新版/assets/pokemon/17-音箱蟀.png",
+      "bytes": 533,
+      "sha256": "a42d8f49cf5711167bf25f604993a679567770a479b98fd62a7fce27d0c7b114"
+    },
+    {
+      "path": "components/宝可梦小镇新版/assets/pokemon/18-帕奇利兹.png",
+      "bytes": 533,
+      "sha256": "a42d8f49cf5711167bf25f604993a679567770a479b98fd62a7fce27d0c7b114"
+    },
+    {
+      "path": "components/宝可梦小镇新版/assets/pokemon/19-洛托姆（加热形态）.png",
+      "bytes": 533,
+      "sha256": "a42d8f49cf5711167bf25f604993a679567770a479b98fd62a7fce27d0c7b114"
+    },
+    {
+      "path": "components/宝可梦小镇新版/assets/pokemon/20-风妖精.png",
+      "bytes": 533,
+      "sha256": "a42d8f49cf5711167bf25f604993a679567770a479b98fd62a7fce27d0c7b114"
+    },
+    {
+      "path": "components/宝可梦小镇新版/bridge_boundary.py",
+      "bytes": 1007,
+      "sha256": "731b453d7ac7c6c7145428f5d5f5d1511589a2578f82b8e2752bcdae1782187a"
+    },
+    {
+      "path": "components/宝可梦小镇新版/frontend/dist/assets/app.css",
+      "bytes": 36388,
+      "sha256": "09dcaa44b7f7306267cf2343dfb0bae10c7180fa8099a55bc8ff8a4260f92321"
+    },
+    {
+      "path": "components/宝可梦小镇新版/frontend/dist/assets/app.js",
+      "bytes": 252712,
+      "sha256": "6d19a04c6727d8a8dba2b32f5b36284f678cf49a60fdc1cc6bd2779875ea2407"
+    },
+    {
+      "path": "components/宝可梦小镇新版/frontend/dist/index.html",
+      "bytes": 1578,
+      "sha256": "398e29db6cf7599f72146d2b31a6c2a3b484274ef1ab74d299a697101b239a7e"
+    },
+    {
+      "path": "components/宝可梦小镇新版/frontend/dist/yard/index.html",
+      "bytes": 1697259,
+      "sha256": "e381cb9a0a4da35b3e7be4e6dccbdcddda95b2c566187d1a11f12d83afce1351"
+    },
+    {
+      "path": "components/宝可梦小镇新版/frontend/package.json",
+      "bytes": 672,
+      "sha256": "c060f21ed07cd23102a49ad0f393f16181f79c4e786e60b5b4d8515bcd11f9be"
+    },
+    {
+      "path": "components/宝可梦小镇新版/frontend/pnpm-lock.yaml",
+      "bytes": 9840,
+      "sha256": "e311630f4bc4c761ae422837dd2ae04514024befb79acb963fa989959c178e93"
+    },
+    {
+      "path": "components/宝可梦小镇新版/frontend/pnpm-workspace.yaml",
+      "bytes": 30,
+      "sha256": "a8dbaf09fa36dd9d340ed79ee1b110240dd5dea0f269582f26a1136a2e745bbd"
+    },
+    {
+      "path": "components/宝可梦小镇新版/frontend/scripts/build.mjs",
+      "bytes": 2332,
+      "sha256": "7666dc22956c31ab8af09e7e9bf0fb5c30675ee9ce298ccd7fd5a5b85875f933"
+    },
+    {
+      "path": "components/宝可梦小镇新版/frontend/scripts/esbuild-binary.mjs",
+      "bytes": 1619,
+      "sha256": "fd26781aa4e88d89d10f79021d83af3102c6810a5b9b5de9806b386f99b58a27"
+    },
+    {
+      "path": "components/宝可梦小镇新版/frontend/src/components/ErrorBoundary.jsx",
+      "bytes": 1120,
+      "sha256": "7df1f4b47283d054c05c0a4702c5bbca6f465fdf22aba1f8c5a803f8e66b2f1d"
+    },
+    {
+      "path": "components/宝可梦小镇新版/frontend/src/components/FocusRoom.jsx",
+      "bytes": 5100,
+      "sha256": "14951b997bfc3e5233c107d2f70da296c5f0dfc275fb0422f458247cf80ef9f7"
+    },
+    {
+      "path": "components/宝可梦小镇新版/frontend/src/components/FocusView.jsx",
+      "bytes": 9871,
+      "sha256": "3ed2a117a82e3e58caba85b43da099d085f58e2700427edd80ad24a9c8ea37ff"
+    },
+    {
+      "path": "components/宝可梦小镇新版/frontend/src/components/Furniture.jsx",
+      "bytes": 4464,
+      "sha256": "7b558492300c367b8b1c0a5bd9cbbcc50da18a38c63fde6da071e03195012487"
+    },
+    {
+      "path": "components/宝可梦小镇新版/frontend/src/components/PartnerAvatar.jsx",
+      "bytes": 647,
+      "sha256": "e213964da30422c65490e306a1b7a5fec2e123a316f8c82d949d86766aedfccf"
+    },
+    {
+      "path": "components/宝可梦小镇新版/frontend/src/cottage-ui.css",
+      "bytes": 2047,
+      "sha256": "073f9c42275fab27a4190c8012ca55c927a152eacd1aff4be9ea0bc5ec724145"
+    },
+    {
+      "path": "components/宝可梦小镇新版/frontend/src/index.html",
+      "bytes": 1578,
+      "sha256": "398e29db6cf7599f72146d2b31a6c2a3b484274ef1ab74d299a697101b239a7e"
+    },
+    {
+      "path": "components/宝可梦小镇新版/frontend/src/lib/bridge.js",
+      "bytes": 1785,
+      "sha256": "74162fdbb372300896bdf069626a421aed4fb9cc05b0821ad7a5f7fccb8626ab"
+    },
+    {
+      "path": "components/宝可梦小镇新版/frontend/src/lib/lifecycle.js",
+      "bytes": 234,
+      "sha256": "97587f403d97a16b347078a3c76e36c8bfd4951caa2867e33658303cdc0a6d99"
+    },
+    {
+      "path": "components/宝可梦小镇新版/frontend/src/lib/town-tools-contract.mjs",
+      "bytes": 1328,
+      "sha256": "821bd4ce948f0a0683f7421d81839aa17d27d4523a0a7f720d78ca78f088a9f3"
+    },
+    {
+      "path": "components/宝可梦小镇新版/frontend/src/lib/town.js",
+      "bytes": 8639,
+      "sha256": "64fd7e25436f0a42c7ce0c82a74ad460306d2f0831b6c5d26fc722868762e238"
+    },
+    {
+      "path": "components/宝可梦小镇新版/frontend/src/lib/yard-care-contract.mjs",
+      "bytes": 626,
+      "sha256": "ed0b4c09a7b8fe312e92ea71e9cb63c1fba43decf5f29d2fb1cf8eb3149606ec"
+    },
+    {
+      "path": "components/宝可梦小镇新版/frontend/src/main.jsx",
+      "bytes": 511,
+      "sha256": "8dff7e88d80e207cee246bc14251064d261d09cebcbb9d3fba59955e7688e170"
+    },
+    {
+      "path": "components/宝可梦小镇新版/frontend/src/room-town.css",
+      "bytes": 2269,
+      "sha256": "0eb33bd0305c5182d6cf22fad69beff4454e89601eb52b6e5d976ea538a95558"
+    },
+    {
+      "path": "components/宝可梦小镇新版/frontend/src/RoomTown.jsx",
+      "bytes": 2610,
+      "sha256": "6a770c0e41973044eabf5936deb08fc3cbc5f28e28ca47c95b8065175422155c"
+    },
+    {
+      "path": "components/宝可梦小镇新版/frontend/src/styles.css",
+      "bytes": 42636,
+      "sha256": "f4344f6ef81d6d3e531d443fbf3c3b76e7b68841acebd4576980175612450f7e"
+    },
+    {
+      "path": "components/宝可梦小镇新版/frontend/src/TownPortal.jsx",
+      "bytes": 2227,
+      "sha256": "aca75989638a04fe8e66b2ecedde23a49f6f5b1c0bf5d1e0b0feb9e694e24309"
+    },
+    {
+      "path": "components/宝可梦小镇新版/frontend/test/lifecycle.test.js",
+      "bytes": 523,
+      "sha256": "c5f835258e7ecd35d856cb7a4ec450bddb2a4a3cd88b32873a09f1cf0b6edd9c"
+    },
+    {
+      "path": "components/宝可梦小镇新版/frontend/test/town.test.js",
+      "bytes": 5810,
+      "sha256": "8cd27b16ffa1528190c1df61de7cebb030e5de244ec0be86729e0bc1891680a5"
+    },
+    {
+      "path": "components/宝可梦小镇新版/frontend/yard/index.html",
+      "bytes": 1697259,
+      "sha256": "e381cb9a0a4da35b3e7be4e6dccbdcddda95b2c566187d1a11f12d83afce1351"
+    },
+    {
+      "path": "components/宝可梦小镇新版/launch.pyw",
+      "bytes": 427,
+      "sha256": "eb9bddb6acf4bfd57bd2a716991168c9a670a4cc28e2dadaf37a1e9a21d47ae3"
+    },
+    {
+      "path": "components/宝可梦小镇新版/LICENSE",
+      "bytes": 1106,
+      "sha256": "f472e81acd7bb686427022846699a54ecbcd9f75cde32226b51b2b4b2a2cfa71"
+    },
+    {
+      "path": "components/宝可梦小镇新版/singleton.py",
+      "bytes": 3200,
+      "sha256": "50270629ec8689f0319e8fa85e13a53c5314afe0018e22a48ed9f0e4f99602bf"
+    },
+    {
+      "path": "components/宝可梦小镇新版/tests/test_town_backend.py",
+      "bytes": 8143,
+      "sha256": "dd7cb18d12fb3a9f94be28e5dc76ef9f5f50806b40db1464dfbaf7408620bc32"
+    },
+    {
+      "path": "components/宝可梦小镇新版/town_backend.py",
+      "bytes": 8222,
+      "sha256": "20f810e3249d146ac572ac4a63a8442adf377c9275f4e88f42bf01e1b229f867"
+    },
+    {
+      "path": "components/宝可梦小镇新版/town_collectibles.py",
+      "bytes": 1035,
+      "sha256": "0903f075aab30ead9d17afbeda0ccbe1ae6664fc5b46a862403447ef7e16cebd"
+    },
+    {
+      "path": "components/宝可梦小镇新版/town_focus.py",
+      "bytes": 1346,
+      "sha256": "ba34562b64a4bfe1ed6e62b1cb06deb3a8360e9d33989b567ab9b880af88678c"
+    },
+    {
+      "path": "components/宝可梦小镇新版/town_map.py",
+      "bytes": 1484,
+      "sha256": "82e2ff89fef275156a5d06bd9c8b30e7444877d264a215dd1734f809dc181d4b"
+    },
+    {
+      "path": "components/宝可梦小镇新版/town_rules.py",
+      "bytes": 6859,
+      "sha256": "9f284b13c649e457a42b9417416aa40fbc76577051842a05249d478523bda5d9"
+    },
+    {
+      "path": "components/宝可梦小镇新版/town_state.py",
+      "bytes": 6785,
+      "sha256": "2077147134e7629b03990ac71fed35dae92238039ef4371c3e86205f2b56a972"
+    },
+    {
+      "path": "components/宝可梦小镇新版/town_store.py",
+      "bytes": 2937,
+      "sha256": "df0da7c05b94eacfefc45fbe2fd9724bc65306bc5b2d8d3720f0eebf514b6ab9"
+    },
+    {
+      "path": "components/游戏管家/actions.py",
+      "bytes": 212,
+      "sha256": "2617fab31cb8a6840886de01718faf3931a39b93a885920213dee26eff007b2b"
+    },
+    {
+      "path": "components/游戏管家/app.py",
+      "bytes": 25269,
+      "sha256": "6048b627419d16d506e9694eb4387739a7e1f6cb08900c86950c89fb9f6a2d3f"
+    },
+    {
+      "path": "components/游戏管家/discovery.py",
+      "bytes": 1183,
+      "sha256": "9f8ba7e704547ce1aff62b2dbc02c17dc2dc4290b29771ddad26e0489452a35d"
+    },
+    {
+      "path": "components/游戏管家/launch.ps1",
+      "bytes": 3598,
+      "sha256": "9c30be5378f5c263ecf9571fa8d2b20fb76c85768950cfd49af53e881d7a6ce0"
+    },
+    {
+      "path": "components/游戏管家/library.py",
+      "bytes": 4206,
+      "sha256": "0507c55d119db1b82745cc6aee829b4b0a35b918c3d9e36c2f6a242a74eefbdf"
+    },
+    {
+      "path": "components/游戏管家/LICENSE",
+      "bytes": 1106,
+      "sha256": "bd771cc526a163ecdad6019b5bffab59983d890380abe2a747118e4fd80e491b"
+    },
+    {
+      "path": "components/游戏管家/snapshots.py",
+      "bytes": 6227,
+      "sha256": "45e0b2db7188d269f370b2fdb7710e9b9ad74e841d79f67db140c85b9d446653"
+    },
+    {
+      "path": "components/游戏管家/steam_library.py",
+      "bytes": 3621,
+      "sha256": "c0b50a9e9edecd2a13b74498021370724b6ad3f74c78ec495fb73f909ef16343"
+    },
+    {
+      "path": "components/游戏管家/tests/test_app.py",
+      "bytes": 1046,
+      "sha256": "f683aa05f7b386c7987c24734430057a7176bccad6600de56e1dd581ccfcd0ba"
+    },
+    {
+      "path": "components/游戏管家/tests/test_core.py",
+      "bytes": 6170,
+      "sha256": "df233dcc052fef13ff6fc3d839d9f3be9d21b25971a1e5ad6532dc70f63fb95c"
+    },
+    {
+      "path": "components/游戏管家/tests/test_trainers.py",
+      "bytes": 4282,
+      "sha256": "f071e039ca879dd2f24c34e9b4a4447ef71d08d4e5c60021d4778736a1ad8df9"
+    },
+    {
+      "path": "components/游戏管家/tests/test_ui.py",
+      "bytes": 3311,
+      "sha256": "7a5d81e662eef6bb487c3479b9db422bfb3680ec44a7054bd6e6b8d81592ab16"
+    },
+    {
+      "path": "components/游戏管家/trainers.py",
+      "bytes": 4458,
+      "sha256": "23ee87d018f31e6ea7cc44b02e961287757ec376d31d7d24d929d93917c06042"
+    },
+    {
+      "path": "components/游戏管家/ui_preferences.py",
+      "bytes": 7337,
+      "sha256": "8f6bd8cf01be3e3dbccd4b13753a0538d3674961467c7f52802e76889617368a"
+    },
+    {
+      "path": "components/远程服务/app/adapters.py",
+      "bytes": 11567,
+      "sha256": "7dbb0234312e52bd15ad01077812643550b838349ce8feddb89a7a8ced99b23e"
+    },
+    {
+      "path": "components/远程服务/app/agent-result.schema.json",
+      "bytes": 513,
+      "sha256": "d7f57f7449aaf0bf2b325c510247386f07c26db2d89bd840d837fae1be14cb76"
+    },
+    {
+      "path": "components/远程服务/app/artifact_preview.py",
+      "bytes": 14506,
+      "sha256": "cd4819f6617dd3b116c5a8ccd6a37ccc218c42468b3e8945ce77b9f421ac0fca"
+    },
+    {
+      "path": "components/远程服务/app/bot_core.py",
+      "bytes": 8148,
+      "sha256": "705a8e7ff263d3725488c5c9e321be80a018c69f13b87546c4061489af1736cd"
+    },
+    {
+      "path": "components/远程服务/app/bot_tasks.py",
+      "bytes": 3411,
+      "sha256": "0ed59b81176175d64efea858b283c6163ccf8e1806874726357f5e83557fe98f"
+    },
+    {
+      "path": "components/远程服务/app/build_mobile_ui.py",
+      "bytes": 3503,
+      "sha256": "4603412a0eb3d12c5a6bf57f79bc3e5e66af41ecd9c188622de5ff8e3a143189"
+    },
+    {
+      "path": "components/远程服务/app/coding_actions.js",
+      "bytes": 10369,
+      "sha256": "8e99c579bcbb3078543bd4b3f2a74ce1bb9b4281e70447c24499f0108a02c97c"
+    },
+    {
+      "path": "components/远程服务/app/coding_plan.py",
+      "bytes": 2176,
+      "sha256": "9fd76767d401e22a84d38e0e5d7d1f25425a2c23dec21e0f80671b4fff400178"
+    },
+    {
+      "path": "components/远程服务/app/coding_runner.py",
+      "bytes": 9185,
+      "sha256": "87b750d39a1b726a4d6317118889fb5314d9aa5c2ebcb01ba436b35e6a1ffbe9"
+    },
+    {
+      "path": "components/远程服务/app/collaboration.html",
+      "bytes": 293368,
+      "sha256": "6795fcbd394c936d53e7e306435e8ab220ab2e96db2f5036a51fa1e6290a01d8"
+    },
+    {
+      "path": "components/远程服务/app/conversation.js",
+      "bytes": 198490,
+      "sha256": "f056de17ce4a71abd7de7c02c2c1b09568bc0a1768e8a9c3c4e071f39969b4b2"
+    },
+    {
+      "path": "components/远程服务/app/conversation_tools.js",
+      "bytes": 7407,
+      "sha256": "c01338207625e31e8b9ebd8749592e9d1695e25be6f6d85ad23ffacd527e9080"
+    },
+    {
+      "path": "components/远程服务/app/conversation_view.py",
+      "bytes": 5969,
+      "sha256": "569f753e5192f07e566a246e2f8444fa2a74d5c38afcaf0fe7ce1bd498b25b9c"
+    },
+    {
+      "path": "components/远程服务/app/deepseek_balance.cjs",
+      "bytes": 3002,
+      "sha256": "90d1f8423d31c706f97f1ed833c58bcfe66237fe3288eddcc5bba7c4870793a6"
+    },
+    {
+      "path": "components/远程服务/app/deepseek_balance.py",
+      "bytes": 3933,
+      "sha256": "b0da6925129a1e0f429a92e28c0674aee35dcfceff1777a2ea8b9c69312bf880"
+    },
+    {
+      "path": "components/远程服务/app/deepseek_history.cjs",
+      "bytes": 9254,
+      "sha256": "bf9c411cdf5ca29f562233d45fa46eee4059c6d31feb4f6e12614794e42e3775"
+    },
+    {
+      "path": "components/远程服务/app/deepseek_history.py",
+      "bytes": 5386,
+      "sha256": "22e7fca7e93eec0dd75c83dbf807d4eda4e35ebad0ff1fac849e8ce8a8e51258"
+    },
+    {
+      "path": "components/远程服务/app/deepseek_resume.py",
+      "bytes": 5825,
+      "sha256": "82a8a1bd6d6757506edc94c48ffc73a260e948bd859184c49bedbe6d285283bd"
+    },
+    {
+      "path": "components/远程服务/app/deepseek_runner.py",
+      "bytes": 7256,
+      "sha256": "5897982962603c88bd5b32118dde09bccbd7dcbcfeeb448dab6df9911664f32f"
+    },
+    {
+      "path": "components/远程服务/app/desktop-embed.js",
+      "bytes": 5438,
+      "sha256": "26621a223c5ba3dad5bcdd76306a6d9aa8bb1575592913ac9bec1250b2841dd6"
+    },
+    {
+      "path": "components/远程服务/app/desktop_open.py",
+      "bytes": 8174,
+      "sha256": "5a4c1845a75d188ecefb211e25e084a6f6d570e3991cb071f27af41410c45043"
+    },
+    {
+      "path": "components/远程服务/app/desktop_prompt.py",
+      "bytes": 7799,
+      "sha256": "89f4c966ff26a2d2cc77c8be001b9d796fe89713f4c50d0c8ea0611f46339503"
+    },
+    {
+      "path": "components/远程服务/app/diagnostics.py",
+      "bytes": 4750,
+      "sha256": "0aa21b93590da78c9af0fc5a03397b5efb2cd92e758a365dca4484876b900cfa"
+    },
+    {
+      "path": "components/远程服务/app/file_review.py",
+      "bytes": 18379,
+      "sha256": "41096bc159803b9eb927ec4f5900f1ae15d7d8fb9ec0efba4d147a129e01d015"
+    },
+    {
+      "path": "components/远程服务/app/file_viewer.html",
+      "bytes": 107081,
+      "sha256": "0e6da36f18a1cdc92319c37d3cf8ca5e457cb096409659725147290b8d5d570f"
+    },
+    {
+      "path": "components/远程服务/app/index.html",
+      "bytes": 17474,
+      "sha256": "1ac68f688365ab85a560191f54d2772c3320983529124be432371e316f523398"
+    },
+    {
+      "path": "components/远程服务/app/keyword-router.js",
+      "bytes": 6713,
+      "sha256": "76c92c3bb90586ece43df7f454b1ce881d0d9dda5c186ab203d0c1b99107d5a0"
+    },
+    {
+      "path": "components/远程服务/app/mobile-controller.css",
+      "bytes": 23338,
+      "sha256": "34fa5e30ead99bb113b6532cd7d79e3dc67822862b276225ddd78cd50cb165e0"
+    },
+    {
+      "path": "components/远程服务/app/mobile-controller.js",
+      "bytes": 47984,
+      "sha256": "976435067546b793b68913d13f23d8bb17b1b5e1922fb717e31c107fbdf27464"
+    },
+    {
+      "path": "components/远程服务/app/mobile-room.css",
+      "bytes": 2126,
+      "sha256": "74302c227ea5f1b82e36328bda252386c7d8fa991466b8287e07f5fd34c232eb"
+    },
+    {
+      "path": "components/远程服务/app/mobile-room.js",
+      "bytes": 13011,
+      "sha256": "9b4a58e4d426be29ac75d46ab2231d204127bb94dd0777905be16a7591cf6be4"
+    },
+    {
+      "path": "components/远程服务/app/mobile_bot.html",
+      "bytes": 176746,
+      "sha256": "d93cd773cc97bf1c4a481675642742f9cab78285b6a2cb3741a232930cfbc93e"
+    },
+    {
+      "path": "components/远程服务/app/mobile_v1_fixture.py",
+      "bytes": 8060,
+      "sha256": "4cced1ee26f3b1adfbff8e136ed59846e20967691e5b598438020a3ab5623b82"
+    },
+    {
+      "path": "components/远程服务/app/mobile_v1_smoke.js",
+      "bytes": 28684,
+      "sha256": "266bd73798ecaec90c67ac3ff5f2f4e6d3feae620a3f5b6b20384f8ed78bf47d"
+    },
+    {
+      "path": "components/远程服务/app/network_access.py",
+      "bytes": 3639,
+      "sha256": "84fd81a52a2a4e91fa0b8545177a865d046c0fc04ba11091c9e192d3c998a216"
+    },
+    {
+      "path": "components/远程服务/app/owned_process.py",
+      "bytes": 2813,
+      "sha256": "25c0c99d7841677f2317dd6ec7510f3d626a9afe846786ab81f946d057e4c05e"
+    },
+    {
+      "path": "components/远程服务/app/pairing.py",
+      "bytes": 1415,
+      "sha256": "ab811d37d4a635d511ca9c87c6d7717e52ddbdad3758def4947ce4fb3a7c7ffe"
+    },
+    {
+      "path": "components/远程服务/app/partner-theme.css",
+      "bytes": 22367,
+      "sha256": "91f826cc0f14e7788fa6f91740a7e98821b0e4cd7d2932ba69e29064478d7202"
+    },
+    {
+      "path": "components/远程服务/app/partner-theme.js",
+      "bytes": 5846,
+      "sha256": "779a8081aa5a2517ac83a81c6c00f6f8dd2afed91c72f07cfa4116d0f53bf020"
+    },
+    {
+      "path": "components/远程服务/app/pc_content.py",
+      "bytes": 5778,
+      "sha256": "7838bcd4abe8173f94e9332adc26b44dc696bca706c4d389ef85b0dab3ec0cdd"
+    },
+    {
+      "path": "components/远程服务/app/pc_file_handle.py",
+      "bytes": 924,
+      "sha256": "bc174ecddd88c36f5f026b1ca10e7f95cec3c8e541c0937ef106bce75a2577e0"
+    },
+    {
+      "path": "components/远程服务/app/pc_file_search.js",
+      "bytes": 10574,
+      "sha256": "63b2b9388c25ee1139dfd36c662273bb9c3eb3d5744843f91cb0742b83551726"
+    },
+    {
+      "path": "components/远程服务/app/pc_files.py",
+      "bytes": 9822,
+      "sha256": "4a29be7cb637929f54b390a904251c09ff635fa5daa9c058610e9e2613ad0353"
+    },
+    {
+      "path": "components/远程服务/app/pdf_viewer.html",
+      "bytes": 15089,
+      "sha256": "e69da15e9725f5664a5d1339b60fdf25ff6e8a8ba000b8cd5fd89e0f063e71b7"
+    },
+    {
+      "path": "components/远程服务/app/permission_notices.py",
+      "bytes": 2530,
+      "sha256": "ee95cb143c20fc5fbe1b401ec13528e10a2af50c2070c3b4adaea081a30d5dd2"
+    },
+    {
+      "path": "components/远程服务/app/preview_worker.py",
+      "bytes": 14123,
+      "sha256": "2f4101813458a835b6a7db14566e69f8b763679bc2c68e3b798fe276ed753658"
+    },
+    {
+      "path": "components/远程服务/app/public_reference.py",
+      "bytes": 8425,
+      "sha256": "18bf7934ba99a27166240b94b139c8071b2fecc34d7d86d2249f71202d3174ad"
+    },
+    {
+      "path": "components/远程服务/app/reply_images.py",
+      "bytes": 2299,
+      "sha256": "86f8bdff1572ee7121afb220c6f61669543b6685756cfc41537c2880af90850f"
+    },
+    {
+      "path": "components/远程服务/app/reply_queue.py",
+      "bytes": 16680,
+      "sha256": "0548ddf1caecf4b40008c7a1296d931ba0c03f334cb0253b8ca6eb1c0c8e1ea1"
+    },
+    {
+      "path": "components/远程服务/app/session_actions.js",
+      "bytes": 2335,
+      "sha256": "09d13eaf6836689bc3d86ac7c17aa6ae689b2c1d1d86ac3e9c8d778f221f1b6b"
+    },
+    {
+      "path": "components/远程服务/app/session_reader.py",
+      "bytes": 18031,
+      "sha256": "b980bd035d42f516bcec4dd450cc177995fb17f4ba97e19f16e88b72a93dfa4d"
+    },
+    {
+      "path": "components/远程服务/app/tasks.py",
+      "bytes": 14341,
+      "sha256": "19ada477cd4524da53b12d58c2a21724ad6c9cb8e5861fda17e05ccddf01a8a0"
+    },
+    {
+      "path": "components/远程服务/app/test_adapters.py",
+      "bytes": 7252,
+      "sha256": "5a77c96eae0030d0badd33b8188ab09f239075d9cadb494847cf7363087df23a"
+    },
+    {
+      "path": "components/远程服务/app/test_artifact_preview.py",
+      "bytes": 8043,
+      "sha256": "56e045bc590f06eb1beb6a971c375cc6a2000beb2808daece61733eed1ebd7d4"
+    },
+    {
+      "path": "components/远程服务/app/test_bot.py",
+      "bytes": 11160,
+      "sha256": "2b8d8a49ab62e0aa385b7aeb674cf468e882ea7451065e6be643a2690c18b2c7"
+    },
+    {
+      "path": "components/远程服务/app/test_bot_tasks.py",
+      "bytes": 2835,
+      "sha256": "1fadf3c92726fb1b0dea8141dbb78512713f4855b5ca10c31880ec8a6b23b63a"
+    },
+    {
+      "path": "components/远程服务/app/test_cleanup.py",
+      "bytes": 2870,
+      "sha256": "c7769e6ec804a1f44265fac8f94f3174d7bd775daf02840667e20513c1b8557d"
+    },
+    {
+      "path": "components/远程服务/app/test_coding_actions.cjs",
+      "bytes": 2173,
+      "sha256": "dee8854813fc58bb8bd438ac5e8bb48686be835fd69ec7c3d4b3c01022d54183"
+    },
+    {
+      "path": "components/远程服务/app/test_coding_routes.py",
+      "bytes": 5652,
+      "sha256": "fbb67f4d446b3f2796e3c37fc280ac9e67d956a858b1cc1d132868d21caf3c48"
+    },
+    {
+      "path": "components/远程服务/app/test_coding_runner.py",
+      "bytes": 5697,
+      "sha256": "50b3436f951a27f77010e65ad9c34886420678ee22aa938dbd55901ae01ba664"
+    },
+    {
+      "path": "components/远程服务/app/test_collaboration_ui.cjs",
+      "bytes": 4507,
+      "sha256": "afa13115bcff88a70d22e067dd65d81cb50b56d836dcddbb60b5d4b8ec918e3f"
+    },
+    {
+      "path": "components/远程服务/app/test_command_bridge.cjs",
+      "bytes": 2190,
+      "sha256": "eb4c59859441a1ea48a8a62b6d4740a06a62b0d93632c33b4219831924b410fc"
+    },
+    {
+      "path": "components/远程服务/app/test_conversation_view.py",
+      "bytes": 4056,
+      "sha256": "3d1ba8385e7a347b3dfea032865579a2e2abc1430c0a2fbeeedbc38af107a35c"
+    },
+    {
+      "path": "components/远程服务/app/test_deepseek_balance.py",
+      "bytes": 3166,
+      "sha256": "20264f1015ae7d812b67acd3fc8960e4faeed482634fb332cfe0d12e554f2214"
+    },
+    {
+      "path": "components/远程服务/app/test_deepseek_history.py",
+      "bytes": 9443,
+      "sha256": "e72c3ebd51d30a038525a94670388616cc3f688caafaa72a35217781c0353161"
+    },
+    {
+      "path": "components/远程服务/app/test_deepseek_resume.py",
+      "bytes": 6814,
+      "sha256": "40814d3f555b76712180454a364663aa61b8d83f1022281ad1b411bb4f15a9b2"
+    },
+    {
+      "path": "components/远程服务/app/test_deepseek_runner.py",
+      "bytes": 5452,
+      "sha256": "8a625103f1325ec6c686d8bcc568058cfa2b8d999625c8e9c0236ece79c66720"
+    },
+    {
+      "path": "components/远程服务/app/test_desktop_embed.cjs",
+      "bytes": 2597,
+      "sha256": "091217e58cd952967e641e4f8875b67ac5541f81d68bcb3716841af2c44cb8a4"
+    },
+    {
+      "path": "components/远程服务/app/test_desktop_http.py",
+      "bytes": 3536,
+      "sha256": "3e2a7f10874bd0dd4a771c78635cbb635d425a94b948d6558866d270a50e2fe7"
+    },
+    {
+      "path": "components/远程服务/app/test_desktop_open.py",
+      "bytes": 5416,
+      "sha256": "0d6bffd693d426fec96a0411686102d618bfc49f90e613389b10ad7be738f259"
+    },
+    {
+      "path": "components/远程服务/app/test_diagnostics.py",
+      "bytes": 2856,
+      "sha256": "9a9fc00c39ce8f3155e7f975d9da3b3a201ceb591799630e1e1aaca5c119770a"
+    },
+    {
+      "path": "components/远程服务/app/test_diagnostics_http.py",
+      "bytes": 2392,
+      "sha256": "0201197473d1f88af99954aec7e021b6670a9364d3c16932d562cd6910e6cce3"
+    },
+    {
+      "path": "components/远程服务/app/test_file_review.py",
+      "bytes": 8946,
+      "sha256": "eccc60137d16cb83083caccb12a0d3d034f2e525c4012511ec31950f45945681"
+    },
+    {
+      "path": "components/远程服务/app/test_file_review_http.py",
+      "bytes": 4036,
+      "sha256": "e17624cfc72d4565713afe79d11616b48ed43ad66921fc920b692d7bcb302699"
+    },
+    {
+      "path": "components/远程服务/app/test_flash_channel.py",
+      "bytes": 2562,
+      "sha256": "2b8a8510f987f263fbfacfd77b7f61b6e323f0874b42e618d9fa885aa8d42133"
+    },
+    {
+      "path": "components/远程服务/app/test_flash_http.py",
+      "bytes": 4404,
+      "sha256": "f380448dc66c9a7bbaae4e8e79ae5bf9365fcd5e9418e05794466855b98f8757"
+    },
+    {
+      "path": "components/远程服务/app/test_generated_images.py",
+      "bytes": 5261,
+      "sha256": "a9a43bf21e4dbe540368b4c04a54598b6e93600d3aaa4c3487e29280a886d442"
+    },
+    {
+      "path": "components/远程服务/app/test_history_presentation.py",
+      "bytes": 2302,
+      "sha256": "c7ea39a0a90c1d79fd62034c9fae8ef88ee4d0b82a86415867dc1839a7d8e594"
+    },
+    {
+      "path": "components/远程服务/app/test_keyword_router.cjs",
+      "bytes": 7720,
+      "sha256": "e321c64de847b3a171b63b6bc43581d52574cc8f1063e60aedf13e43d4f4409e"
+    },
+    {
+      "path": "components/远程服务/app/test_mobile_activity.cjs",
+      "bytes": 2134,
+      "sha256": "6cffd7b7aaab58f2c70d1671e16c8179bfe90d23cff14c00bbb27df1bdbe0e40"
+    },
+    {
+      "path": "components/远程服务/app/test_mobile_activity_browser.cjs",
+      "bytes": 3925,
+      "sha256": "34a46686836950a28a0c235564a3ee232d95968b95a424d1a75ab847b98196a4"
+    },
+    {
+      "path": "components/远程服务/app/test_mobile_controller.cjs",
+      "bytes": 15834,
+      "sha256": "4b08df1768d35515a1003762bac2f9c3e2d6ae0043df6ea5cec54ed7f1fd19ba"
+    },
+    {
+      "path": "components/远程服务/app/test_mobile_observer_motion.cjs",
+      "bytes": 2527,
+      "sha256": "3c75382fd1e4157d940e1615eaa97b91b2cfae85d0c5ce6194e15aeb7452b94b"
+    },
+    {
+      "path": "components/远程服务/app/test_mobile_room.cjs",
+      "bytes": 1451,
+      "sha256": "85fcac691841e76717ad9d1f0f04c91b3ba51f70a4a38fed4a69c5a17702ae37"
+    },
+    {
+      "path": "components/远程服务/app/test_native_history_http.py",
+      "bytes": 2543,
+      "sha256": "9f7e3c182c155e335926d5605e8f6d6c068cde38114874978efd3e5d8e2e8fcf"
+    },
+    {
+      "path": "components/远程服务/app/test_network_access.py",
+      "bytes": 3405,
+      "sha256": "0f6303b968919b9459a0f9e294aa90829c38e973281d5d489cbec078d5865595"
+    },
+    {
+      "path": "components/远程服务/app/test_pairing.py",
+      "bytes": 1302,
+      "sha256": "869023d1f253078ea34ed773e80df7c6cf410df14f2e0cc6741da4a0a3166813"
+    },
+    {
+      "path": "components/远程服务/app/test_partner_avatar.cjs",
+      "bytes": 791,
+      "sha256": "f3ebb6beca75f1117ec03a225bede418a6098863ad62dfd214b3da78564cfafd"
+    },
+    {
+      "path": "components/远程服务/app/test_partner_signals.cjs",
+      "bytes": 1563,
+      "sha256": "83685672cec25eac5b1850483eb7016670fe30cd1a8f57e0e3c9c57285a8c69d"
+    },
+    {
+      "path": "components/远程服务/app/test_partner_ui.cjs",
+      "bytes": 7050,
+      "sha256": "6dd1b25be07d300a9cacf52170321ff8aa94d54f1181a733cd6265aa7860e16b"
+    },
+    {
+      "path": "components/远程服务/app/test_pc_content.py",
+      "bytes": 3781,
+      "sha256": "11eab56edc206860d71bb67d28d25c6912c78a0f40b8eba344b3a36010092178"
+    },
+    {
+      "path": "components/远程服务/app/test_pc_file_search.cjs",
+      "bytes": 1998,
+      "sha256": "b33f2b672f124dfced0cd8f7e49c054cad4cce4c46b44b4774508a6ecdf1a917"
+    },
+    {
+      "path": "components/远程服务/app/test_pc_files.py",
+      "bytes": 4556,
+      "sha256": "08eac9a3313843f1c34c70a7e45ffe298c85ec88649e4f44fc282e1fbd56e282"
+    },
+    {
+      "path": "components/远程服务/app/test_permission_notices.py",
+      "bytes": 1945,
+      "sha256": "619292db3559f07813d29f24a80b39d72e557a3157610cb5822bbe1a7ef64372"
+    },
+    {
+      "path": "components/远程服务/app/test_presentation_photo.cjs",
+      "bytes": 881,
+      "sha256": "373fd69560c601f612f64632cd05b26eac5a50b22f4b59a324c880157745a5ec"
+    },
+    {
+      "path": "components/远程服务/app/test_preview_http.py",
+      "bytes": 3793,
+      "sha256": "8197c75d61467dc5a71fdd1904f3054c31bf54f48616ecb8a6ba4eb6ee9a3673"
+    },
+    {
+      "path": "components/远程服务/app/test_preview_worker.py",
+      "bytes": 9424,
+      "sha256": "d0cd600c9a3b306d363d615d5b238083e583f67e160b0e125bc07171887c6b50"
+    },
+    {
+      "path": "components/远程服务/app/test_public_reference.py",
+      "bytes": 3463,
+      "sha256": "b242c829eee55e5e41f22fda3b36a7a0bb38f5b5f1fe5297149d5a40869073c0"
+    },
+    {
+      "path": "components/远程服务/app/test_replies.py",
+      "bytes": 10056,
+      "sha256": "24891ce1cc82702d50819e9372cd62aad7df5db9b6227ece1512449ad5afb2b5"
+    },
+    {
+      "path": "components/远程服务/app/test_reply_images.py",
+      "bytes": 4850,
+      "sha256": "35c8441af0f486fdf0a0163e7ca3e2aaf180ba37be4e930ceb0a6e566fd62677"
+    },
+    {
+      "path": "components/远程服务/app/test_session_actions.cjs",
+      "bytes": 688,
+      "sha256": "897a9e63c9d61d86f4d3778a3279e25d1102faa48911c2d0a0bd1b510ff4f96d"
+    },
+    {
+      "path": "components/远程服务/app/test_session_dialog.cjs",
+      "bytes": 3200,
+      "sha256": "a01be1e381d0b6e0b82b7693e106f49c3aa6cac865e45c318cb52bd4b3398aa1"
+    },
+    {
+      "path": "components/远程服务/app/test_session_layout.cjs",
+      "bytes": 2170,
+      "sha256": "cd71e79b5dfc3ef5830438d12b26181a033dd63fefae6eb16ab90948903ca9c4"
+    },
+    {
+      "path": "components/远程服务/app/test_session_recovery.cjs",
+      "bytes": 2804,
+      "sha256": "539b61c32caac2161d16a59757af7e5ba9f6d9aeaf7d4ba67932702f56ace4fb"
+    },
+    {
+      "path": "components/远程服务/app/test_starter_templates.cjs",
+      "bytes": 594,
+      "sha256": "56d299cdaffdeae8028d6e4c5b52cac9fadc9e1fc7c6bdd573df962183719baa"
+    },
+    {
+      "path": "components/远程服务/app/test_tasks.py",
+      "bytes": 7937,
+      "sha256": "98772c50b1af7736860e4196aab8892932fe2f8f572dcac7238f3584d5ce42cb"
+    },
+    {
+      "path": "components/远程服务/app/test_transfer.py",
+      "bytes": 22095,
+      "sha256": "304cab95cc9c58af928a5ed41e58bef29fd63e6cc23f653d463e037f21a01fd6"
+    },
+    {
+      "path": "components/远程服务/app/test_usage.py",
+      "bytes": 4797,
+      "sha256": "38392cf9f95c2f6692e7d9af2c94c1624d1ebe0161cbb6a12f98bc8a2ad571e9"
+    },
+    {
+      "path": "components/远程服务/app/test_usage_http.py",
+      "bytes": 2438,
+      "sha256": "58c58edbdeb033a069b8cfd3ca7d422c33470060cb0eeaa18305fcc648e14bfa"
+    },
+    {
+      "path": "components/远程服务/app/test_web_product.py",
+      "bytes": 3986,
+      "sha256": "7d17babb918007331603c2e4bfb82b8e2c52fffe6fecbfa6c2f3b4f35ec8a7bd"
+    },
+    {
+      "path": "components/远程服务/app/test_web_product_http.py",
+      "bytes": 3433,
+      "sha256": "a179368ddc45e194d062253429e41883aa08fb73ddc8a69da6d86caa72e04b12"
+    },
+    {
+      "path": "components/远程服务/app/test_workbench_http.py",
+      "bytes": 19725,
+      "sha256": "e52fa3361d86a21c15777de3dc75d1fa6802a8dacb8a842172c61e670435316d"
+    },
+    {
+      "path": "components/远程服务/app/test_workbench_preview.cjs",
+      "bytes": 2777,
+      "sha256": "dbb2b8641c8f92fd7745cb8ff55b9d98e1a6da01f63ccefd27ec406bb2766f1b"
+    },
+    {
+      "path": "components/远程服务/app/test_workbench_proxy.py",
+      "bytes": 7367,
+      "sha256": "93c929915657b050e9b26c3d6350d421ad6680a542b60df73fb6c1232420bd66"
+    },
+    {
+      "path": "components/远程服务/app/transfer.py",
+      "bytes": 68773,
+      "sha256": "6c45467da56905e472a4b214ba0c70d438821ce660a130fc58c6782c7de7c2b1"
+    },
+    {
+      "path": "components/远程服务/app/ui-assets/activity-home.back.png",
+      "bytes": 4336,
+      "sha256": "3dbc933bc2bf594c8f9a1dff3705df6c053364800731c273fcc287b420084a72"
+    },
+    {
+      "path": "components/远程服务/app/ui-assets/activity-home.front.png",
+      "bytes": 4336,
+      "sha256": "3dbc933bc2bf594c8f9a1dff3705df6c053364800731c273fcc287b420084a72"
+    },
+    {
+      "path": "components/远程服务/app/ui-assets/activity-home.sit.png",
+      "bytes": 4336,
+      "sha256": "3dbc933bc2bf594c8f9a1dff3705df6c053364800731c273fcc287b420084a72"
+    },
+    {
+      "path": "components/远程服务/app/ui-assets/activity-orchard.back.png",
+      "bytes": 4336,
+      "sha256": "3dbc933bc2bf594c8f9a1dff3705df6c053364800731c273fcc287b420084a72"
+    },
+    {
+      "path": "components/远程服务/app/ui-assets/activity-orchard.front.png",
+      "bytes": 4336,
+      "sha256": "3dbc933bc2bf594c8f9a1dff3705df6c053364800731c273fcc287b420084a72"
+    },
+    {
+      "path": "components/远程服务/app/ui-assets/activity-orchard.sit.png",
+      "bytes": 4336,
+      "sha256": "3dbc933bc2bf594c8f9a1dff3705df6c053364800731c273fcc287b420084a72"
+    },
+    {
+      "path": "components/远程服务/app/ui-assets/activity-plaza.back.png",
+      "bytes": 4336,
+      "sha256": "3dbc933bc2bf594c8f9a1dff3705df6c053364800731c273fcc287b420084a72"
+    },
+    {
+      "path": "components/远程服务/app/ui-assets/activity-plaza.front.png",
+      "bytes": 4336,
+      "sha256": "3dbc933bc2bf594c8f9a1dff3705df6c053364800731c273fcc287b420084a72"
+    },
+    {
+      "path": "components/远程服务/app/ui-assets/activity-plaza.sit.png",
+      "bytes": 4336,
+      "sha256": "3dbc933bc2bf594c8f9a1dff3705df6c053364800731c273fcc287b420084a72"
+    },
+    {
+      "path": "components/远程服务/app/ui-assets/activity-room.back.png",
+      "bytes": 4336,
+      "sha256": "3dbc933bc2bf594c8f9a1dff3705df6c053364800731c273fcc287b420084a72"
+    },
+    {
+      "path": "components/远程服务/app/ui-assets/activity-room.relax.png",
+      "bytes": 4336,
+      "sha256": "3dbc933bc2bf594c8f9a1dff3705df6c053364800731c273fcc287b420084a72"
+    },
+    {
+      "path": "components/远程服务/app/ui-assets/activity-room.rest.png",
+      "bytes": 4336,
+      "sha256": "3dbc933bc2bf594c8f9a1dff3705df6c053364800731c273fcc287b420084a72"
+    },
+    {
+      "path": "components/远程服务/app/ui-assets/activity-room.turn.png",
+      "bytes": 4336,
+      "sha256": "3dbc933bc2bf594c8f9a1dff3705df6c053364800731c273fcc287b420084a72"
+    },
+    {
+      "path": "components/远程服务/app/ui-assets/partner-art.css",
+      "bytes": 27065,
+      "sha256": "49bcfe1c817632f82d4a5615eaba0f99882a0b2bd6382bad43e942b24ee38ebc"
+    },
+    {
+      "path": "components/远程服务/app/ui-assets/PHOSPHOR-LICENSE.txt",
+      "bytes": 1071,
+      "sha256": "b5b1f1da112d18ea2147decfd48ddc1bf2b5aeb6c265381579340e95b15a2bb2"
+    },
+    {
+      "path": "components/远程服务/app/ui-assets/room-preview.png",
+      "bytes": 4336,
+      "sha256": "3dbc933bc2bf594c8f9a1dff3705df6c053364800731c273fcc287b420084a72"
+    },
+    {
+      "path": "components/远程服务/app/usage.py",
+      "bytes": 6037,
+      "sha256": "4a1d41ab649264a913c1fea1267988a95c0e0291fe6ce15e5ff8120aed59421b"
+    },
+    {
+      "path": "components/远程服务/app/web_product.py",
+      "bytes": 6842,
+      "sha256": "e6a8d2449810fd8ae470632cbe422f1c29569e32e5ad378cf97764237e85a96f"
+    },
+    {
+      "path": "components/远程服务/app/web_product_capture.py",
+      "bytes": 2780,
+      "sha256": "68d0c35dcfc52b2c5e4855fd36cf59a30bc6f6b5459173e9bd3f5fb0bcc5b6d7"
+    },
+    {
+      "path": "components/远程服务/app/workbench_proxy.py",
+      "bytes": 12362,
+      "sha256": "cbf872061ec65a422e51e443f0ca621d277522746b9d8ea38a9b492466b51afe"
+    },
+    {
+      "path": "components/远程服务/app/xlsx_preview.py",
+      "bytes": 6056,
+      "sha256": "a4ef94129047795939def8e057e526517fdf6e1005180c9ab4975ab110cd0a14"
+    },
+    {
+      "path": "components/远程服务/LICENSE",
+      "bytes": 1106,
+      "sha256": "f472e81acd7bb686427022846699a54ecbcd9f75cde32226b51b2b4b2a2cfa71"
+    },
+    {
+      "path": "EXPORT_POLICY.json",
+      "bytes": 31068,
+      "sha256": "75b294231a7741703ca8ce78c89f4a2e1b34e19db6384194e325d88146418ad9"
+    },
+    {
+      "path": "launch.py",
+      "bytes": 377,
+      "sha256": "61c80f4596b3732474324bd7dae9a23ee12eb0bd273a54be126dab48726bc63a"
+    },
+    {
+      "path": "LICENSE",
+      "bytes": 1106,
+      "sha256": "bd771cc526a163ecdad6019b5bffab59983d890380abe2a747118e4fd80e491b"
+    },
+    {
+      "path": "licenses/esbuild-LICENSE.md",
+      "bytes": 1069,
+      "sha256": "b40ec5baec7bb34fa5b1c09521fa3cd52d5fad7adafed74932a2010d3612a681"
+    },
+    {
+      "path": "licenses/lucide-react-LICENSE",
+      "bytes": 3208,
+      "sha256": "b495047bd93a9b06913511076f504daba17d5bbeb3e0650f3bb53a4220329c57"
+    },
+    {
+      "path": "licenses/PHOSPHOR-LICENSE.txt",
+      "bytes": 1071,
+      "sha256": "b5b1f1da112d18ea2147decfd48ddc1bf2b5aeb6c265381579340e95b15a2bb2"
+    },
+    {
+      "path": "licenses/react-dom-LICENSE",
+      "bytes": 1088,
+      "sha256": "da6d3703ed11cbe42bd212c725957c98da23cbff1998c05fa4b3d976d1a58e93"
+    },
+    {
+      "path": "licenses/react-LICENSE",
+      "bytes": 1088,
+      "sha256": "da6d3703ed11cbe42bd212c725957c98da23cbff1998c05fa4b3d976d1a58e93"
+    },
+    {
+      "path": "licenses/Three-LICENSE.txt",
+      "bytes": 1081,
+      "sha256": "8b378ebe60e2fe500158cb0ac71cb5e8b7d92953c2abcc63a0eb90499653b5bc"
+    },
+    {
+      "path": "preflight.py",
+      "bytes": 1680,
+      "sha256": "551257e21a2b927190bf6e290374dfd21d90a9c736eb59fd1bfedd0e6ef3a8b9"
+    },
+    {
+      "path": "README.md",
+      "bytes": 5285,
+      "sha256": "43aa2a61ac2c2a65d249ea41de184631dc0776fb66ea878163f70e6fa0aa233b"
+    },
+    {
+      "path": "requirements-lock.txt",
+      "bytes": 270,
+      "sha256": "c6d7ce02b6143990400ed2ee6b06df9e6113dec9d7c9e0668e0eebd871721f87"
+    },
+    {
+      "path": "requirements.txt",
+      "bytes": 112,
+      "sha256": "d6f3d0e18fbe677e155681b7c8869b84c62ace182956a840c89e1307f977d43a"
+    },
+    {
+      "path": "start.cmd",
+      "bytes": 89,
+      "sha256": "da472a0ba52379d9e1b25ece7aeeabba1826d3f65b20b10f39167727134574be"
+    },
+    {
+      "path": "THIRD_PARTY_NOTICES.md",
+      "bytes": 1547,
+      "sha256": "41f62d0eacb66b712972f7417d86f6d4b75344a808ac9b610423b079f554f97a"
+    }
+  ]
+}

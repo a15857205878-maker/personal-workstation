@@ -1,0 +1,10 @@
+.mobile-pane-tabs{display:none}
+@media(max-width:950px){
+ .mobile-pane-tabs{display:flex;gap:7px;margin-bottom:14px}
+ .mobile-pane-tabs button{border:1px solid #dde7e4;background:#fff;border-radius:8px;padding:9px 12px;font-size:11px;color:#80978f}
+ .mobile-pane-tabs button.active{background:#e8f2ed;color:#32695f;border-color:#c4ddd0}
+ .pane-timeline .inspector{display:none}
+ .pane-tools .timeline-panel{display:none}
+}
+
+.document-date{display:block;font-size:9px;color:#9caeb2;margin-top:4px}

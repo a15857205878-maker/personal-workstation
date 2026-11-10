@@ -1,0 +1,18 @@
+{
+  "type": "object",
+  "properties": {
+    "status": {"type": "string", "enum": ["completed", "needs_attention"]},
+    "summary": {"type": "string"},
+    "completed_parts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {"title": {"type": "string"}, "detail": {"type": "string"}},
+        "required": ["title", "detail"],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": ["status", "summary", "completed_parts"],
+  "additionalProperties": false
+}

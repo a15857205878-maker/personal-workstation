@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#eef3f9">
+<title>PDF 预览</title>
+<style>
+:root{
+  --bg:#eef3f9;--panel:#f8fafc;--card:#ffffff;--line:#dbe5ef;--line-soft:#e8eff6;
+  --ink:#1f2a3a;--muted:#5f6f83;--faint:#8493a5;
+  --accent:#2f6fe4;--accent-strong:#1f5bd0;--accent-soft:#e8f0fe;
+  --err:#b42318;--err-bg:#fdf1ef;
+  color-scheme:light;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Microsoft YaHei",sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0;min-height:100%}
+body{background:linear-gradient(180deg,#f5f8fc 0%,var(--bg) 100%);color:var(--ink);-webkit-text-size-adjust:100%}
+a{color:var(--accent-strong)}
+a:focus-visible{outline:3px solid #9dbcf2;outline-offset:2px}
+.page{width:100%;max-width:900px;margin:0 auto;padding:18px 14px calc(28px + env(safe-area-inset-bottom))}
+.doc-head{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px;box-shadow:0 6px 18px rgba(30,58,95,.06)}
+.eyebrow{font-size:11px;letter-spacing:.08em;color:var(--faint);font-weight:700}
+h1{font-size:16px;line-height:1.45;margin:4px 0 0;overflow-wrap:anywhere;word-break:break-word;font-weight:700}
+.status{display:flex;align-items:flex-start;gap:9px;margin-top:10px;font-size:12.5px;line-height:1.65;color:var(--muted);overflow-wrap:anywhere}
+.status-dot{width:8px;height:8px;border-radius:50%;background:#a5b2c2;flex:none;margin-top:6px}
+.status[data-tone="busy"] .status-dot{background:var(--accent)}
+.status[data-tone="ready"] .status-dot{background:#3b82f6}
+.status[data-tone="error"]{color:var(--err)}
+.status[data-tone="error"] .status-dot{background:var(--err)}
+.status-text{min-width:0;flex:1}
+.status-detail{color:var(--faint);font-size:12px;margin-top:2px;overflow-wrap:anywhere}
+.status[data-tone="error"] .status-detail{color:var(--err)}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.action{display:inline-flex;align-items:center;justify-content:center;min-height:40px;padding:8px 14px;border-radius:10px;border:1px solid var(--line);background:var(--accent-soft);color:var(--accent-strong);font-size:12.5px;font-weight:650;text-decoration:none}
+.action:hover{border-color:#b9cff2;background:#eef4ff}
+.action.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.action.primary:hover{background:var(--accent-strong)}
+.pages{margin-top:14px;display:flex;flex-direction:column;gap:10px}
+.page-shot{margin:0;background:var(--card);border:1px solid var(--line);border-radius:10px;overflow:hidden;box-shadow:0 3px 12px rgba(30,58,95,.06)}
+.page-shot img{display:block;width:100%;height:auto;background:#fff}
+.page-num{font-size:11px;color:var(--faint);padding:5px 9px;border-top:1px solid var(--line-soft);text-align:right}
+@media(max-width:420px){
+  .page{padding:12px 10px calc(24px + env(safe-area-inset-bottom))}
+  .doc-head{padding:12px 13px;border-radius:12px}
+  h1{font-size:15px}
+  .action{flex:1 1 140px}
+}
+@media(min-width:761px){
+  .page{padding:26px 20px 40px}
+}
+</style>
+</head>
+<body>
+<main class="page">
+  <header class="doc-head">
+    <div class="eyebrow">PDF 预览</div>
+    <h1 id="docTitle">PDF 预览</h1>
+    <div class="status" id="statusBox" data-tone="busy" role="status" aria-live="polite">
+      <span class="status-dot" aria-hidden="true"></span>
+      <div class="status-text">
+        <div id="statusText">正在加载预览…</div>
+        <div class="status-detail" id="statusDetail" hidden></div>
+      </div>
+    </div>
+    <div class="actions" id="actions" hidden>
+      <a class="action primary" id="pdfLink" href="#" hidden>下载PDF</a>
+      <a class="action" id="originalLink" href="#" hidden>原文件</a>
+    </div>
+  </header>
+  <section class="pages" id="pages" aria-label="预览页面"></section>
+</main>
+<script>
+(function () {
+  'use strict';
+
+  var ID_RE = /^[a-f0-9]{64}$/i;
+  var MAX_PAGES = 100;
+  var POLL_MS = 2000;
+  var REQUEST_TIMEOUT_MS = 15000;
+
+  var params = new URLSearchParams(location.search);
+  var token = params.get('token') || '';
+  var rawPreviewId = params.get('preview_id') || '';
+  var previewId = ID_RE.test(rawPreviewId) ? rawPreviewId : '';
+
+  var els = {
+    title: document.getElementById('docTitle'),
+    statusBox: document.getElementById('statusBox'),
+    statusText: document.getElementById('statusText'),
+    statusDetail: document.getElementById('statusDetail'),
+    actions: document.getElementById('actions'),
+    pdfLink: document.getElementById('pdfLink'),
+    originalLink: document.getElementById('originalLink'),
+    pages: document.getElementById('pages')
+  };
+  if (!els.title || !els.statusBox || !els.statusText || !els.statusDetail
+      || !els.actions || !els.pdfLink || !els.originalLink || !els.pages) return;
+
+  var stopped = false;
+  var pollTimer = null;
+  var inFlight = false;
+
+  function textOf(value) {
+    return value === undefined || value === null ? '' : String(value).trim();
+  }
+
+  function setTitle(value) {
+    var text = textOf(value);
+    if (!text) return;
+    els.title.textContent = text;
+    document.title = text + ' · PDF 预览';
+  }
+
+  function setDetail(value) {
+    var text = textOf(value);
+    els.statusDetail.textContent = text;
+    els.statusDetail.hidden = !text;
+  }
+
+  function setStatus(text, tone) {
+    els.statusBox.dataset.tone = tone || 'busy';
+    els.statusText.textContent = text;
+  }
+
+  function stopPolling() {
+    stopped = true;
+    if (pollTimer !== null) {
+      clearTimeout(pollTimer);
+      pollTimer = null;
+    }
+  }
+
+  function fail(text) {
+    stopPolling();
+    setStatus(text, 'error');
+    setDetail('');
+    els.actions.hidden = true;
+    els.pdfLink.hidden = true;
+    els.originalLink.hidden = true;
+    while (els.pages.firstChild) els.pages.removeChild(els.pages.firstChild);
+  }
+
+  function schedulePoll() {
+    if (stopped) return;
+    if (pollTimer !== null) clearTimeout(pollTimer);
+    pollTimer = setTimeout(function () {
+      pollTimer = null;
+      loadPreview();
+    }, POLL_MS);
+  }
+
+  function pageImageUrl(number) {
+    return '/preview/' + encodeURIComponent(previewId) + '/page/' + number + '.png?token=' + encodeURIComponent(token);
+  }
+
+  function fixedPdfUrl() {
+    return '/preview/' + encodeURIComponent(previewId) + '/document.pdf?token=' + encodeURIComponent(token) + '&download=1';
+  }
+
+  function pdfUrlFrom(raw) {
+    if (raw !== undefined && raw !== null && raw !== '') {
+      var supplied;
+      try {
+        supplied = new URL(String(raw), location.origin);
+      } catch (error) {
+        return '';
+      }
+      if (supplied.origin !== location.origin) return '';
+      var expected = ('/preview/' + previewId + '/document.pdf').toLowerCase();
+      if (supplied.pathname.toLowerCase() !== expected) return '';
+    }
+    return fixedPdfUrl();
+  }
+
+  function originalUrlFrom(raw) {
+    if (!raw) return '';
+    var supplied;
+    try {
+      supplied = new URL(String(raw), location.origin);
+    } catch (error) {
+      return '';
+    }
+    if (supplied.origin !== location.origin) return '';
+    if (supplied.pathname === '/api/workbench-artifact') {
+      var taskId=supplied.searchParams.get('id')||'',name=supplied.searchParams.get('name')||'';
+      if(!/^[a-f0-9]{32}$/.test(taskId)||!name||name.length>240||/[\\/\x00-\x1f]/.test(name))return '';
+      var kind=supplied.searchParams.get('kind')||'task';if(!['task','collaboration'].includes(kind))return '';
+      var original=new URL('/api/workbench-artifact',location.origin);original.searchParams.set('id',taskId);original.searchParams.set('name',name);original.searchParams.set('token',token);if(kind==='collaboration')original.searchParams.set('kind',kind);return original.pathname+original.search;
+    }
+    if (!/^\/artifact\/[^/]+\/.+/.test(supplied.pathname)) return '';
+    var fixed = new URL(supplied.pathname + supplied.search, location.origin);
+    fixed.searchParams.set('token', token);
+    return fixed.pathname + fixed.search;
+  }
+
+  function titleFromOriginal(raw) {
+    if (!raw) return '';
+    try {
+      var url = new URL(String(raw), location.origin);
+      var parts = url.pathname.split('/');
+      var last = parts[parts.length - 1] || '';
+      return decodeURIComponent(last);
+    } catch (error) {
+      return '';
+    }
+  }
+
+  function setActions(pdfHref, originalHref) {
+    if (!pdfHref || !originalHref) return false;
+    els.pdfLink.href = pdfHref;
+    els.pdfLink.hidden = false;
+    els.originalLink.href = originalHref;
+    els.originalLink.hidden = false;
+    els.actions.hidden = false;
+    return true;
+  }
+
+  function renderPages(count) {
+    while (els.pages.firstChild) els.pages.removeChild(els.pages.firstChild);
+    for (var number = 1; number <= count; number += 1) {
+      var figure = document.createElement('figure');
+      figure.className = 'page-shot';
+      var image = document.createElement('img');
+      image.setAttribute('loading', 'lazy');
+      image.setAttribute('decoding', 'async');
+      image.alt = '第 ' + number + ' 页';
+      image.addEventListener('error', function () {
+        this.alt += '（加载失败）';
+        setStatus('部分预览页面加载失败。', 'error');
+        setDetail('请检查网络后重新打开；也可下载PDF或原文件。若缓存丢失，请返回成果列表重新点击PDF预览。');
+      });
+      image.src = pageImageUrl(number);
+      figure.appendChild(image);
+      var caption = document.createElement('figcaption');
+      caption.className = 'page-num';
+      caption.textContent = '第 ' + number + ' 页';
+      figure.appendChild(caption);
+      els.pages.appendChild(figure);
+    }
+  }
+
+  function applyPayload(data) {
+    if (!data || typeof data !== 'object') {
+      fail('预览服务返回了无效响应。');
+      return;
+    }
+    var id = textOf(data.id);
+    if (!ID_RE.test(id) || id.toLowerCase() !== previewId.toLowerCase()) {
+      fail('预览ID不一致，已拒绝加载。');
+      return;
+    }
+
+    var title = textOf(data.title);
+    if (!title) title = titleFromOriginal(data.original_url);
+    if (title) setTitle(title);
+
+    var status = textOf(data.status).toLowerCase();
+    var message = textOf(data.message);
+
+    if (status === 'queued' || status === 'converting') {
+      setStatus(status === 'queued' ? '预览排队中，稍候会自动刷新…' : '正在转换 PDF，稍候会自动刷新…', 'busy');
+      setDetail(message || '状态每 2 秒自动更新。');
+      els.actions.hidden = true;
+      els.pdfLink.hidden = true;
+      els.originalLink.hidden = true;
+      schedulePoll();
+      return;
+    }
+
+    if (status === 'ready') {
+      stopPolling();
+      var totalPages = Math.max(0, Math.floor(Number(data.pages) || 0));
+      var shownPages = Math.min(totalPages, MAX_PAGES);
+      var pdfHref = pdfUrlFrom(data.pdf_url);
+      var originalHref = originalUrlFrom(data.original_url);
+      if (!pdfHref || !originalHref) {
+        fail('预览数据中的下载地址无效，已拒绝加载。');
+        return;
+      }
+      renderPages(shownPages);
+      setActions(pdfHref, originalHref);
+      if (shownPages > 0) {
+        setStatus(totalPages > MAX_PAGES
+          ? 'PDF 预览已就绪，已显示前 100 页。'
+          : 'PDF 预览已就绪，共 ' + shownPages + ' 页。', 'ready');
+        setDetail(totalPages > MAX_PAGES ? '完整内容请下载 PDF。' : '');
+      } else {
+        setStatus('PDF 预览已就绪。', 'ready');
+        setDetail('未返回可展示页面，可直接下载 PDF。');
+      }
+      return;
+    }
+
+    if (status === 'failed') {
+      stopPolling();
+      var reason = message || '转换失败（未提供原因）。';
+      var failedOriginal = originalUrlFrom(data.original_url);
+      setStatus('转换失败：' + reason, 'error');
+      setDetail('');
+      els.pdfLink.hidden = true;
+      if (failedOriginal) {
+        els.originalLink.href = failedOriginal;
+        els.originalLink.hidden = false;
+        els.actions.hidden = false;
+      } else {
+        els.originalLink.hidden = true;
+        els.actions.hidden = true;
+        setDetail('原文件地址无效，无法提供下载。');
+      }
+      return;
+    }
+
+    fail('预览状态无法识别，已停止加载。');
+  }
+
+  async function requestStatus() {
+    var controller = new AbortController();
+    var timer = setTimeout(function () {
+      try { controller.abort(); } catch (error) { /* ignore */ }
+    }, REQUEST_TIMEOUT_MS);
+    try {
+      var response = await fetch('/api/bot/preview/' + encodeURIComponent(previewId) + '?token=' + encodeURIComponent(token), {
+        method: 'GET',
+        headers: { Accept: 'application/json' },
+        cache: 'no-store',
+        signal: controller.signal
+      });
+      var raw = await response.text();
+      var data = null;
+      if (raw) {
+        try { data = JSON.parse(raw); } catch (error) { data = null; }
+      }
+      return { response: response, data: data };
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+
+  async function loadPreview() {
+    if (stopped || inFlight) return;
+    inFlight = true;
+    try {
+      var result;
+      try {
+        result = await requestStatus();
+      } catch (error) {
+        var timedOut = error && error.name === 'AbortError';
+        fail(timedOut ? '加载预览超时，请重新打开此页。' : '加载预览失败，请检查网络后重新打开此页。');
+        return;
+      }
+      var response = result.response;
+      var data = result.data;
+      if (response.status === 403) {
+        fail('配对失效，请从电脑重新配对后再打开预览。');
+        return;
+      }
+      if (response.status === 401) {
+        fail('访问令牌无效，请从电脑重新打开链接。');
+        return;
+      }
+      if (!response.ok) {
+        var reason = textOf(data && (data.error || data.message));
+        fail('无法加载预览' + (reason ? '：' + reason : '（HTTP ' + response.status + '）') + '。');
+        return;
+      }
+      try {
+        applyPayload(data);
+      } catch (error) {
+        fail('预览数据处理失败，请重新打开此页。');
+      }
+    } finally {
+      inFlight = false;
+    }
+  }
+
+  if (!rawPreviewId) {
+    fail('预览链接缺少预览ID，无法加载。');
+    return;
+  }
+  if (!previewId) {
+    fail('预览ID格式不正确，已拒绝加载。');
+    return;
+  }
+  if (!token) {
+    fail('预览链接缺少访问令牌，请从电脑重新打开。');
+    return;
+  }
+  loadPreview();
+})();
+</script>
+</body>
+</html>

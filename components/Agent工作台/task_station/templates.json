@@ -1,0 +1,181 @@
+{
+  "schema_version": 1,
+  "updated_on": "2026-11-06",
+  "document_kind": "task_template_catalog_not_execution_config",
+  "mode": "independent_user_selected_tasks",
+  "command_pattern": "{task_label}｜{agent_label}｜{user_instruction}",
+  "automatic_handoff": false,
+  "fields": [
+    {
+      "id": "task_type",
+      "label": "想做什么",
+      "required": true
+    },
+    {
+      "id": "agent",
+      "label": "交给谁",
+      "required": true
+    },
+    {
+      "id": "instruction",
+      "label": "具体要求",
+      "required": true
+    },
+    {
+      "id": "materials",
+      "label": "资料",
+      "required": false
+    },
+    {
+      "id": "requirements",
+      "label": "补充要求",
+      "required": false
+    }
+  ],
+  "tasks": [
+    {
+      "id": "text",
+      "label": "生成文档",
+      "agents": [
+        {
+          "role_ref": "text_claude",
+          "label": "Claude"
+        },
+        {
+          "role_ref": "text_2",
+          "label": "千问"
+        }
+      ],
+      "default_role_ref": "text_claude",
+      "placeholder": "写什么、给谁看、篇幅和风格",
+      "default_output": "完整正文",
+      "suffix": "根据给定材料和要求完成正文；事实、引用或数据缺失时明确标注，不补造。"
+    },
+    {
+      "id": "pptx",
+      "label": "生成PPT",
+      "agents": [
+        {
+          "role_ref": "presentation_gemini",
+          "label": "Gemini"
+        }
+      ],
+      "default_role_ref": "presentation_gemini",
+      "placeholder": "主题、页数、受众、风格和参考材料",
+      "default_output": "可下载、可编辑的PPTX文件",
+      "suffix": "交付可下载、可编辑的PPTX，检查页面文字和图表；无法生成文件时说明限制。"
+    },
+    {
+      "id": "image",
+      "label": "生成图片",
+      "agents": [
+        {
+          "role_ref": "image_gemini",
+          "label": "Gemini（图片生成）"
+        }
+      ],
+      "default_role_ref": "image_gemini",
+      "placeholder": "画面内容、用途、比例、风格与留白要求",
+      "default_output": "可下载的图片文件",
+      "suffix": "请实际生成并提供可下载的图片，而不是只写提示词；无法生成时明确说明。不要把整页图片当成可编辑PPT。"
+    },
+    {
+      "id": "xlsx",
+      "label": "生成Excel",
+      "agents": [
+        {
+          "role_ref": "excel_gemini",
+          "label": "Gemini"
+        }
+      ],
+      "default_role_ref": "excel_gemini",
+      "placeholder": "表格用途、字段、数据和计算要求",
+      "default_output": "可下载、可编辑的XLSX文件",
+      "suffix": "交付可下载、可编辑的XLSX；计算使用公式，检查汇总、零值和输入验证的错误提示。"
+    },
+    {
+      "id": "animation",
+      "label": "生成小动画",
+      "agents": [
+        {
+          "role_ref": "animation_gemini",
+          "label": "Gemini"
+        }
+      ],
+      "default_role_ref": "animation_gemini",
+      "placeholder": "动画形象或元素、动作、时长、背景与循环要求",
+      "default_output": "可离线预览的HTML/CSS/SVG动画文件",
+      "suffix": "仅生成离线CSS/SVG小动画，不使用JavaScript、外部资源、网络请求或网页跳转；支持减少动态效果。"
+    },
+    {
+      "id": "research",
+      "label": "查找资料",
+      "agents": [
+        {
+          "role_ref": "research_kimi",
+          "label": "Kimi"
+        }
+      ],
+      "default_role_ref": "research_kimi",
+      "placeholder": "查什么、时间范围和需要哪些来源",
+      "default_output": "带来源链接的资料清单",
+      "suffix": "附可打开的来源链接，区分资料原文与自己的归纳；无法核实的内容明确说明。"
+    },
+    {
+      "id": "web_check",
+      "label": "检查网页",
+      "agents": [
+        {
+          "role_ref": "frontend",
+          "label": "DeepSeek"
+        }
+      ],
+      "default_role_ref": "frontend",
+      "placeholder": "网址或页面材料、重点检查什么",
+      "default_output": "问题清单和对应位置",
+      "suffix": "按实际看到的页面或提供的材料列出问题与位置；未完成的点击或浏览检查不记为通过。"
+    },
+    {
+      "id": "web_edit",
+      "label": "修改网页",
+      "agents": [
+        {
+          "role_ref": "frontend",
+          "label": "DeepSeek"
+        }
+      ],
+      "default_role_ref": "frontend",
+      "placeholder": "页面位置和要修改的内容",
+      "default_output": "修改结果与检查说明",
+      "suffix": "按指定位置完成修改，并说明实际改动和检查结果。"
+    },
+    {
+      "id": "software_operation",
+      "label": "软件操作",
+      "agents": [
+        {
+          "role_ref": "backend_and_integration",
+          "label": "GPT-6.1 Sol"
+        }
+      ],
+      "default_role_ref": "backend_and_integration",
+      "placeholder": "软件名称、想完成什么，以及需要讲步骤还是实际操作",
+      "default_output": "操作步骤或实际操作结果",
+      "suffix": "区分讲解步骤和实际操作；只报告真正执行过的步骤及结果。"
+    },
+    {
+      "id": "software_error",
+      "label": "处理软件报错",
+      "agents": [
+        {
+          "role_ref": "backend_and_integration",
+          "label": "GPT-6.1 Sol"
+        }
+      ],
+      "default_role_ref": "backend_and_integration",
+      "placeholder": "软件名称、报错原文和触发操作",
+      "default_output": "原因、处理步骤和验证结果",
+      "suffix": "先确认现象和原因，再做对应处理；无法确定的原因保留为待核实。"
+    }
+  ]
+}

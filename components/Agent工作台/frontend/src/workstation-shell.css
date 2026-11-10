@@ -1,0 +1,3 @@
+.mode-pane[hidden]{display:none!important}
+.workstation-loading{padding:28px;color:var(--theme-muted,#657e93)}
+.workstation-error{padding:10px 20px;color:#9b4d34;background:#fff2e9}
