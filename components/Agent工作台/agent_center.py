@@ -59,12 +59,21 @@ class AgentCenter:
         self.chat.memory_sources=[self.chat.sessions,self.agent.chat.sessions]+([lab.sessions] if lab else [])
         for summary in self.sessions.list():
             if summary['status']=='corrupt':continue
-            session=self.sessions.load(summary['id']);interrupted=[]
+            session=self.sessions.load(summary['id']);interrupted=[];jobs_changed=False
             for turn in session['turns']:
                 if (turn['state']=='starting' and not turn.get('run_id')) or ((turn.get('jobs') or turn.get('drafted') or turn['kind']=='chat') and turn['state'] in ACTIVE):
                     turn.update(state='interrupted',error='上次启动结果未确认，未自动重发')
                     interrupted.append(turn)
-            if interrupted:
+                if turn['state']!='interrupted':continue
+                for job in turn.get('jobs',[]):
+                    if job.get('run_id'):continue
+                    if job['state']=='queued':
+                        job.update(state='skipped',error='上次运行中断，此子任务未发送')
+                        jobs_changed=True
+                    elif job['state']=='starting':
+                        job.update(state='interrupted',error='上次子任务启动结果未确认')
+                        jobs_changed=True
+            if interrupted or jobs_changed:
                 self._save(session)
                 for turn in interrupted:
                     if turn['kind']=='execute' or turn.get('jobs'):

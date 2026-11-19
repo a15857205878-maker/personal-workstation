@@ -34,6 +34,7 @@ function Assignments({jobs,onChange,profiles,disabled}){
 
 function Center({visible,pendingSetup,onSetupHandled,pendingBrief,onBriefHandled,onLegacy,pendingConversation,onConversationHandled,onTurnArtifacts,historyVisible,historyIntent,onHistoryState,onHistoryIntentHandled}){
  const [profiles,setProfiles]=useState([]),[sessions,setSessions]=useState([]),[session,setSession]=useState(null),[ready,setReady]=useState(false),[error,setError]=useState(''),[notice,setNotice]=useState(''),[busy,setBusy]=useState(''),[globalBusy,setGlobalBusy]=useState(false),[settings,setSettings]=useState(false),[creating,setCreating]=useState(false);
+ const [statusError,setStatusError]=useState('');
  const [a,setA]=useState(''),[b,setB]=useState(''),[c,setC]=useState(''),[jobs,setJobs]=useState([]),[presetName,setPresetName]=useState('我的分工'),[preset,setPreset]=useState(null),[drafts,setDrafts]=useState({}),[assignments,setAssignments]=useState(false),[draftAttachments,setDraftAttachments]=useState({}),[attachmentBusy,setAttachmentBusy]=useState(false);
  const [managing,setManaging]=useState(false);
  const [manual,setManual]=useState(false),[identities,setIdentities]=useState({}),[identityTarget,setIdentityTarget]=useState(null);
@@ -47,6 +48,7 @@ function Center({visible,pendingSetup,onSetupHandled,pendingBrief,onBriefHandled
  useEffect(()=>{const observer=new ResizeObserver(()=>{const h=main.current?.clientHeight;if(h>0){setHeight(h);setInputSize(v=>inputHeight(v,h));}});if(main.current)observer.observe(main.current);return()=>observer.disconnect();},[]);
  const retryAttempts=useRef(new Map());
  const current=useRef(null),alive=useRef(true),locked=useRef(false),attempt=useRef(null),feed=useRef(null),nearBottom=useRef(true);
+ const displayError=error||statusError;
  const draftKey=session?.id||'new',text=drafts[draftKey]||'',running=active(session),prepared=session?.turns?.find(t=>t.state==='prepared');
  const attachments=draftAttachments[draftKey]||[];
  const setAttachments=items=>setDraftAttachments(old=>({...old,[draftKey]:items}));
@@ -86,7 +88,20 @@ function Center({visible,pendingSetup,onSetupHandled,pendingBrief,onBriefHandled
  }
  useEffect(()=>{alive.current=true;const init=()=>bootstrap(true).catch(e=>alive.current&&setError(e.message));if(window.pywebview?.api?.call)init();else window.addEventListener('pywebviewready',init,{once:true});return()=>{alive.current=false;window.removeEventListener('pywebviewready',init);};},[]);
  useEffect(()=>{if((!visible&&!historyVisible)||!ready)return;let cancelled=false,inflight=false;let tick=0;
-  async function poll(){if(cancelled||inflight||locked.current)return;inflight=true;const selected=current.current;try{if(selected){const s=await call('api_center_status',{id:selected});if(!cancelled&&current.current===selected){setSession(s);remember(s);}}if(++tick%5===0)await bootstrap();}catch(e){if(!cancelled)setError('状态读取失败：'+e.message);}finally{inflight=false;}}
+  async function poll(){
+   if(cancelled||inflight||locked.current)return;
+   inflight=true;const selected=current.current;
+   try{
+    if(selected){
+     const s=await call('api_center_status',{id:selected});
+     if(!cancelled&&current.current===selected){setSession(s);remember(s);}
+    }
+    if(++tick%5===0)await bootstrap();
+    if(!cancelled&&current.current===selected)setStatusError('');
+   }catch(e){
+    if(!cancelled&&current.current===selected)setStatusError('状态读取失败：'+e.message);
+   }finally{inflight=false;}
+  }
   const timer=setInterval(poll,800);return()=>{cancelled=true;clearInterval(timer);};
  },[visible,historyVisible,ready]);
  useEffect(()=>{if(visible&&pendingSetup&&pendingSetup.section!=='options'){setSettings(true);onSetupHandled?.();}},[visible,pendingSetup?.id]);
@@ -236,7 +251,7 @@ function Center({visible,pendingSetup,onSetupHandled,pendingBrief,onBriefHandled
    <details className="center-settings-menu"><summary>群聊设置</summary><button className="auto-button" disabled={!session||!!busy||running||!!prepared||globalBusy} onClick={()=>setManaging(true)}>会话管理</button><button className="auto-button" onClick={()=>setMemorySeed({})}>长期记忆</button><button className="auto-button" onClick={()=>setSettings(true)}>模型连接</button><button className="auto-button" onClick={onLegacy}>原高级协作</button><small>点击成员资料可更换头像和昵称。</small></details>
   </div>
  </header>
- {sendBlock&&session&&!creating&&!prepared&&!running&&<p className="auto-warning" role="status">{sendBlock}</p>}{error&&progressId===null&&<div className="auto-warning" role="alert">{error}</div>}{notice&&progressId===null&&<p role="status">{notice}</p>}
+ {sendBlock&&session&&!creating&&!prepared&&!running&&<p className="auto-warning" role="status">{sendBlock}</p>}{displayError&&progressId===null&&<div className="auto-warning" role="alert">{displayError}</div>}{notice&&progressId===null&&<p role="status">{notice}</p>}
  {(!session||creating)&&<ConversationStart ready={ready} error={error} loading={!!busy||globalBusy}
   hasProfiles={profiles.length>0} members={startMembers} onCreate={create} onModels={()=>setSettings(true)}
   onRetry={()=>action('bootstrap',()=>bootstrap(true))} onBack={session?()=>setCreating(false):undefined}>
@@ -253,7 +268,7 @@ function Center({visible,pendingSetup,onSetupHandled,pendingBrief,onBriefHandled
   onSaveDraft={saveDraft} renderEditor={(items,setItems,disabled)=><Assignments jobs={items} onChange={setItems} profiles={profiles} disabled={disabled}/>}
   onRestorePlanningInput={canRestorePlanningInput?restorePlanningInput:undefined}
   opener={progressOpener.current} onClose={()=>setProgressId(null)} onDelivery={turnId=>requestAnimationFrame(()=>focusRecord(turnId,'delivery'))}
-  activeId={currentTurn?.id} busy={busy} globalBusy={globalBusy} identities={identities} error={error} notice={notice}
+  activeId={currentTurn?.id} busy={busy} globalBusy={globalBusy} identities={identities} error={displayError} notice={notice}
   onConfirm={confirm} onEdit={canReturnToDraft?item=>cancelPlan(item,true):undefined} onCancel={cancelPlan} onStop={stop} onRetry={retry}
   retryBlocked={running||!!prepared||!!session.archived||session.call_count>=session.call_limit}/>}
  </div>

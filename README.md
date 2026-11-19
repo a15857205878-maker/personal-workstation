@@ -6,7 +6,7 @@ Windows 本地桌面工作站，包含搭档聊天、任务分工、成果、工
 
 下载后完整解压，双击 `PersonalWorkstation.exe`。包内自带 Python 和 Tcl/Tk，使用系统的 WebView2 Evergreen Runtime。缺少 WebView2 时，包内 README 提供微软下载入口。
 
-[下载便携 ZIP](https://github.com/a15857205878-maker/personal-workstation/releases/download/v2026.11.20/PersonalWorkstation-2026.11.20-portable-win-x64-evergreen.zip) · [查看发布页](https://github.com/a15857205878-maker/personal-workstation/releases/tag/v2026.11.20)
+[下载便携 ZIP](https://github.com/a15857205878-maker/personal-workstation/releases/download/v2026.11.20.1/PersonalWorkstation-2026.11.20.1-portable-win-x64-evergreen.zip) · [查看发布页](https://github.com/a15857205878-maker/personal-workstation/releases/tag/v2026.11.20.1)
 
 ## 2026.11.20
 

@@ -8,8 +8,8 @@
     },
     {
       "path": "EXPORT_POLICY.json",
-      "bytes": 41159,
-      "sha256": "ad7f76583c29539c2457b8a9a1fa088832dfeba937d75a555de592d21842d2dd"
+      "bytes": 40481,
+      "sha256": "fa9b1e9a470891840633d833f962db1b56be20d734adf9e455c1d1280c2735fc"
     },
     {
       "path": "LICENSE",
@@ -18,8 +18,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 5146,
-      "sha256": "76a1961ee0cde078f3fe596d4a76f5b479e3434e7044179368509f17aebbd60d"
+      "bytes": 5670,
+      "sha256": "cd5798c4fec77e46b4a68e165e266818f246a6f5e9382b8fd79d556674e7cca7"
     },
     {
       "path": "THIRD_PARTY_NOTICES.md",
@@ -38,8 +38,8 @@
     },
     {
       "path": "components/Agent工作台/agent_center.py",
-      "bytes": 29612,
-      "sha256": "a986ff278a38a04424f20598d6cd3b0312d551da466bd9dbd475e83436741b97"
+      "bytes": 29784,
+      "sha256": "a34cfc7c0896509488fb94c780a2c44a73dffd1b536d29b7027b3d605becbbf7"
     },
     {
       "path": "components/Agent工作台/agent_workflow.py",
@@ -218,8 +218,8 @@
     },
     {
       "path": "components/Agent工作台/frontend/dist/assets/app.js",
-      "bytes": 583333,
-      "sha256": "833cd660f77a75b722a26c26c5e5e5c8914dc178c5ef25a39db1ebe619415d9a"
+      "bytes": 583432,
+      "sha256": "ab88fc977b8dc60236b976904178e47392b8fdc293b7fa69b0193b061a7a1ce5"
     },
     {
       "path": "components/Agent工作台/frontend/dist/index.html",
@@ -288,8 +288,8 @@
     },
     {
       "path": "components/Agent工作台/frontend/src/agent-center.jsx",
-      "bytes": 33128,
-      "sha256": "f7a2d1f32d0b703aae0b75583b571634b236b598c8577caf85f23dda4c6aea76"
+      "bytes": 33097,
+      "sha256": "f47cf4f138b2f7ad1bd3f639ef27952425548512eb4c74c1a64c7b74fb202165"
     },
     {
       "path": "components/Agent工作台/frontend/src/app-interaction.mjs",
