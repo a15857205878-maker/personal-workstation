@@ -2,6 +2,12 @@
 
 Windows 本地桌面工作站，包含搭档聊天、任务分工、成果、工具、休闲、手机连接与设置。主程序位于 `components/Agent工作台`，运行资料从空状态创建。
 
+## Windows x64 便携版
+
+下载后完整解压，双击 `PersonalWorkstation.exe`。包内自带 Python 和 Tcl/Tk，使用系统的 WebView2 Evergreen Runtime。缺少 WebView2 时，包内 README 提供微软下载入口。
+
+[下载便携 ZIP](https://github.com/a15857205878-maker/personal-workstation/releases/download/v2026.11.20/PersonalWorkstation-2026.11.20-portable-win-x64-evergreen.zip) · [查看发布页](https://github.com/a15857205878-maker/personal-workstation/releases/tag/v2026.11.20)
+
 ## 2026.11.20
 
 - 搭档群聊支持最多三名模型成员、按会话保存草稿和明确分工。任务先形成待确认计划，确认后运行，并可单独重试失败项。
@@ -9,7 +15,7 @@ Windows 本地桌面工作站，包含搭档聊天、任务分工、成果、工
 - 工作站重整搭档、成果、工具与休闲入口。手机配对页面提供聊天、成果、文件和更多四个入口，旧任务记录仍可访问。
 - 工具页保留资料与打包、图标换装台等原有功能，休闲页整合书房和小镇专注入口。
 
-## 安装与启动
+## 源码安装与启动
 
 需要 Windows 10/11、Python 3.12、Microsoft Edge WebView2 Runtime。开发构建另需 Node.js 22.8+、pnpm 11.25.0。依赖不会随源码包附带。
 
