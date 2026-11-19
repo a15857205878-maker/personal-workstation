@@ -1,8 +1,9 @@
 from pathlib import Path
-import importlib.util,json,sys,tempfile,unittest
+import importlib.util,json,os,sys,tempfile,unittest
 W=Path(__file__).resolve().parents[1];sys.path.insert(0,str(W))
-P=Path(__file__).resolve().parents[2]/'agent-desktop-pet'
+P=Path(os.environ.get('AGENT_PET_ROOT', str(Path(__file__).resolve().parents[2] / 'agent-desktop-pet')))
 
+@unittest.skipUnless((P/'pet_room_presence.py').is_file(), 'Requires the optional desktop pet')
 class RoomTests(unittest.TestCase):
  def setUp(self):
   self.temp=tempfile.TemporaryDirectory();self.addCleanup(self.temp.cleanup);self.root=Path(self.temp.name)

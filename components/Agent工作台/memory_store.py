@@ -21,12 +21,12 @@ class MemoryStore:
             return items
         except (ValueError,KeyError,TypeError):raise ValueError('记忆文件损坏或超限，原文件未改动，请检查 memory.json') from None
     def _fields(self,row):
-        if row.get('scope') not in ('A','B','shared') or row.get('kind') not in ('profile','preference','note'):raise ValueError('记忆范围或类型无效')
+        if row.get('scope') not in ('A','B','C','shared') or row.get('kind') not in ('profile','preference','note'):raise ValueError('记忆范围或类型无效')
         if not isinstance(row.get('text'),str) or not 1<=len(row['text'].strip())<=self.MAX_TEXT:raise ValueError('每条记忆请输入 1–500 字')
         source=row.get('source')
         if source is not None:
             if not isinstance(source,dict) or any(not isinstance(source.get(k),str) or not re.fullmatch('[a-f0-9]{32}',source[k]) for k in ('chat_id','message_id')):raise ValueError('记忆来源无效')
-            if source.get('seat') not in ('U','A','B') or not isinstance(source.get('excerpt'),str) or not 1<=len(source['excerpt'])<=500 or not isinstance(source.get('title'),str) or len(source['title'])>100:raise ValueError('记忆来源内容无效')
+            if source.get('seat') not in ('U','A','B','C') or not isinstance(source.get('excerpt'),str) or not 1<=len(source['excerpt'])<=500 or not isinstance(source.get('title'),str) or len(source['title'])>100:raise ValueError('记忆来源内容无效')
     def _write(self,rows):
         if len(json.dumps(rows,ensure_ascii=False,indent=2).encode('utf-8'))>self.MAX_BYTES:raise ValueError('记忆文件达到 4 MiB 上限，请先整理')
         atomic_json(self.path,rows)
@@ -61,7 +61,7 @@ class MemoryStore:
         for part in re.findall('[\u4e00-\u9fff]+',text):tokens.update(part[i:i+2] for i in range(len(part)-1))
         return tokens
     def relevant(self,seat,query):
-        if seat not in ('A','B'):raise ValueError('记忆席位无效')
+        if seat not in ('A','B','C'):raise ValueError('记忆席位无效')
         with self.lock:
             tokens=self._tokens(query);ranked=[]
             for index,row in enumerate(self._load()):

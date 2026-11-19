@@ -1,9 +1,18 @@
-.startup-welcome{position:fixed;inset:40px 0 0;z-index:900;background:var(--app-bg,#edf3f9);color:var(--app-text,#19334c);display:grid;place-content:center;text-align:center;animation:startup-away 1.1s ease both;pointer-events:none}
-.startup-welcome-brand{animation:startup-arrive .55s ease both}
-.startup-welcome-brand>span{display:inline-grid;place-items:center;width:72px;height:72px;border-radius:24px;background:rgba(88,153,243,.15);color:#4485e2;margin-bottom:18px}
-.startup-welcome strong{display:block;font-size:26px;letter-spacing:2px}.startup-welcome p{font-size:14px;opacity:.65;margin:10px 0}
-.startup-welcome>button{pointer-events:auto;position:absolute;bottom:30px;right:30px;border:1px solid currentColor;background:transparent;color:inherit;border-radius:10px;padding:7px 12px;opacity:.65;cursor:pointer}
-[data-color-scheme="dark"] .startup-welcome{background:#101b2b;color:#e4edfa}
-@keyframes startup-arrive{from{opacity:0;transform:translateY(8px) scale(.97)}to{opacity:1;transform:none}}
-@keyframes startup-away{0%,65%{opacity:1}100%{opacity:0;visibility:hidden}}
-@media(prefers-reduced-motion:reduce){.startup-welcome{display:none;animation:none}.startup-welcome-brand{animation:none}}
+.startup-welcome{position:fixed;inset:40px 0 0;z-index:900;background:var(--app-bg,#f4f5f7);color:var(--app-text,#252b35);display:grid;place-content:center;text-align:center;animation:startup-away 3s ease both;font-family:"Microsoft YaHei","Segoe UI",sans-serif}
+.startup-welcome-brand{animation:startup-arrive .8s cubic-bezier(.2,.8,.2,1) both}
+.startup-symbol{position:relative;width:180px;height:130px;margin:0 auto 24px}
+.startup-symbol>i{position:absolute;display:grid;place-items:center;inset:30px 55px;width:70px;height:70px;border:1px solid var(--app-border);border-radius:22px;background:var(--app-surface);color:var(--app-primary-ink);animation:startup-core 1.1s ease both;font-style:normal}
+.startup-thread{position:absolute;width:56px;height:32px;border:1px solid var(--app-border-strong);border-radius:12px 12px 12px 3px;background:var(--app-primary-soft);animation:startup-thread 1.4s cubic-bezier(.2,.8,.2,1) both}
+.thread-one{left:0;top:5px;--thread-x:40px;--thread-y:40px;transform:rotate(-12deg)}
+.thread-two{right:0;top:24px;--thread-x:-40px;--thread-y:20px;animation-delay:.15s;transform:rotate(12deg)}
+.thread-three{left:15px;bottom:0;--thread-x:30px;--thread-y:-35px;animation-delay:.3s;transform:rotate(-5deg)}
+.startup-welcome strong{display:block;font-size:25px;letter-spacing:.08em;font-weight:500;animation:startup-copy .65s .5s ease both}
+.startup-welcome p{font-size:14px;color:var(--app-muted);margin:12px 0;animation:startup-copy .65s .75s ease both}
+.startup-welcome>button{position:absolute;bottom:28px;right:28px;min-height:40px;padding:8px 14px;border:1px solid var(--app-border-strong);border-radius:8px;background:var(--app-surface);color:var(--app-text);cursor:pointer;font:inherit;font-size:12px}
+.startup-welcome>button:focus-visible{outline:2px solid var(--app-primary);outline-offset:3px}
+@keyframes startup-arrive{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes startup-core{0%,25%{opacity:0;transform:scale(.8)}100%{opacity:1;transform:none}}
+@keyframes startup-thread{0%{opacity:0;translate:var(--thread-x) var(--thread-y);scale:.6}50%{opacity:1}100%{opacity:.8;translate:0 0;scale:1}}
+@keyframes startup-copy{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes startup-away{0%,85%{opacity:1}100%{opacity:0;visibility:hidden}}
+@media(prefers-reduced-motion:reduce){.startup-welcome{display:none;animation:none}.startup-welcome.startup-manual{display:grid}.startup-welcome *{animation:none!important}}

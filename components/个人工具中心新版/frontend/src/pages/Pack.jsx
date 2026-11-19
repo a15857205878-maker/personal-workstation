@@ -245,14 +245,8 @@ export function PackPage({
   return (
     <div className="page pack-page">
       <PageHeader
-        eyebrow="文件打包"
-        title="把文件安全地打成 ZIP"
-        description="从原生文件选择器加入文件，可移除、复用上次选择并指定输出目录。文件只在本机处理，不会上传。"
-        actions={
-          <Button variant="primary" icon={Plus} loading={pending === 'files'} onClick={handlePickFiles}>
-            选择文件
-          </Button>
-        }
+        title="资料与打包"
+        description="在本机选择文件，整理常用资料，并打成 ZIP。"
       />
 
       {pageError ? (
@@ -267,9 +261,10 @@ export function PackPage({
             <SectionHeader
               id="pack-files-title"
               title="待打包文件"
-              description={`${files.length} 个文件 · ${sizeLabel}`}
-              action={
+              description={files.length ? `${files.length} 个文件 · ${sizeLabel}` : undefined}
+              action={files.length ? (
                 <div className="pack-file-actions">
+                  <Button size="sm" variant="secondary" icon={Plus} loading={pending === 'files'} onClick={handlePickFiles}>添加文件</Button>
                   <Button
                     size="sm"
                     variant="ghost"
@@ -279,18 +274,16 @@ export function PackPage({
                   >
                     重用上次选择
                   </Button>
-                  {files.length ? (
-                    <Button
+                  <Button
                       size="sm"
                       variant="ghost"
                       icon={Trash2}
                       onClick={() => setFiles([])}
                     >
                       清空
-                    </Button>
-                  ) : null}
+                  </Button>
                 </div>
-              }
+              ) : undefined}
             />
 
             {files.length ? (
@@ -325,7 +318,7 @@ export function PackPage({
                 compact
                 icon={Package}
                 title="还没有选择文件"
-                description="使用上方“选择文件”一次加入多个文件，或重用上一次的打包选择。"
+                description="可以一次选入多个文件，也可以沿用上一次的选择。"
                 action={
                   <div className="empty-actions">
                     <Button size="sm" variant="secondary" icon={Plus} loading={pending === 'files'} onClick={handlePickFiles}>
@@ -352,7 +345,7 @@ export function PackPage({
               <div className="output-row__body">
                 <span>输出目录</span>
                 <code title={outputDir || ''}>
-                  {outputDir || '使用后端默认目录（未手动指定）'}
+                  {outputDir || '使用默认输出目录'}
                 </code>
               </div>
               <div className="output-row__actions">
@@ -430,17 +423,17 @@ export function PackPage({
                   </article>
                 ))}
               </div>
-            ) : (
+            ) : !recentJobs.length && !focusedJob ? (
               <div className="task-empty">
                 <span className="task-empty__icon">
                   <Package size={18} aria-hidden="true" />
                 </span>
                 <div>
                   <strong>当前没有进行中的打包任务</strong>
-                  <p>完成打包后，可在这里打开 ZIP 所在位置。</p>
+                  <p>开始打包后，这里会显示进度和输出位置。</p>
                 </div>
               </div>
-            )}
+            ) : null}
 
             {recentJobs.length ? (
               <div className="job-stack job-stack--history">
@@ -465,8 +458,8 @@ export function PackPage({
           <section className="panel" aria-labelledby="pack-materials-title">
             <SectionHeader
               id="pack-materials-title"
-              title="论文与 PPT"
-              description="复用已有的资料入口，不需要重复选择文件。"
+              title="常用资料"
+              description="配置论文和演示文稿，方便重复取用。"
             />
             <div className="quick-material-list">
               {QUICK_MATERIALS.map((id) => {
@@ -522,25 +515,7 @@ export function PackPage({
             >
               一键打包论文与 PPT
             </Button>
-            <p className="side-note">
-              只打包已配置且路径可用的资料。输出目录与上方选择一致；未指定时由后端使用默认目录。
-            </p>
-          </section>
-
-          <section className="panel privacy-card" aria-labelledby="pack-privacy-title">
-            <div className="privacy-card__icon" aria-hidden="true">
-              <FolderOpen size={20} />
-            </div>
-            <h2 id="pack-privacy-title">本地处理</h2>
-            <p>
-              文件选择、ZIP 打包与打开结果位置都在本机完成。
-              界面没有上传接口，也不会把文件路径发送到网络。
-            </p>
-            <ul>
-              <li>取消原生选择器不会报错。</li>
-              <li>不存在的文件会先提示移除。</li>
-              <li>打包完成后可直接打开结果位置。</li>
-            </ul>
+            <p className="side-note">只包含路径可用的资料，沿用所选输出目录。</p>
           </section>
 
           {missing.length ? (

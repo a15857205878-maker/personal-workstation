@@ -13,13 +13,10 @@ class QuickCommands:
             if not isinstance(text,str) or not text.strip() or len(text)>8000:raise ValueError('请输入1–8000字符的具体要求。')
             if p.get('mode')=='work':
                 bundle=self.bridge.attachments.bundle(p.get('attachments',[]));text=text.strip()+('\n\n'+bundle['text'] if bundle['text'] else '')
-                if len(text)>8000:raise ValueError('高级协作需求与附件文字合计超过8000字符，请精简或先送普通任务。')
+                if len(text)>8000:raise ValueError('高级协作需求与附件文字合计超过8000字符，请精简资料后交接。')
                 event=dict(kind='advanced',text=text)
-            elif p.get('mode')=='tasks':
-                result=self.bridge.call('station_create',dict(task_type=p.get('task_type'),role=p.get('role'),instruction=text.strip(),attachments=p.get('attachments',[])))
-                if not result.get('ok'):raise ValueError(result.get('error','保存草稿失败'))
-                event=dict(kind='task',id=result['data']['id'])
-            else:raise ValueError('请选择普通任务或高级协作。')
+            elif p.get('mode')=='tasks':raise ValueError('独立任务已停用，请将需求送入搭档。')
+            else:raise ValueError('请选择搭档需求交接。')
             event['request_id']=nonce
             self.cache[nonce]=event
             if len(self.cache)>32:self.cache.pop(next(iter(self.cache)))

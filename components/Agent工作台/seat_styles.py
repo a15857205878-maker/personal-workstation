@@ -1,12 +1,12 @@
 """Validate per-seat styles independently of transport and task authority."""
 from persona_catalog import resolve_style
-def styles_for(payload):
+def styles_for(payload,seats=('A','B')):
     legacy=payload.get('persona','conductor')
     if legacy not in ('conductor','qinghe','lele','jingshui'):raise ValueError('不支持的人格选项')
     choices=payload.get('seat_styles',{})
-    if not isinstance(choices,dict) or set(choices)-{'A','B'}:raise ValueError('表达风格仅支持 A、B 两个席位')
+    if not isinstance(choices,dict) or set(choices)-set(seats):raise ValueError('表达风格包含不在本会话中的席位')
     result={}
-    for seat in ('A','B'):
+    for seat in seats:
         style=choices.get(seat,{'preset':legacy})
         if not isinstance(style,dict) or style.get('preset') not in ('conductor','qinghe','lele','jingshui','custom'):raise ValueError(seat+' 席表达风格无效')
         preset=style['preset'];text=style.get('text','')

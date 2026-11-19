@@ -13,7 +13,7 @@ import time
 import uuid
 from .review import ReviewMixin
 from .catalog import load_catalog
-from .document_export import write_document
+from .document_export import WORD_TABLE_GUIDANCE, write_document
 from .spreadsheet_export import write_spreadsheet, CONTRACT as SPREADSHEET_CONTRACT
 
 BASE = Path(__file__).resolve().parent
@@ -150,6 +150,7 @@ class Service(ReviewMixin):
         client_prompt=prompt+'\n\n请在当前客户端直接完成任务并提供实际成果文件，不要求输出宿主用的结构JSON；不能完成时明确说明。'
         if template['id'] == 'text':
             prompt += '\n交付方式：直接返回完整正文，可使用简洁标题和段落；本地工作站会把正文生成Word文件。不需要自行写文件，也不要编造下载链接或本地路径。'
+            prompt += '\n' + WORD_TABLE_GUIDANCE
         if template['id'] == 'xlsx' and p['role'] != 'excel':
             prompt += '\n' + SPREADSHEET_CONTRACT
         if template['id']=='pptx' and p['role']=='presentation_gemini':

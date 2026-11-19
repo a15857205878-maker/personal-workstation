@@ -98,15 +98,17 @@ class ShortcutService:
                 try:
                     if path.is_file() and not linked(path):paths.append(path)
                 except OSError:continue
-        paths=list(dict.fromkeys([*paths,*self.dock_paths()]))
+        dock_paths=set(self.dock_paths());desktop_dirs={Path(x).resolve() for x in self._dirs or []}
+        paths=list(dict.fromkeys([*paths,*dock_paths]))
         result=[]
         for item in self.backend.read_many(paths):
             try:
                 validate_properties(item);target=Path(item['target'])
+                origin=dict(location='desktop' if Path(item['path']).parent.resolve() in desktop_dirs else 'collection',in_dock=Path(item['path']).absolute() in dock_paths)
                 if not item['target']:
-                    result.append(dict(path=item['path'],editable=False,**properties(item)));continue
+                    result.append(dict(path=item['path'],editable=False,**origin,**properties(item)));continue
                 if target.suffix.lower() not in EXTENSIONS or target.is_dir():continue
-                result.append(dict(path=item['path'],**properties(item)))
+                result.append(dict(path=item['path'],**origin,**properties(item)))
             except (ValueError,OSError,KeyError):continue
         if isinstance(self.backend,ShortcutBackend):result.extend(self.backend.system_items())
         return result

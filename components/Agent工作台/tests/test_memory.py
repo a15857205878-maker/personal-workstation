@@ -23,7 +23,7 @@ class MemoryTests(unittest.TestCase):
         self.assertNotIn('B_ONLY',json.dumps(found,ensure_ascii=False))
         b=self.store.relevant('B','hello');self.assertTrue(any('SHARED' in r['text'] for r in b));self.assertFalse(any('A_ONLY' in r['text'] for r in b))
     def test_invalid_and_duplicate_memories(self):
-        for invalid in [dict(scope='C',kind='profile',text='x'),dict(scope='A',kind='profile',text=''),dict(scope='A',kind='profile',text='x'*501)]:
+        for invalid in [dict(scope='D',kind='profile',text='x'),dict(scope='A',kind='profile',text=''),dict(scope='A',kind='profile',text='x'*501)]:
             with self.assertRaises(ValueError):self.store.save(invalid)
         first=self.store.save(dict(scope='shared',kind='profile',text='昵称小沈'))
         self.assertEqual(self.store.save(dict(scope='shared',kind='profile',text='昵称小沈'))['id'],first['id'])

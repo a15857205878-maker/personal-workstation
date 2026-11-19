@@ -56,16 +56,16 @@ class ProfileStore:
             if not isinstance(rows,list) or len(rows)>32:raise ValueError()
             ids=set()
             for p in rows:
-                if not isinstance(p,dict) or not re.fullmatch('[a-f0-9]{32}',p['id']) or p['id'] in ids or p['kind'] not in ('deepseek','compatible','codex_local'):raise ValueError()
+                if not isinstance(p,dict) or not re.fullmatch('[a-f0-9]{32}',p['id']) or p['id'] in ids or p['kind'] not in ('deepseek','compatible','codex_local','antigravity_local'):raise ValueError()
                 ids.add(p['id'])
-                if p['kind']=='codex_local':
-                    if p['base_url']!='codex://local' or p['encrypted_key']:raise ValueError()
+                if p['kind'] in ('codex_local','antigravity_local'):
+                    if p['base_url']!=('codex://local' if p['kind']=='codex_local' else 'antigravity://local') or p['encrypted_key']:raise ValueError()
                 else:validate_url(p['base_url'])
                 if not all(isinstance(p[k],str) for k in ('name','model','encrypted_key')):raise ValueError()
             return rows
         except Exception:raise ValueError('模型配置损坏，原文件保持不变；请检查 providers.json') from None
     @staticmethod
-    def public(p):return {**{k:p[k] for k in ('id','name','kind','base_url','model')},'has_key':bool(p['encrypted_key']),'requires_key':p['kind']!='codex_local'}
+    def public(p):return {**{k:p[k] for k in ('id','name','kind','base_url','model')},'has_key':bool(p['encrypted_key']),'requires_key':p['kind'] not in ('codex_local','antigravity_local')}
     def list(self):
         with self.lock:return [self.public(p) for p in self._load()]
     def save(self,payload):
@@ -74,12 +74,12 @@ class ProfileStore:
             old=next((p for p in rows if p['id']==identifier),None)
             if payload.get('id') and not old:raise ValueError('配置不存在')
             name=payload.get('name','');model=payload.get('model','');kind=payload.get('kind')
-            if not isinstance(name,str) or not 1<=len(name.strip())<=80 or not isinstance(model,str) or not 1<=len(model.strip())<=200 or kind not in ('deepseek','compatible','codex_local'):raise ValueError('配置名或模型 ID 无效')
-            base='codex://local' if kind=='codex_local' else validate_url(payload.get('base_url'));secret=payload.get('api_key','')
-            if kind=='codex_local' and secret:raise ValueError('本机 Codex 不接收 API 密钥，请在 Codex 中登录')
+            if not isinstance(name,str) or not 1<=len(name.strip())<=80 or not isinstance(model,str) or not 1<=len(model.strip())<=200 or kind not in ('deepseek','compatible','codex_local','antigravity_local'):raise ValueError('配置名或模型 ID 无效')
+            base=({'codex_local':'codex://local','antigravity_local':'antigravity://local'}.get(kind) or validate_url(payload.get('base_url')));secret=payload.get('api_key','')
+            if kind in ('codex_local','antigravity_local') and secret:raise ValueError('本机客户端不接收 API 密钥，请在对应客户端中登录')
             if not isinstance(secret,str) or len(secret)>4096 or (secret and (not secret.isascii() or re.search(r'[\x00-\x20\x7f]',secret))):raise ValueError('API 密钥格式无效，请勿包含空格或换行')
-            if old and old['base_url']!=base and not secret:raise ValueError('接口地址已变更，请重新填写对应密钥，不会把旧密钥发送到新地址')
-            encrypted='' if kind=='codex_local' else (self.encrypt(secret) if secret else (old['encrypted_key'] if old else ''))
+            if old and old['base_url']!=base and kind not in ('codex_local','antigravity_local') and not secret:raise ValueError('接口地址已变更，请重新填写对应密钥，不会把旧密钥发送到新地址')
+            encrypted='' if kind in ('codex_local','antigravity_local') else (self.encrypt(secret) if secret else (old['encrypted_key'] if old else ''))
             row=dict(id=identifier,name=name.strip(),kind=kind,base_url=base,model=model.strip(),encrypted_key=encrypted)
             if not old and len(rows)>=32:raise ValueError('模型配置最多 32 项')
             rows=[p for p in rows if p['id']!=identifier]+[row];atomic_json(self.path,rows);return self.public(row)
@@ -87,7 +87,7 @@ class ProfileStore:
         with self.lock:
             p=next((p for p in self._load() if p['id']==identifier),None)
             if p is None:raise ValueError('模型配置不存在')
-            if p['kind']=='codex_local':return self.public(p),''
+            if p['kind'] in ('codex_local','antigravity_local'):return self.public(p),''
             if not p['encrypted_key']:raise ValueError('请先为所选模型保存 API 密钥')
             return self.public(p),self.decrypt(p['encrypted_key'])
     def delete_key(self,identifier):

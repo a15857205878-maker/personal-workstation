@@ -61,3 +61,8 @@ html[data-partner-theme] .partition-tab::after{color:var(--partner-muted)!import
 :root[data-partner-theme=dark]{--partner-notice-bg:#3a3020;--partner-notice-ink:#ffe3a6;--partner-notice-line:#8b7141}
 html[data-partner-theme] .notice{background:var(--partner-notice-bg)!important;color:var(--partner-notice-ink)!important;border-color:var(--partner-notice-line)!important}
 html[data-partner-theme] .status-panel .notice{background:transparent!important;color:var(--partner-muted)!important;border-color:var(--partner-line)!important}
+
+/* Restore the original single-model sequence without touching other surfaces. */
+html[data-single-simple=true] .partition-tabs,html[data-single-simple=true] .session-models,html[data-single-simple=true] #partnerHistoryToggle,html[data-single-simple=true] #partnerHistoryRestore{display:none!important}
+.single-model-choice{display:flex;flex-direction:column;gap:7px;font-size:12px;padding:4px 0 10px}.single-model-choice select{min-height:38px;border:1px solid var(--line);border-radius:8px;padding:6px;background:var(--panel);color:var(--ink);width:100%}.single-history-label{display:block;font-size:12px;margin:12px 0 8px}
+html[data-single-simple=true] .side-head{flex-wrap:wrap}html[data-single-simple=true] .single-model-choice{flex-basis:100%;width:100%}

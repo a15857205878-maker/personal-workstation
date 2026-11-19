@@ -1,5 +1,6 @@
 import unittest,tempfile,sys,json,time,zipfile
 from pathlib import Path
+from xml.etree import ElementTree
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]));sys.path.insert(0,str(Path(__file__).resolve().parent))
 import test_api as api_tests
 from test_api import FakeClient,await_done
@@ -39,9 +40,15 @@ class DualFilesTests(unittest.TestCase):
   with zipfile.ZipFile(path) as z:self.assertIn(b'<v>10</v>',z.read('xl/worksheets/sheet1.xml'))
   self.assertIn('返回一个JSON',client.calls[0][0]['content']);self.assertIn('审查',client.calls[1][0]['content']);self.assertEqual(self.sessions.load(run['id'])['files'],run['files'])
  def test_pptx_and_docx_export_without_extra_model_calls(self):
-  for fmt,value in [('pptx',DECK),('docx','项目进展\n已完成：双模型文件交付')]:
+  word = '# 示例 · 三步验收安排\n\n```word-table\n| 周一整理资料 |\n| 周三核对进度 |\n| 周五提交文档 |\n```'
+  for fmt,value in [('pptx',DECK),('docx',word)]:
    engine,run,client=self.run_file(fmt,value);self.assertEqual(run['status'],'completed',run.get('error'));self.assertEqual(len(client.calls),3)
    path=artifact_path(self.base,run,run['files'][0]['name']);self.assertTrue(zipfile.is_zipfile(path))
+   if fmt=='docx':
+    self.assertIn('word-table',client.calls[-1][0]['content'])
+    with zipfile.ZipFile(path) as archive:
+     table=ElementTree.fromstring(archive.read('word/document.xml')).find('.//{*}tbl')
+    self.assertEqual([row.findtext('.//{*}t') for row in table.findall('{*}tr')],['周一整理资料','周三核对进度','周五提交文档'])
  def test_invalid_final_is_failure_not_fake_download(self):
   _,run,client=self.run_file('xlsx','这里是一份表格大纲');self.assertEqual(run['status'],'failed');self.assertEqual(run.get('files',[]),[]);self.assertIn('文件',run['error']);self.assertEqual(len(client.calls),3)
  def test_unknown_output_rejected_before_dispatch(self):

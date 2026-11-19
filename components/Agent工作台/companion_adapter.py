@@ -3,26 +3,25 @@ from pathlib import Path
 import importlib.util
 import json
 import os
+import subprocess
 
 WORKSTATION=Path(__file__).resolve().parent
-PET=Path(os.environ.get('AGENT_PET_ROOT',str(WORKSTATION.parent/'agent-desktop-pet')))
+PET=Path(os.environ.get('AGENT_PET_ROOT', str(WORKSTATION.parent / 'agent-desktop-pet')))
 
 
 class CompanionAdapter:
     def __init__(self,pet_root=PET,workbench_root=WORKSTATION,launcher=None):
         self.pet_root=Path(pet_root);self.workbench_root=Path(workbench_root)
-        if launcher is None:
-            center=WORKSTATION.parent/'个人工具中心新版'
-            spec=importlib.util.spec_from_file_location('_workstation_pet_launcher',center/'pet_launcher.py')
-            module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
-            import os
-            launcher=module.PetLauncher(center/'data/pet_launcher.json',os.startfile)
         self.launcher=launcher
+        self.pet_entry=self.pet_root/'pet-launcher.ps1'
+
+    def _entry(self):
+        return self.launcher.entry() if self.launcher is not None else self.pet_entry
 
     def status(self):
         result={'launch_ready':False,'workbench_linked':False,'event_count':0,'feed_state':'empty','warnings':[]}
         try:
-            entry=self.launcher.entry();result['launch_ready']=bool(entry and Path(entry).is_file())
+            entry=self._entry();result['launch_ready']=bool(entry and Path(entry).is_file())
         except (OSError,ValueError,TypeError):result['warnings'].append('桌宠启动入口需要检查。')
         try:
             link=self.pet_root/'workbench_link.json'
@@ -43,9 +42,23 @@ class CompanionAdapter:
         return result
 
     def launch(self):
-        result=self.launcher.launch()
-        if result.get('needs_configuration'):raise ValueError('桌宠启动入口未配置或已移动，请检查现有桌宠安装。')
-        return {'action':result.get('action','requested'),'message':'已请求启动桌宠。若已在运行，不会重复创建；隐藏状态可从系统托盘恢复。'}
+        if self.launcher is None:
+            if not self.pet_entry.is_file():
+                raise ValueError('龙娘桌宠启动文件不存在，请检查个人版安装。')
+            powershell=Path(os.environ['SystemRoot'])/'System32/WindowsPowerShell/v1.0/powershell.exe'
+            try:
+                subprocess.run([str(powershell),'-NoProfile','-ExecutionPolicy','Bypass','-WindowStyle','Hidden',
+                                '-File',str(self.pet_entry)],cwd=self.pet_root,
+                               creationflags=subprocess.CREATE_NO_WINDOW,timeout=8,check=True,capture_output=True)
+            except (OSError,subprocess.SubprocessError) as exc:
+                raise ValueError('龙娘桌宠启动失败，请检查个人版的启动环境。') from exc
+            action='requested'
+        else:
+            result=self.launcher.launch()
+            if result.get('needs_configuration'):
+                raise ValueError('桌宠启动入口未配置或已移动，请检查现有桌宠安装。')
+            action=result.get('action','requested')
+        return {'action':action,'message':'已请求启动龙娘桌宠。已运行时会沿用同一个实例。'}
 
     def _home_link(self):
         path=self.pet_root/'pet_home_link.py'

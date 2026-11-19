@@ -1,13 +1,15 @@
 const test=require('node:test'),assert=require('node:assert/strict');
-const {bucket,summary,records,viewFromHash,validPreview,keyboardState,frameHeight}=require('./mobile-controller.js');
+const {bucket,summary,records,viewFromHash,validPreview,keyboardState,typingTarget}=require('./mobile-controller.js');
 test('Keyboard layout is based on editing and actual visual viewport reduction',()=>{
  assert.equal(keyboardState(844,480,true),true);assert.equal(keyboardState(844,480,false),false);assert.equal(keyboardState(844,790,true),false);assert.equal(keyboardState(0,0,true),false);assert.equal(keyboardState(844,NaN,true),false);
 });
 test('Keyboard stays stable through a brief blur until viewport recovers',()=>{
  assert.equal(keyboardState(844,510,false,true),true);assert.equal(keyboardState(844,750,false,true),true);assert.equal(keyboardState(844,800,false,true),false);assert.equal(keyboardState(844,750,true,false),false);
 });
-test('Embedded input area ends near keyboard instead of using a fixed header deduction',()=>{
- assert.equal(frameHeight(450,0,100,80,true),342);assert.equal(frameHeight(450,30,90,80,true),382);assert.equal(frameHeight(844,0,100,80,false),652);
+test('Only fields that can open the keyboard count as an active editor',()=>{
+ assert.equal(typingTarget({tagName:'TEXTAREA'}),true);assert.equal(typingTarget({tagName:'INPUT',type:'search'}),true);
+ assert.equal(typingTarget({tagName:'SELECT'}),false);assert.equal(typingTarget({tagName:'INPUT',type:'file'}),false);
+ assert.equal(typingTarget({tagName:'TEXTAREA',readOnly:true}),false);
 });
 test('Chinese task and collaboration states have one consistent category',()=>{
  for(const s of ['running','stopping','执行中','排队中','等待交接'])assert.equal(bucket(s),'active');
@@ -18,7 +20,7 @@ test('Chinese task and collaboration states have one consistent category',()=>{
 const list={tasks:[{id:'a',status:'草稿',title:'草稿'},{id:'b',status:'已完成',title:'结果'},{id:'c',status:'执行中',title:'文档'}],collaborations:[{id:'d',status:'running',task:'协作'},{id:'e',status:'failed',task:'失败'}]};
 test('Summary reports actual returned scope and never invents running tasks',()=>{assert.deepEqual(summary(list),{active:2,attention:1,completed:1,total:5});assert.deepEqual(summary({}),{active:0,attention:0,completed:0,total:0});});
 test('Filters retain kind and input data, search is literal and handles unknown states',()=>{const copy=JSON.stringify(list);assert.deepEqual(records(list,'active').map(x=>x.id),['c','d']);assert.equal(records(list,'all','文档')[0].kind,'task');assert.equal(records(list,'all','协作')[0].kind,'collaboration');assert.equal(JSON.stringify(list),copy);assert.equal(records(list,'all','<script>').length,0);});
-test('Navigation accepts only own views, never external locations',()=>{assert.equal(viewFromHash('#tasks'),'tasks');assert.equal(viewFromHash('#new'),'new');assert.equal(viewFromHash('#https://bad'),'sessions');assert.equal(viewFromHash(''),'sessions');});
+test('Navigation accepts only own views, never external locations',()=>{assert.equal(viewFromHash('#tasks'),'tasks');assert.equal(viewFromHash('#new'),'chat');assert.equal(viewFromHash('#https://bad'),'chat');assert.equal(viewFromHash(''),'chat');});
 test('Merged session preview accepts only paired local viewer pages',()=>{
  assert.equal(viewFromHash('#sessions'),'sessions');assert.equal(viewFromHash('#files'),'files');
  const origin='http://127.0.0.1:8765';assert.equal(validPreview(origin+'/preview-viewer?token=paired&id=x',origin,'paired'),origin+'/preview-viewer?token=paired&id=x');

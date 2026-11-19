@@ -1,7 +1,9 @@
-import sys,unittest,ast
+import os,sys,unittest,ast,json
 from pathlib import Path
 from types import SimpleNamespace
-P=Path(__file__).resolve().parents[2]/'agent-desktop-pet'
+P=Path(os.environ.get('AGENT_PET_ROOT', str(Path(__file__).resolve().parents[2] / 'agent-desktop-pet')))
+if not (P/'pet_butler.py').is_file() or not (P.parent/'Agent-desktop-pet-original/web/model/c_0120.model3.json').is_file():
+    raise unittest.SkipTest('Requires the optional desktop pet and authorized legacy appearance fixture')
 sys.path.insert(0,str(P))
 import pet_butler
 import pet_appearance_catalog
@@ -23,24 +25,26 @@ class ButlerTests(unittest.TestCase):
             pet_butler.open_tool(h,'quota');self.assertEqual(calls,['quota'])
             with self.assertRaises(ValueError):pet_butler.open_tool(h,'shell')
     def test_appearance_inventory_does_not_mix_assets(self):
-        legacy=pet_appearance_catalog.catalog(P/'web','legacy')
+        original=P.parent/'Agent-desktop-pet-original/web/model/c_0120.model3.json'
+        legacy=json.loads(original.read_text(encoding='utf-8-sig'))['FileReferences']
         dragon=pet_appearance_catalog.catalog(P/'web','dragon')
         self.assertIn('ReactionNod:0',[m['id'] for m in dragon['motions']])
-        self.assertNotIn('ReactionNod:0',[m['id'] for m in legacy['motions']])
+        self.assertNotIn('ReactionNod',legacy.get('Motions',{}))
         self.assertIn('呆呆眼',dragon['expressions'])
-        self.assertNotEqual(legacy['expressions'],dragon['expressions'])
+        self.assertFalse(any('dragon' in item.get('File','').lower() for item in legacy.get('Expressions',[])))
     def test_bulk_scopes_exclude_unselected_agents_and_reject_stale_ui(self):
         h=SimpleNamespace(settings={'agent':'codex'})
         self.assertEqual(pet_butler.scopes(h,{'agent':'codex'}),('codex','workbench'))
         with self.assertRaises(ValueError):pet_butler.scopes(h,{'agent':'deepseek'})
-    def test_real_host_inventory_changes_on_character_switch(self):
+    def test_old_shape_preference_reads_personal_dragon_inventory(self):
         tree=ast.parse((P/'run.py').read_text(encoding='utf-8'))
         fn=next(n for n in ast.walk(tree) if isinstance(n,ast.FunctionDef) and n.name=='_appearance_inventory')
         env={'WEB':str(P/'web')};exec(compile(ast.Module(body=[fn],type_ignores=[]),'run.py','exec'),env)
         host=SimpleNamespace(settings={'petAppearance':'legacy'})
         old=env['_appearance_inventory'](host)
         host.settings['petAppearance']='dragon';new=env['_appearance_inventory'](host)
-        self.assertNotEqual(old['motions'],new['motions'])
+        self.assertEqual(old,new)
+        self.assertIn('ReactionNod:0',[motion['id'] for motion in new['motions']])
         host.settings['petAppearance']='legacy';self.assertEqual(env['_appearance_inventory'](host),old)
     def test_unified_agent_tools_are_not_gated_by_character(self):
         from pet_panel_actions import apply_action

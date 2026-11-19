@@ -11,6 +11,7 @@ if(result.error||result.status!==0)throw result.error||Error('构建失败');
 await copyFile(path.join(root,'src/index.html'),path.join(dist,'index.html'));
 await copyFile(path.join(root,'src/index.html'),path.join(dist,'quick.html'));
 await copyFile(path.join(root,'src/PHOSPHOR-LICENSE.txt'),path.join(dist,'PHOSPHOR-LICENSE.txt'));
+await copyFile(path.join(center,'node_modules/lucide-react/LICENSE'),path.join(dist,'LUCIDE-LICENSE.txt'));
 for(const f of ['index.html','assets/app.js','assets/app.css']){const s=await stat(path.join(dist,f));if(!s.size)throw Error('空构建文件');console.log(f,s.size,'bytes');}
 
 // Reuse the already built sibling town UI in an isolated same-window document.

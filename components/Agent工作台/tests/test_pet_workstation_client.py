@@ -1,7 +1,9 @@
 from pathlib import Path
-import importlib.util,sys,unittest
+import importlib.util,os,sys,unittest
 from unittest.mock import Mock,patch
-PET=Path(__file__).resolve().parents[2]/'agent-desktop-pet'
+PET=Path(os.environ.get('AGENT_PET_ROOT', str(Path(__file__).resolve().parents[2] / 'agent-desktop-pet')))
+if not (PET/'pet_workstation.py').is_file():
+    raise unittest.SkipTest('Requires the optional desktop pet')
 sys.path.insert(0,str(PET))
 from pet_workstation import WorkstationClient
 
@@ -25,6 +27,16 @@ class ClientTests(unittest.TestCase):
   calls=[];client=WorkstationClient(transport=lambda *a:calls.append(a))
   with self.assertRaises(ValueError):client.open('powershell.exe')
   self.assertFalse(calls)
+ def test_turn_click_starts_hidden_workstation_once_then_posts_exact_id(self):
+  started=[];posts=[];results=[];turn='a'*32
+  def transport(method,payload):
+   if method=='POST':
+    posts.append(payload);return {'opened':True,'turn_id':payload['turn_id']}
+   return {'version':1,'navigation_ready':bool(started),'counts':{}}
+  client=WorkstationClient(transport=transport,opener=lambda:started.append(True))
+  self.assertTrue(client.open_turn(turn,results.append));client.action_thread.join(2)
+  self.assertEqual((started,posts,results),([True],[{'turn_id':turn}],[True]))
+  with self.assertRaises(ValueError):client.open_turn('../anywhere')
  def test_uncertain_navigation_post_is_not_replayed(self):
   posts=[]
   def transport(method,payload):

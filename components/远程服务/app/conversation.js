@@ -6,6 +6,7 @@
 
   const $ = (id) => document.getElementById(id);
   const token = new URLSearchParams(location.search).get('token') || '';
+  const simpleSingle=parent!==window&&new URLSearchParams(location.search).get('desktop_embed')==='1'&&new URLSearchParams(location.search).get('single_simple')==='1';
   const api = (path) => path + (path.indexOf('?') >= 0 ? '&' : '?') + 'token=' + encodeURIComponent(token);
   const el = (tag, cls, text) => {
     const node = document.createElement(tag);
@@ -624,6 +625,7 @@
   }
   function autoGrow() {
     const input = $('composerInput');
+    if(simpleSingle&&document.documentElement.dataset.singleManualInput==='true')return;
     input.style.height = 'auto';
     input.style.height = Math.min(input.scrollHeight, 160) + 'px';
   }
@@ -824,6 +826,7 @@
           renderList();
           setLine('listStatus', view.statusText, view.statusTone);
         }
+        publishHostHistory();
       }
     }
   }
@@ -966,17 +969,88 @@
     const deepseekTab = $('partitionDeepSeek');
     if (codexTab) codexTab.disabled = busy;
     if (deepseekTab) deepseekTab.disabled = busy;
-    for (const id of ['sessionCodex','sessionDeepSeek','menuButton']) { const button=$(id);if(button)button.disabled=busy; }
+    for (const id of ['sessionCodex','sessionDeepSeek','menuButton','singleModelChoice']) { const button=$(id);if(button)button.disabled=busy; }
     document.querySelectorAll('.conv-item').forEach((button) => { button.disabled = busy; });
     const more = $('loadMore');
     if (more) more.disabled = busy || view.busy;
     const older = $('loadOlder');
     if (older) older.disabled = busy || state.readBusy;
+    publishHostHistory();
+  }
+
+  let historyHostOrigin = '';
+  let historyHostSignature = '';
+
+  function publishHostHistory(force = false) {
+    if (!historyHostOrigin) return;
+    const groups = Object.fromEntries(['codex', 'deepseek'].map(model => {
+      const view = viewFor(model);
+      return [model, {
+        loading: view.busy,
+        status: view.statusText,
+        more: view.nextOffset !== null,
+        rows: view.list.map(({key, title, updated}) => ({key, title, updated})),
+      }];
+    }));
+    const data = {
+      type: 'workstation-single-history',
+      model: state.partition,
+      busy: state.phase !== 'idle',
+      active: state.target?.key || '',
+      groups,
+    };
+    const signature = JSON.stringify(data);
+    if (!force && signature === historyHostSignature) return;
+    historyHostSignature = signature;
+    parent.postMessage(data, historyHostOrigin);
+  }
+
+  function connectHistoryHost() {
+    const query = new URLSearchParams(location.search);
+    if (!simpleSingle || window === parent || query.get('desktop_embed') !== '1' || query.get('host_history') !== '1') return;
+    window.addEventListener('message', event => {
+      const command = event.data;
+      if (event.source !== parent || !/^http:\/\/127\.0\.0\.1:\d{1,5}$/.test(event.origin) || command?.type !== 'workstation-single-history-action') return;
+      if (command.action === 'connect') {
+        historyHostOrigin = event.origin;
+        document.documentElement.dataset.workstationHistoryHost = 'true';
+        closeDrawer();
+        publishHostHistory(true);
+        for (const model of ['codex', 'deepseek']) {
+          const view = viewFor(model);
+          if (!view.loaded && !view.busy) loadList(model, true);
+        }
+        return;
+      }
+      if (historyHostOrigin !== event.origin || state.phase !== 'idle') return;
+      if (command.action === 'new') newConversation();
+      if (command.action === 'model' && ['codex','deepseek'].includes(command.value)) switchPartition(command.value);
+      if (command.action === 'open' && ['codex','deepseek'].includes(command.value?.model) && typeof command.value.key === 'string') {
+        const item = viewFor(command.value.model).list.find(entry => entry.key === command.value.key);
+        if (item && item.key !== state.target?.key) selectItem(item);
+      }
+      if (command.action === 'search' && typeof command.value === 'string' && command.value.length <= 120) {
+        for (const model of ['codex', 'deepseek']) searchHistory(model, command.value);
+      }
+      if (command.action === 'more' && ['codex','deepseek'].includes(command.value)) loadList(command.value, false);
+    });
+  }
+
+  function searchHistory(partition, query) {
+    const view = viewFor(partition);
+    view.query = query;
+    view.nextOffset = null;
+    view.sessions = [];
+    view.sig = '';
+    view.loaded = false;
+    rebuildList(partition);
+    loadList(partition, true);
   }
 
   function syncPartitionUI() {
     const view = activeView();
     const partition = PARTITIONS[state.partition];
+    const modelChoice=$('singleModelChoice');if(modelChoice){modelChoice.value=state.partition;modelChoice.disabled=state.phase!=='idle';}
     for (const [id, partitionId] of [['sessionCodex','codex'],['sessionDeepSeek','deepseek']]) { const button=$(id);button.setAttribute('aria-pressed',String(state.partition===partitionId));button.disabled=state.phase!=='idle'; }
     $('sessionModelHint').textContent=state.partition==='deepseek'?'逐条检查 · 可新建':'历史与续聊';
     const codexTab = $('partitionCodex');
@@ -1001,7 +1075,7 @@
     const conversationList = $('conversationList');
     if (conversationList) conversationList.setAttribute('aria-label', partition.label + ' 历史会话');
     const newButton = $('newConversation');
-    if (newButton) newButton.textContent = state.partition === 'deepseek' ? '＋ 新 Flash 任务' : '＋ 新会话';
+    if (newButton) newButton.textContent = simpleSingle?'开启会话':state.partition === 'deepseek' ? '＋ 新 Flash 任务' : '＋ 新会话';
     const emptyNew = $('emptyNew');
     if (emptyNew) emptyNew.textContent = state.partition === 'deepseek' ? '新建 Flash 任务' : '新建 Codex 会话';
     const emptyTitle = $('emptyTitle');
@@ -2104,6 +2178,9 @@
     ].join('|');
     if (state.messagesDomSig !== sig) {
       state.messagesDomSig = sig;
+      const previousIds=new Set([...box.querySelectorAll('.msg')].map(n=>n.dataset.messageId||n.dataset.taskId||n.dataset.targetKey).filter(Boolean));
+      const animate=simpleSingle&&box.dataset.motionTarget===target.key&&!(opts?.initial||opts?.older);
+      box.dataset.motionTarget=target.key;
       const items = buildChatItems(messages);
       const disclosures = rememberDisclosures(box);
       clear(box);
@@ -2113,7 +2190,10 @@
         for (const item of items) {
           if (item.type === 'task-goal') box.append(renderTaskGoalBubble(item));
           else if (item.type === 'task-status') box.append(renderTaskStatusBubble(item));
-          else box.append(renderMessage(item.message, { taskAttachments: item.taskAttachments, taskId: item.taskId }));
+          else {const message=renderMessage(item.message, { taskAttachments: item.taskAttachments, taskId: item.taskId });
+            if(animate&&message.dataset.messageId&&!previousIds.has(message.dataset.messageId))message.classList.add('single-message-enter');
+            box.append(message);
+          }
         }
       }
       restoreDisclosures(box, disclosures);
@@ -4196,6 +4276,15 @@
   }
 
   function setupEvents() {
+    if(simpleSingle){
+      document.documentElement.dataset.singleSimple='true';document.documentElement.dataset.historyCollapsed='false';
+      const label=el('label','single-model-choice','选择模型'),choice=el('select');choice.id='singleModelChoice';choice.setAttribute('aria-label','单模型选择');
+      for(const [id,name] of [['codex','Codex'],['deepseek','DeepSeek']]){const option=el('option','',name);option.value=id;choice.append(option);}
+      choice.value=state.partition;choice.onchange=()=>switchPartition(choice.value);label.append(choice);
+      $('newConversation').before(label);
+      const historyLabel=el('strong','single-history-label','历史会话');$('searchForm').before(historyLabel);
+    }
+    connectHistoryHost();
     $('newConversation').addEventListener('click', newConversation);
     $('emptyNew').addEventListener('click', newConversation);
     $('partitionCodex').addEventListener('click', () => switchPartition('codex'));
@@ -4210,14 +4299,7 @@
         setLine('listStatus', '操作进行中，请稍后再搜索。', 'warn');
         return;
       }
-      const view = activeView();
-      view.query = $('searchInput').value.trim();
-      view.nextOffset = null;
-      view.sessions = [];
-      view.sig = '';
-      view.loaded = false;
-      rebuildList(state.partition);
-      loadList(state.partition, true);
+      searchHistory(state.partition, $('searchInput').value.trim());
     });
     $('loadMore').addEventListener('click', () => loadList(state.partition, false));
     $('loadOlder').addEventListener('click', () => {
@@ -4281,12 +4363,19 @@
       renderHeader();
     });
 
-    document.addEventListener('visibilitychange', () => {
-      if (document.hidden) return;
-      if (state.phase === 'idle' && state.target && state.target.kind !== 'new') loadConversation({});
+    let resumeAt = 0;
+    function resumeConversation() {
+      if (document.hidden || navigator.onLine === false || Date.now() - resumeAt < 1400) return;
+      if (state.phase !== 'idle') return;
+      resumeAt = Date.now();
+      if (state.target && state.target.kind !== 'new') loadConversation({});
       if (state.connected === false) probe();
-      if (state.phase === 'idle') loadList(state.partition, true);
-    });
+      loadList(state.partition, true);
+    }
+    window.WorkstationSingleResume = resumeConversation;
+    document.addEventListener('visibilitychange', resumeConversation);
+    window.addEventListener('online', resumeConversation);
+    window.addEventListener('pageshow', event => { if (event.persisted) resumeConversation(); });
     window.addEventListener('resize', () => {
       if (!isMobile()) closeDrawer();
     });

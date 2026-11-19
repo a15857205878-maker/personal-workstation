@@ -9,6 +9,7 @@ from room_store import DEFAULT_ROOM
 sys.path.append(str(CENTER))
 from singleton import SingleInstance
 from bridge_boundary import install_boundary
+from desktop_chrome import WindowControls, show_workstation
 
 def main():
     parser=argparse.ArgumentParser();parser.add_argument('--quick',action='store_true');parser.add_argument('--background',action='store_true');parser.add_argument('--ui-smoke',action='store_true');parser.add_argument('--smoke-result');parser.add_argument('--smoke-shots',type=Path);parser.add_argument('--room',type=Path,default=DEFAULT_ROOM);args=parser.parse_args()
@@ -26,35 +27,11 @@ def main():
     from quick_window import QuickWindow,request_quick
     if args.quick and not args.ui_smoke and request_quick(BASE):return
     quick=None;remote_gateway=None
-    bridge=Bridge(root,data_dir=root/'app-data' if temp else BASE/'data');holder={};ready=threading.Event();close_pending=threading.Event()
-    bridge.companion_ui_ready=ready
-    bridge._room_surface_visible=not (args.background or args.quick)
-    if temp:
-        from workstation_core import WorkstationCore,ToolProcess
-        from town_adapter import TownAdapter
-        tool_fixture=root/'tools-fixture'
-        for folder in ('个人工具中心/data','个人工具中心新版/data','游戏管家/data'):(tool_fixture/folder).mkdir(parents=True,exist_ok=True)
-        bridge._workstation=WorkstationCore(bridge,tools=ToolProcess(lambda:holder.get('window'),test_root=tool_fixture))
-        bridge._workstation.town=TownAdapter(base=root/'town-fixture')
-        from remote_surface import RemoteSurface
-        def remote_offline(url):raise OSError('isolated UI fixture')
-        tailscale_fixture=root/'tailscale-ipn.exe';tailscale_fixture.write_bytes(b'UI fixture, never execute')
-        bridge._workstation.remote=RemoteSurface(root/'remote-fixture',fetch=remote_offline,tailscale_path=tailscale_fixture,opener=lambda path:None)
-        from companion_adapter import CompanionAdapter
-        from types import SimpleNamespace
-        pet_fixture=root/'pet-fixture';pet_fixture.mkdir()
-        (pet_fixture/'workbench_link.json').write_text(json.dumps({'workbench_root':str(root/'app-data')}),encoding='utf-8')
-        pet_entry=pet_fixture/'pet.lnk';pet_entry.write_bytes(b'isolated fixture, never execute')
-        fixture_launcher=SimpleNamespace(entry=lambda:pet_entry,launch=lambda:{'action':'requested'})
-        bridge._workstation.companion=CompanionAdapter(pet_fixture,root/'app-data',launcher=fixture_launcher)
-        from companion_room import RoomPresence
-        bridge._workstation._room=RoomPresence(pet_fixture)
-        image=pet_fixture/'web/appearances/dragon/01-idle.png';image.parent.mkdir(parents=True)
-        from companion_adapter import PET
-        shutil.copy2(BASE/'examples/neutral.png',image)
+    bridge=None
+    holder={};ready=threading.Event();close_pending=threading.Event()
     def show():
         if ready.wait(10):
-            try:holder['window'].restore();holder['window'].show()
+            try:show_workstation(holder['window'])
             except Exception:logging.exception('Cannot show workbench')
     instance=SingleInstance(BASE if not temp else root,show)
     try:
@@ -64,6 +41,31 @@ def main():
                     if request_quick(BASE):break
                     time.sleep(.2)
             return
+        bridge=Bridge(root,data_dir=root/'app-data' if temp else BASE/'data')
+        bridge.companion_ui_ready=ready
+        bridge._room_surface_visible=not (args.background or args.quick)
+        if temp:
+            from workstation_core import WorkstationCore,ToolProcess
+            from town_adapter import TownAdapter
+            tool_fixture=root/'tools-fixture'
+            for folder in ('个人工具中心/data','个人工具中心新版/data','游戏管家/data'):(tool_fixture/folder).mkdir(parents=True,exist_ok=True)
+            bridge._workstation=WorkstationCore(bridge,tools=ToolProcess(lambda:holder.get('window'),test_root=tool_fixture))
+            bridge._workstation.town=TownAdapter(base=root/'town-fixture')
+            from remote_surface import RemoteSurface
+            def remote_offline(url):raise OSError('isolated UI fixture')
+            tailscale_fixture=root/'tailscale-ipn.exe';tailscale_fixture.write_bytes(b'UI fixture, never execute')
+            bridge._workstation.remote=RemoteSurface(root/'remote-fixture',fetch=remote_offline,tailscale_path=tailscale_fixture,opener=lambda path:None)
+            from companion_adapter import CompanionAdapter
+            from types import SimpleNamespace
+            pet_fixture=root/'pet-fixture';pet_fixture.mkdir()
+            (pet_fixture/'workbench_link.json').write_text(json.dumps({'workbench_root':str(root/'app-data')}),encoding='utf-8')
+            pet_entry=pet_fixture/'pet.lnk';pet_entry.write_bytes(b'isolated fixture, never execute')
+            fixture_launcher=SimpleNamespace(entry=lambda:pet_entry,launch=lambda:{'action':'requested'})
+            bridge._workstation.companion=CompanionAdapter(pet_fixture,root/'app-data',launcher=fixture_launcher)
+            from companion_room import RoomPresence
+            bridge._workstation._room=RoomPresence(pet_fixture)
+            image=pet_fixture/'web/appearances/dragon/01-idle.png';image.parent.mkdir(parents=True)
+            shutil.copy2(BASE/'examples/neutral.png',image)
         if not args.ui_smoke:
             try:
                 from remote_gateway import RemoteGateway
@@ -75,7 +77,6 @@ def main():
         entry=BASE/'frontend/dist/index.html'
         if not entry.is_file():raise RuntimeError('工作台前端尚未构建')
         window=webview.create_window('Agent 工作台',str(entry),width=1320,height=860,min_size=(850,640),hidden=args.quick or args.background,background_color='#edf3f9',text_select=True,frameless=True,easy_drag=False)
-        from desktop_chrome import WindowControls
         chrome=WindowControls(window).install(bridge)
         from workstation_tray import WorkstationTray
         chrome.tray=WorkstationTray(window,BASE/'assets/station.ico')
@@ -211,10 +212,11 @@ def main():
     finally:
         if remote_gateway:remote_gateway.close()
         if quick:quick.close()
-        bridge._stop_api()
-        bridge.close_station()
         try:
-            bridge.close_workstation()
+            if bridge is not None:
+                bridge._stop_api()
+                bridge.close_station()
+                bridge.close_workstation()
         except Exception:
             logging.exception('Workstation tool cleanup did not complete')
         finally:

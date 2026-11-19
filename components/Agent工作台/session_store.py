@@ -7,7 +7,7 @@ from credential_store import atomic_json
 def now():return datetime.now(timezone.utc).isoformat(timespec='seconds')
 
 class SessionStore:
-    def __init__(self,base):self.base=Path(base).resolve();self.lock=threading.RLock()
+    def __init__(self,base,summary_fields=()):self.base=Path(base).resolve();self.lock=threading.RLock();self.summary_fields=summary_fields
     def _directory(self,identifier):
         if not isinstance(identifier,str) or not re.fullmatch('[a-f0-9]{32}',identifier):raise ValueError('会话 ID 无效')
         path=(self.base/identifier).resolve()
@@ -51,6 +51,9 @@ class SessionStore:
                 try:
                     session=self.load(directory.name)
                     row={k:session[k] for k in ('id','title','status','updated','call_count','call_limit')}
+                    for key in self.summary_fields:
+                        if type(session.get(key,False)) is not bool:raise ValueError()
+                        row[key]=session.get(key,False)
                     if not all(isinstance(row[k],str) for k in ('title','status','updated')):raise ValueError()
                 except (OSError,ValueError,KeyError,TypeError):
                     row=dict(id=directory.name,title='记录未完成或损坏（原文件已保留）',status='corrupt',updated='',call_count=0,call_limit=9)
@@ -64,5 +67,5 @@ class SessionStore:
                 for step in session['steps']:
                     if step['state']=='running':step['state']='cancelled';step['error']='上次运行中断'
                 self.save(session);self.event(session['id'],dict(type='interrupted'))
-                from workbench_notices import publish_notice
-                publish_notice(self.base.parent/'pet-notices.json','collaboration',session['id'],'interrupted')
+                from workbench_notices import publish_run_notice
+                publish_run_notice(self.base.parent/'pet-notices.json',session)

@@ -67,19 +67,20 @@ class CoreTests(unittest.TestCase):
     def test_overview_and_artifacts_only_query_existing_engine(self):
         b=FakeBridge();tools=Mock();c=WorkstationCore(b,tools)
         overview=c.call('workstation_overview',{})
-        self.assertEqual(overview['counts']['attention'],1)
-        self.assertEqual(overview['counts']['collaborations'],1)
+        self.assertEqual(overview['counts']['attention'],0)
+        self.assertEqual(overview['counts']['collaborations'],0)
         artifacts=c.call('workstation_artifacts',{})
         self.assertEqual(artifacts['items'][0]['name'],'result.txt')
         self.assertNotIn('path',artifacts['items'][0])
-        self.assertEqual(set(a for a,p in b.calls),{'station_list','station_get','api_bootstrap'})
+        self.assertEqual(set(a for a,p in b.calls),{'station_list','station_get'})
         tools.call.assert_not_called()
     def test_partial_read_failure_is_visible(self):
         b=FakeBridge();original=b.call
-        b.call=lambda action,payload: {'ok':False,'error':'unavailable'} if action=='api_bootstrap' else original(action,payload)
+        b.call=lambda action,payload: {'ok':False,'error':'unavailable'} if action=='station_list' else original(action,payload)
         result=WorkstationCore(b,Mock()).overview()
-        self.assertEqual(len(result['tasks']),1)
-        self.assertEqual(result['warnings'],['unavailable'])
+        self.assertEqual(len(result['tasks']),0)
+        self.assertEqual(result['history_warnings'],['unavailable'])
+        self.assertTrue(result['center_available'])
     def test_tool_boundary_never_accepts_pet_or_arbitrary_launch(self):
         c=WorkstationCore(FakeBridge(),ToolProcess())
         for action in ('pet_launch','launch_tool','open_folder','unknown'):

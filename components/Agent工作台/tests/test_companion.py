@@ -2,6 +2,7 @@ from pathlib import Path
 import importlib.util
 import ast
 import json
+import os
 import sys
 import tempfile
 import unittest
@@ -10,7 +11,7 @@ from unittest.mock import Mock
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 from companion_adapter import CompanionAdapter
 
-PET=Path(__file__).resolve().parents[2]/'agent-desktop-pet'
+PET=Path(os.environ.get('AGENT_PET_ROOT', str(Path(__file__).resolve().parents[2] / 'agent-desktop-pet')))
 
 class CompanionTests(unittest.TestCase):
     def setUp(self):
@@ -37,6 +38,7 @@ class CompanionTests(unittest.TestCase):
         result=self.adapter.status()
         self.assertFalse(result['launch_ready']);self.assertFalse(result['workbench_linked'])
 
+    @unittest.skipUnless((PET/'pet_workbench.py').is_file(), 'Requires the optional desktop pet')
     def test_notice_pipeline_uses_existing_feed_and_persistent_deduplication(self):
         from workbench_notices import publish_notice
         spec=importlib.util.spec_from_file_location('companion_feed_fixture',PET/'pet_workbench.py')
@@ -56,6 +58,7 @@ class CompanionTests(unittest.TestCase):
         for action in ('workstation_companion_status','workstation_companion_launch'):
             with self.assertRaises(ValueError):core.call(action,{'path':'elsewhere.exe'})
 
+    @unittest.skipUnless((PET/'pet_banner.py').is_file(), 'Requires the optional desktop pet')
     def test_pet_primary_entry_returns_to_the_workstation(self):
         source=ast.parse((PET/'pet_banner.py').read_text(encoding='utf-8-sig'))
         function=next(n for n in ast.walk(source) if isinstance(n,ast.FunctionDef) and n.name=='activate')

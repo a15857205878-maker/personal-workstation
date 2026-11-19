@@ -14,7 +14,7 @@ export function validatePlan(p,profiles){
   if(!['conductor','qinghe','lele','jingshui','custom'].includes(style.preset))return `${seat} 席表达风格无效。`;
   if(typeof style.text!=='string'||style.text.length>3000||(style.preset==='custom'&&!style.text.trim()))return `${seat} 席自定义风格需为 1–3000 字。`;
  }
- if(![p.primary_id,p.reviewer_id].every(id=>{const row=profiles.find(x=>x.id===id);return row?.kind==='codex_local'||row?.has_key;}))return '请为两个角色选择本机 Codex 或已配置密钥的 API 模型。';
+ if(![p.primary_id,p.reviewer_id].every(id=>{const row=profiles.find(x=>x.id===id);return ['codex_local','antigravity_local'].includes(row?.kind)||row?.has_key;}))return '请为两个角色选择本机 Codex 或已配置密钥的 API 模型。';
  return '';
 }
 export function sameModel(a,b){return !!a&&!!b&&a.base_url.replace(/\/+$/,'')===b.base_url.replace(/\/+$/,'')&&a.model===b.model;}
@@ -22,4 +22,4 @@ export function canRetry(s){return !!s&&['failed','interrupted'].includes(s.stat
 export function finalReply(s){return s?.status==='completed'?[...(s.steps||[])].reverse().find(x=>x.stage==='修订'&&x.state==='completed'&&x.content):null;}
 export function stepLabel(s){return ({running:'正在接收 · 未完成',completed:'完整回复',failed:'失败 · 未完成内容',cancelled:'已中断 · 未完成内容'}[s.state]||'未完成内容');}
 export const styleLabel=p=>({conductor:'总谱',qinghe:'清和',lele:'乐乐',jingshui:'静水',custom:'自定义'}[p]||'总谱');
-export function buildProfilePayload(d){const local=d.kind==='codex_local',p={name:d.name.trim(),kind:d.kind,base_url:local?'codex://local':d.base_url.trim(),model:d.model.trim()};if(d.id)p.id=d.id;if(!local&&d.api_key.trim())p.api_key=d.api_key.trim();return p;}
+export function buildProfilePayload(d){const local=['codex_local','antigravity_local'].includes(d.kind),p={name:d.name.trim(),kind:d.kind,base_url:local?(d.kind==='codex_local'?'codex://local':'antigravity://local'):d.base_url.trim(),model:d.model.trim()};if(d.id)p.id=d.id;if(!local&&d.api_key.trim())p.api_key=d.api_key.trim();return p;}

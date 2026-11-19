@@ -18,13 +18,23 @@ class IconStudioAPI:
         self.collection=Path(collection) if collection is not None else find_collection(base)
         self.added=self.base/'data/icon_studio/imported-icons';self.targets={};self.assets={};self.revision=None
     def snapshot(self,**extra):
-        self.targets={identifier('target',item['path']):item for item in self.service.scan()}
+        scanned=self.service.scan()
+        scanned.sort(key=lambda item:(not item.get('in_dock',False),item.get('location')!='desktop',str(item.get('name') or Path(item['path']).stem).casefold(),item['path']))
+        self.targets={identifier('target',item['path']):item for item in scanned}
+        names={}
+        for item in scanned:
+            name=(item.get('name') or Path(item['path']).stem).casefold();names[name]=names.get(name,0)+1
+        def target(key,item):
+            name=item.get('name') or Path(item['path']).stem;kind=item.get('kind','shortcut');location=item.get('location','collection')
+            label='Windows 系统图标' if kind=='system' else '桌面' if location=='desktop' else '收纳目录'
+            if item.get('in_dock'):label+=' · FloatingDock 使用中'
+            return dict(id=key,name=name,path=item['path'],kind=kind,editable=item.get('editable',True),location=location,location_label=label,in_dock=bool(item.get('in_dock')),duplicate_count=names[name.casefold()])
         assets={}
         for source,folder in (('原素材',self.collection),('新增',self.added)):
             if folder:
                 for path in sorted(folder.glob('*.ico')):assets[identifier('asset',path)]=dict(path=path,source=source)
         self.assets=assets;self.revision=uuid.uuid4().hex
-        return dict(revision=self.revision,targets=[dict(id=key,name=item.get('name') or Path(item['path']).stem,path=item['path'],kind=item.get('kind','shortcut'),editable=item.get('editable',True)) for key,item in self.targets.items()],assets=[dict(id=key,name=item['path'].stem,source=item['source']) for key,item in self.assets.items()],collection=str(self.collection) if self.collection else '',added_collection=str(self.added),**extra)
+        return dict(revision=self.revision,targets=[target(key,item) for key,item in self.targets.items()],assets=[dict(id=key,name=item['path'].stem,source=item['source']) for key,item in self.assets.items()],collection=str(self.collection) if self.collection else '',added_collection=str(self.added),target_notice='有同名快捷方式，请按桌面、收纳目录或 FloatingDock 标记选择；只修改选中的入口。' if any(n>1 for n in names.values()) else '',**extra)
     def _refresh(self,message,**extra):
         try:return self.snapshot(message=message,**extra)
         except Exception:
@@ -72,4 +82,4 @@ class IconStudioAPI:
         if not item.get('editable',True):raise ValueError('特殊应用入口暂不支持换装或还原')
         if action=='apply':self.service.apply(item['path'],self._asset(p['asset']),item)
         else:self.service.restore(item['path'])
-        return self._refresh('已应用并保留原还原记录。' if action=='apply' else '已还原选中项。')
+        return self._refresh(('已应用到“'+(item.get('name') or Path(item['path']).stem)+'”（'+('Windows 系统图标' if item.get('kind')=='system' else '桌面' if item.get('location')=='desktop' else '收纳目录')+'），并保留原还原记录。') if action=='apply' else '已还原选中项。')

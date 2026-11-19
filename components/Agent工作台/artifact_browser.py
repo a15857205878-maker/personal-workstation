@@ -82,17 +82,22 @@ class ArtifactBrowser:
  def list(self,station_items):
   with self.lock:
    warnings=[];items=[];cache={};seen=set();sources=self._sources()
+   from center_index import read_center
+   center=read_center(self.data);owners=center['run_owners'];warnings.extend(center['warnings'])
    def add(path,kind,source,title='',owner=None,metadata=None):
     p=Path(path) if path else None;name=p.name if p else metadata['name'];size=metadata.get('size',0) if metadata else 0;mtime=0
     try:
      if p:stat=p.stat();size=stat.st_size;mtime=stat.st_mtime
-    except OSError:return
+    except OSError:
+     if kind=='center':warnings.append('部分搭档成果文件已移动或缺失，请回原记录核对。')
+     return
     key=os.path.normcase(str(p.absolute())) if p else 'station:'+source+':'+name
     if key in seen:return
     seen.add(key)
     identifier=hashlib.sha256((kind+'\0'+source+'\0'+str(path or name)).encode('utf-8')).hexdigest()
-    item=dict(id=identifier,name=name,size=size,modified=mtime,source_kind=kind,source_label={'station':'独立任务','collaboration':'双模型协作','external':'外部文件'}[kind],title=title,can_open=Path(name).suffix.lower() in OPEN,can_preview=Path(name).suffix.lower() in PREVIEW)
+    item=dict(id=identifier,name=name,size=size,modified=mtime,source_kind=kind,source_label={'station':'历史任务成果','collaboration':'双模型协作','external':'外部文件','center':'搭档群聊'}[kind],title=title,can_open=Path(name).suffix.lower() in OPEN,can_preview=Path(name).suffix.lower() in PREVIEW)
     if owner:item.update(task_id=owner.get('id'),task_title=title)
+    if kind=='center':item.update(owners[owner['id']])
     cache[identifier]=dict(item,path=p,source=source,owner=owner);items.append(item)
    for item in station_items:
     path=Path(item['folder'])/'results'/item['name'] if item.get('folder') else None
@@ -100,9 +105,9 @@ class ArtifactBrowser:
    if self.data is not None:
     from session_store import SessionStore
     store=SessionStore(self.data/'sessions')
-    for row in store.list():
+    for identifier in dict.fromkeys([*owners,*[r['id'] for r in store.list()]]):
      try:
-      run=store.load(row['id'])
+      run=store.load(identifier)
       files=run.get('files') or []
       if not isinstance(files,list):raise ValueError('成果元数据异常')
       for f in files[:100]:
@@ -110,7 +115,7 @@ class ArtifactBrowser:
        name=f.get('name','')
        if not isinstance(name,str) or not name or Path(name).name!=name:continue
        path=self.data/'collaboration-artifacts'/run['id']/name
-       add(path,'collaboration',run['id'],run.get('title',''),{'id':run['id'],'name':name})
+       add(path,'center' if run['id'] in owners else 'collaboration',run['id'],owners.get(run['id'],{}).get('conversation_title') or run.get('title',''),{'id':run['id'],'name':name})
      except (OSError,ValueError,KeyError,TypeError):warnings.append('部分协作记录暂时无法读取，原文件保持不变。')
    for source in sources:
     p=Path(source['path'])
@@ -123,7 +128,7 @@ class ArtifactBrowser:
        if f.is_file() and not linked(f) and not f.name.startswith('.') and f.suffix.lower() in SHOW:add(f,'external',source['id'],'文件夹 · '+p.name)
     except (OSError,ValueError):warnings.append('外部来源不可用：'+p.name+'，可重新选择或移除来源。')
    items.sort(key=lambda x:x['modified'],reverse=True);items=items[:300];self.current={i['id']:cache[i['id']] for i in items}
-   return dict(items=items,sources=[dict(s,label=Path(s['path']).name) for s in sources],warnings=list(dict.fromkeys(warnings)),limit=300,scope='独立任务及双模型最近100条记录 + 已选择的外部文件/文件夹；文件夹仅当前层，最多显示最近300个文件')
+   return dict(items=items,sources=[dict(s,label=Path(s['path']).name) for s in sources],warnings=list(dict.fromkeys(warnings)),limit=300,scope='搭档群聊与历史任务/协作最近100条记录 + 已选择的外部文件/文件夹；文件夹仅当前层，最多显示最近300个文件')
  def path(self,identifier):
   with self.lock:
    entry=self.current.get(identifier)
@@ -131,7 +136,7 @@ class ArtifactBrowser:
    if entry['source_kind']=='station':
     if self.data is None:raise ValueError('任务目录不可用')
     root=self.data/'station/tasks'/entry['owner']['id']/'results';path=root/entry['owner']['name']
-   elif entry['source_kind']=='collaboration':
+   elif entry['source_kind'] in ('collaboration','center'):
     from session_store import SessionStore
     from collaboration_files import artifact_path
     return artifact_path(self.data,SessionStore(self.data/'sessions').load(entry['owner']['id']),entry['owner']['name'])

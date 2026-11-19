@@ -3,7 +3,7 @@ import {roomTaskState} from './companion-room-model.mjs';
 import './companion-room.css';
 
 // Open the actual pet host instead of drawing a second static resident here.
-export default function CompanionRoom({visible,call,butler,onNavigate}){
+export default function CompanionRoom({visible,call,butler,companion,onNavigate}){
  const [status,setStatus]=useState(null),[pending,setPending]=useState(false),[message,setMessage]=useState(''),[error,setError]=useState('');
  const wanted=useRef(null),busy=useRef(false),alive=useRef(false);
  useEffect(()=>{
@@ -33,11 +33,22 @@ export default function CompanionRoom({visible,call,butler,onNavigate}){
   finally{busy.current=false}
  };
  const task=roomTaskState(butler),connected=status?.connected===true;
+ const connection=connected?(status.visible===false?'已连接 · 已隐藏':status.mode==='home'?'已连接 · 小屋模式':'已连接 · 桌面模式')
+  :status===null?'正在检查桌宠':companion?.launch_ready?'桌宠尚未连接':'桌宠入口待检查';
  return <article className="companion-home ws-card" aria-label="桌宠生活空间">
-  <div className="companion-home-heading"><div><small>桌宠生活空间</small><h2>小屋与小镇</h2><p>打开桌面上的同一间小屋，在房间、院落和小镇之间切换。</p></div><div className="ws-actions"><button disabled={pending} onClick={open}>{pending?'等待桌宠确认…':'打开桌面小屋'}</button><button onClick={()=>onNavigate('town')}>在工作站逛小镇</button><button onClick={()=>onNavigate('reading')}>书房与放松</button></div></div>
-  <p role="status">{connected?(status.mode==='home'?'桌宠已在小屋中':'桌宠已连接 · 当前为桌面模式'):'桌宠状态未连接；首次使用或更新后请正常启动／重启桌宠。'}</p>
-  {message&&<p role="status">{message}</p>}{error&&<p className="ws-error" role="alert">{error}</p>}
-  <div className="companion-home-status"><div className={'companion-home-task '+task.kind}><span aria-hidden="true"/><strong>{task.label}</strong></div><p>{task.hint}</p><small>工作概况更新于 {butler?.observed_at?new Date(butler.observed_at*1000).toLocaleTimeString():'尚未同步'}</small></div>
-  <p className="ws-muted">工作状态与角色活动分别显示。小屋按需打开，回到桌宠界面请使用房间右键菜单；退出此页不会收起已打开的小屋。不会创建第二个角色或复制亲密度记录。</p>
+  <div className="companion-home-heading">
+   <div className="companion-home-title"><h2>龙娘的小屋</h2>
+    <p>从工作站打开桌面小屋，或留在工作站逛小镇。</p>
+    <span className="companion-connection" data-connected={connected} role="status">{connection}</span>
+   </div>
+   <button className="ws-primary companion-open" disabled={pending||(!connected&&companion?.launch_ready===false)} onClick={open}>{pending?'等待桌宠确认…':'打开桌面小屋'}</button>
+  </div>
+  {(message||error)&&<div className="companion-home-result">
+   {message&&<p role="status">{message}</p>}{error&&<p className="ws-error" role="alert">{error}</p>}
+  </div>}
+  <div className="companion-home-body">
+   <div className="companion-home-status"><div className={'companion-home-task '+task.kind}><span aria-hidden="true"/><strong>{task.label}</strong></div><p>{task.hint}</p><small>工作概况更新于 {butler?.observed_at?new Date(butler.observed_at*1000).toLocaleTimeString():'尚未同步'}</small></div>
+   <div className="ws-actions companion-home-links"><button onClick={()=>onNavigate('town')}>在工作站逛小镇</button><button onClick={()=>onNavigate('reading')}>书房与放松</button></div>
+  </div>
  </article>;
 }

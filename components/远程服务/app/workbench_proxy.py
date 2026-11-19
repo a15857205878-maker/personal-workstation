@@ -24,8 +24,16 @@ FIELDS = {
     'task_artifact': {'id', 'name'}, 'collaboration_artifact':{'id','name'}, 'app_launch': {'id'},
     'pack_preview': set(), 'pack_start': {'preview_id'},
 }
+FIELDS.update({'center_bootstrap':set(),'center_get':{'id','history_limit'},'center_create':{'primary_id','reviewer_id','third_id'},'center_send':{'id','text','target','rounds'},'center_stop':{'id','turn_id'},'center_artifact':{'id','run_id','name'}})
+FIELDS['center_results']=set()
+FIELDS['center_manage']={'id','title','archived'}
+FIELDS['center_retry']={'id','turn_id','item'}
+FIELDS.update(center_prepare={'id','text','jobs'},center_confirm={'id','turn_id','plan_revision'},center_cancel_plan={'id','turn_id'},
+              center_draft={'id','text'},center_edit_plan={'id','turn_id','plan_revision','jobs'},center_today=set(),center_accept={'id','turn_id'})
+READS.update({'center_results','center_bootstrap','center_get','center_artifact','center_today'})
 APPS = {'home': '个人主页', 'tools': '个人工具中心', 'workbench': 'Agent 工作台', 'pet': 'Agent 桌宠', 'dock': '快捷方式控制中心'}
 ERRORS = {
+    'center_busy':'电脑正在处理其他模型操作，请结束后手动重试；这次未提交群聊任务。',
     'invalid_delivery_format':'请选择文字、Word、Excel或PPTX交付。',
     'pack_preview_invalid': '打包预览无效，请重新读取电脑上次选定文件。',
     'pack_preview_expired': '打包预览已过期，请重新预览并确认。',
@@ -148,14 +156,17 @@ class WorkbenchProxy:
             if purpose is not None and purpose!='presentation':raise ValueError('附件用途无效。')
             payload = {'name': original, 'content_base64': base64.b64encode(content).decode('ascii')}
             if purpose:payload['purpose']=purpose
-        if action in ('task_artifact','collaboration_artifact') and not self._filename(payload.get('name')):
+        if action in ('task_artifact','collaboration_artifact','center_artifact') and not self._filename(payload.get('name')):
             raise ValueError('成果文件名无效。')
         result = self.transport(action, payload, request_id)
+        if action == 'center_bootstrap' and result.get('ok') and isinstance(result.get('data'), dict):
+            result = {**result, 'data': {**result['data'], 'receiver_task_handoff': True}}
         if not result.get('ok'):
             code = result.get('error', '')
             message = ('电脑网关尚不支持远程打包，请正常重开已更新的个人工作站与接收服务。'
                        if action in ('pack_preview', 'pack_start') and code == 'unknown_action' else
                        '小屋状态接口尚未载入，请在任务结束后正常重开个人工作站。' if action == 'room_status' and code == 'unknown_action' else
+                       '搭档群聊接口尚未载入，请正常重开个人工作站后刷新。' if action.startswith('center_') and code == 'unknown_action' else
                        ERRORS.get(code, code if not re.fullmatch(r'[a-z_]+', code) else '工作台未接受此操作，请检查任务内容和所选目标。'))
             result = {**result, 'error_code': code, 'error': message}
         return result

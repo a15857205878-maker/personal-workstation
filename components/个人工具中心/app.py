@@ -128,6 +128,10 @@ class ToolCenter:
         self.root.destroy()
 
 def main():
+    if '--smoke-test' not in sys.argv:
+        sys.path.insert(0,str(Path(__file__).resolve().parent.parent/'个人工具中心新版'))
+        from workstation_redirect import launch
+        return launch()
     smoke='--smoke-test' in sys.argv
     if os.name=='nt':
         try:ctypes.windll.shcore.SetProcessDpiAwareness(1)

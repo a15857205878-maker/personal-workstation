@@ -25,24 +25,24 @@ const {PALETTES,normalizeAppearance,mergeAppearance,nextColorScheme,applyAppeara
 const plain=value=>JSON.parse(JSON.stringify(value));
 
 test('appearance values are normalized without dropping a valid previous state',()=>{
- assert.deepEqual(plain(normalizeAppearance({theme:'coastal',color_scheme:'dark'})),{theme:'coastal',color_scheme:'dark'});
- assert.deepEqual(plain(normalizeAppearance({theme:'neon',color_scheme:'sepia'})),{theme:'mint',color_scheme:'light'});
- assert.deepEqual(plain(normalizeAppearance({theme:'lavender'},{theme:'blue',color_scheme:'dark'})),{theme:'lavender',color_scheme:'dark'});
- assert.deepEqual(plain(normalizeAppearance(undefined,{theme:'apricot',color_scheme:'dark'})),{theme:'apricot',color_scheme:'dark'});
+ assert.deepEqual(plain(normalizeAppearance({theme:'coastal',color_scheme:'dark'})),{chat_background:'auto',background_strength:35,theme:'coastal',color_scheme:'dark'});
+ assert.deepEqual(plain(normalizeAppearance({theme:'neon',color_scheme:'sepia'})),{chat_background:'auto',background_strength:35,theme:'mint',color_scheme:'light'});
+ assert.deepEqual(plain(normalizeAppearance({theme:'lavender'},{theme:'blue',color_scheme:'dark'})),{chat_background:'auto',background_strength:35,theme:'lavender',color_scheme:'dark'});
+ assert.deepEqual(plain(normalizeAppearance(undefined,{theme:'apricot',color_scheme:'dark'})),{chat_background:'auto',background_strength:35,theme:'apricot',color_scheme:'dark'});
  assert.equal(PALETTES.length,5);
  assert.equal(nextColorScheme('light'),'dark');
  assert.equal(nextColorScheme('dark'),'light');
 });
 
 test('a partial save keeps the last successful field and prefers the returned record',()=>{
- assert.deepEqual(plain(mergeAppearance({theme:'mint',color_scheme:'dark'},{color_scheme:'light'},{color_scheme:'light'})),{theme:'mint',color_scheme:'light'});
- assert.deepEqual(plain(mergeAppearance({theme:'mint',color_scheme:'dark'},{theme:'blue'},{theme:'blue',color_scheme:'dark'})),{theme:'blue',color_scheme:'dark'});
- assert.deepEqual(plain(mergeAppearance({theme:'mint',color_scheme:'dark'},{theme:'blue'},{color_scheme:'light'})),{theme:'blue',color_scheme:'light'});
+ assert.deepEqual(plain(mergeAppearance({theme:'mint',color_scheme:'dark'},{color_scheme:'light'},{color_scheme:'light'})),{chat_background:'auto',background_strength:35,theme:'mint',color_scheme:'light'});
+ assert.deepEqual(plain(mergeAppearance({theme:'mint',color_scheme:'dark'},{theme:'blue'},{theme:'blue',color_scheme:'dark'})),{chat_background:'auto',background_strength:35,theme:'blue',color_scheme:'dark'});
+ assert.deepEqual(plain(mergeAppearance({theme:'mint',color_scheme:'dark'},{theme:'blue'},{color_scheme:'light'})),{chat_background:'auto',background_strength:35,theme:'blue',color_scheme:'light'});
 });
 
 test('DOM attributes cover palette, color-scheme and the native color-scheme hint',()=>{
  const attrs={};
- const root={dataset:{},style:{},setAttribute:(name,value)=>{attrs[name]=value;}};
+ const root={dataset:{},style:{setProperty(name,value){this[name]=value;}},setAttribute:(name,value)=>{attrs[name]=value;}};
  applyAppearance({theme:'coastal',color_scheme:'dark'},root);
  assert.equal(root.dataset.palette,'coastal');
  assert.equal(root.dataset.colorScheme,'dark');
@@ -60,4 +60,14 @@ test('partial API payloads are exact and failures reject instead of pretending',
  await assert.rejects(()=>appearanceRequest('api_appearance_save',{color_scheme:'light'}),/主题保存失败/);
  delete context.window.pywebview;
  await assert.rejects(()=>appearanceRequest('api_appearance_get'),/等待本地桌面服务/);
+});
+
+test('background survives theme changes and zero strength is meaningful',()=>{
+ const old={theme:'blue',color_scheme:'dark',chat_background:'coast',background_strength:0};
+ const merged=mergeAppearance(old,{color_scheme:'light'},{theme:'blue',color_scheme:'light'});
+ assert.equal(merged.chat_background,'coast');assert.equal(merged.background_strength,0);
+ const root={dataset:{},style:{setProperty(name,value){this[name]=value;}},setAttribute(){}};
+ applyAppearance({...old,chat_background:'auto',background_strength:50},root);
+ assert.equal(root.style['--chat-bg-image'],'var(--partner-aurora)');assert.equal(root.style['--chat-bg-opacity'],'0.5');
+ applyAppearance({...old,chat_background:'none'},root);assert.equal(root.style['--chat-bg-image'],'none');
 });

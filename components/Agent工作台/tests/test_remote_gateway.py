@@ -226,7 +226,7 @@ class GatewayTests(unittest.TestCase):
 
     def test_public_text_redacts_paths_and_tokens(self):
         identifier = self.create()
-        self.bridge.tasks[identifier]['result'] = 'file C:\\Users\\private\\report.txt key sk-123456789secret'
+        self.bridge.tasks[identifier]['result'] = 'file C:\\Users\\example\\private\\report.txt key sk-123456789secret'
         result = self.rpc('task_get', {'id': identifier})
         self.assertNotIn('private', json.dumps(result))
         self.assertNotIn('123456789secret', json.dumps(result))

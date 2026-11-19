@@ -21,3 +21,22 @@ def make_api(base):
         def write_icon(self,path,icon):self.value['icon']=icon;return deepcopy(self.value)
     service=ShortcutService(base,backend=Backend(),asset_root=base/'fixture-cache')
     return IconStudioAPI(base,lambda folder=False,**kwargs:[str(assets if folder else imported)],service=service,collection=assets)
+
+
+def make_duplicate_api(base):
+    """Two same-name links, with a Dock pointing only at the desktop copy."""
+    import json
+    api=make_api(base);base=Path(base);desktop=base/'fixture-desktop';archive=base/'fixture-archive';archive.mkdir(exist_ok=True)
+    paths=[desktop/'龙娘桌宠.lnk',archive/'龙娘桌宠.lnk']
+    for path in paths:path.write_bytes(b'isolated named shortcut')
+    initial=api.service.backend.value
+    class Backend:
+        def __init__(self):self.values={Path(p):deepcopy(initial) for p in [desktop/'验收软件.lnk',*paths]}
+        def desktop_dirs(self):return [desktop]
+        def read(self,path):return deepcopy(self.values[Path(path)])
+        def read_many(self,paths):return [dict(path=str(p),**self.read(p)) for p in paths]
+        def write_icon(self,path,icon):self.values[Path(path)]['icon']=icon;return self.read(path)
+    api.service.backend=Backend();api.service.root.mkdir(parents=True,exist_ok=True)
+    dock=base/'fixture-dock.json';dock.write_text(json.dumps({'Items':[{'Path':str(paths[0])}]}),encoding='utf-8')
+    (api.service.root/'sources.json').write_text(json.dumps({'shortcut_dirs':[str(archive)],'dock_settings':str(dock)}),encoding='utf-8')
+    return api,paths

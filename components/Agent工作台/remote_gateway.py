@@ -16,6 +16,7 @@ import sqlite3
 import threading
 import uuid
 
+from center_remote import FIELDS as CENTER_FIELDS,READS as CENTER_READS,REQUIRED as CENTER_REQUIRED,validate_jobs as validate_center_jobs
 MAX_BODY = 262144
 MAX_UPLOAD_BODY = 14 * 1024 * 1024
 MAX_FILE = 10 * 1024 * 1024
@@ -32,6 +33,8 @@ FIELDS = {
     'collaboration_artifact': {'id', 'name'},
     'pack_preview': set(), 'pack_start': {'preview_id'},
 }
+FIELDS.update(CENTER_FIELDS)
+READS.update(CENTER_READS)
 COLLAB_FIELDS = set('id title task status rounds planned_calls call_limit call_count max_tokens started updated deadline seconds_left steps notes error stage usage persona context_count output_format files artifact_preview'.split())
 TASK_FIELDS = set('id title task_type role instruction materials requirements status result error created_at updated_at events archived mode files remote_notes'.split())
 STEP_FIELDS = set('id seat model provider stage round state content error started completed at usage duration seconds'.split())
@@ -193,6 +196,9 @@ class RemoteGateway:
         return clean(result)
 
     def _dispatch(self, action, p):
+        if action in CENTER_FIELDS:
+            from center_remote import dispatch
+            return clean(dispatch(self,action,p))
         if action == 'room_status':
             from mobile_room_status import public_room_status,read_public_pet_activity
             return public_room_status(self._call('workstation_butler_status', {}),pet_activity=read_public_pet_activity())
@@ -357,6 +363,7 @@ class RemoteGateway:
                         else {'name', 'content_base64'} if action == 'attachment_import'
                         else {'preview_id'} if action == 'pack_start'
                         else set() if action in ('room_status', 'catalog', 'list', 'pack_preview') else {'id'})
+            if action in CENTER_REQUIRED:required=CENTER_REQUIRED[action]
             if action.endswith('_note'):
                 required.add('text')
             if action in ('task_artifact','collaboration_artifact'):
@@ -364,16 +371,24 @@ class RemoteGateway:
             if required - set(p):
                 raise ValueError('missing_fields')
             for field, value in p.items():
-                if field in ('attachments', 'attachment_ids'):
+                if action in ('center_prepare','center_edit_plan') and field=='jobs':
+                    validate_center_jobs(value)
+                elif field in ('attachments', 'attachment_ids'):
                     if not isinstance(value, list) or len(value) > 5 or any(not isinstance(v, str) for v in value) or len(set(value)) != len(value):
                         raise ValueError('invalid_attachment_ids')
-                elif field in ('rounds', 'call_limit', 'max_tokens', 'context_count'):
+                elif field in ('rounds', 'call_limit', 'max_tokens', 'context_count','history_limit','plan_revision'):
                     if type(value) is not int:
                         raise ValueError('invalid_field_type')
+                elif field=='archived':
+                    if type(value) is not bool:raise ValueError('invalid_field_type')
                 elif not isinstance(value, str):
                     raise ValueError('invalid_field_type')
-                elif len(value) > (MAX_UPLOAD_BODY if field == 'content_base64' else 24000 if field in ('instruction', 'materials', 'requirements') else 8000 if field == 'task' else 1000 if field == 'text' else 200):
+                elif len(value) > (MAX_UPLOAD_BODY if field == 'content_base64' else 24000 if field in ('instruction', 'materials', 'requirements') else 8000 if field == 'task' else 8000 if field == 'text' and action in ('center_prepare','center_draft') else 4000 if field == 'text' and action=='center_send' else 1000 if field == 'text' else 200):
                     raise ValueError('field_too_large')
+            if action=='center_get' and 'history_limit' in p and not 12<=p['history_limit']<=60:raise ValueError('invalid_history_limit')
+            if action in CENTER_FIELDS:
+                for field in ('id','run_id','turn_id','primary_id','reviewer_id','third_id'):
+                    if field in p and (not isinstance(p[field],str) or not re.fullmatch('[a-f0-9]{32}',p[field])):raise ValueError('invalid_target')
             if 'purpose' in p and p['purpose']!='presentation':raise ValueError('invalid_attachment_purpose')
             if 'text' in p and not p['text'].strip():
                 raise ValueError('empty_note')

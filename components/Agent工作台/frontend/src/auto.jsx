@@ -4,7 +4,7 @@ import {isActive,statusLabel,validatePlan,sameModel,canRetry,finalReply,stepLabe
 import './auto.css';
 import Attachments from './attachments.jsx';
 import GenerationHandoff from './handoff.jsx';
-import CollaborationFiles from './collaboration-files.jsx';
+import CollaborationFiles,{saveCollaborationFile} from './collaboration-files.jsx';
 import useDialog from './use-dialog.js';
 import IncomingTasks from './incoming-tasks.jsx';
 import {TaskPanel,BriefDialog} from './task-panel.jsx';
@@ -20,7 +20,7 @@ const emptyProfile=()=>({id:'',name:'DeepSeek',kind:'deepseek',base_url:'https:/
 function Usage({usage}){return <span>{usage&&usage.known!==false&&Number.isFinite(usage.prompt_tokens)&&Number.isFinite(usage.completion_tokens)?`输入 ${usage.prompt_tokens.toLocaleString()} / 输出 ${usage.completion_tokens.toLocaleString()} Token`:'Token 用量未返回'}</span>;}
 export function Settings({profiles,onProfiles,onRemove,onClose,locked}){
  const [draft,setDraft]=useState(emptyProfile),[busy,setBusy]=useState(''),[error,setError]=useState(''),[message,setMessage]=useState(''),[models,setModels]=useState([]);
- const [clientPath,setClientPath]=useState('');
+ const [clientPath,setClientPath]=useState(''),[antigravity,setAntigravity]=useState(null);
  const [confirmDelete,setConfirmDelete]=useState(false);
  const dialog=useDialog(close,!!busy),first=useRef(null),mounted=useRef(true);
  useEffect(()=>{mounted.current=true;return()=>{mounted.current=false;};},[]);
@@ -31,7 +31,9 @@ export function Settings({profiles,onProfiles,onRemove,onClose,locked}){
  async function perform(action){
   if(busy||locked)return;setBusy(action);setError('');setMessage('');if(action!=='remove')setConfirmDelete(false);
   try{
-   if(action==='remove'){
+   if(action==='antigravity'){
+    const result=await call('api_discover_antigravity');if(!mounted.current)return;setAntigravity(result);setModels((result.models||[]).map(m=>m.id));if(result.state==='catalog')setDraft({...emptyProfile(),name:'Antigravity Gemini',kind:'antigravity_local',base_url:'antigravity://local',model:result.models?.find(m=>m.id==='gemini-4-argon-medium')?.id||result.models?.[0]?.id||''});
+   }else if(action==='remove'){
     const result=await call('api_profile_delete',{id:draft.id});if(!mounted.current)return;
     onRemove(result.id);setDraft(emptyProfile());setModels([]);setConfirmDelete(false);setMessage('配置已删除，历史会话保留。');
    }else if(action==='path'){
@@ -54,19 +56,20 @@ export function Settings({profiles,onProfiles,onRemove,onClose,locked}){
    }
   }catch(e){if(mounted.current)setError(e.message);}finally{if(mounted.current)setBusy('');}
  }
- const local=draft.kind==='codex_local',saved=profiles.find(x=>x.id===draft.id),dirty=!!saved&&['name','kind','base_url','model'].some(k=>draft[k]!==saved[k]);
+ const local=['codex_local','antigravity_local'].includes(draft.kind),saved=profiles.find(x=>x.id===draft.id),dirty=!!saved&&['name','kind','base_url','model'].some(k=>draft[k]!==saved[k]);
  return <div className="auto-modal-backdrop"><section className="auto-modal" role="dialog" aria-modal="true" aria-labelledby="model-settings-title" ref={dialog}>
   <div className="auto-modal-head"><div><span className="auto-kicker">YOUR MODELS</span><h2 id="model-settings-title">模型设置</h2></div><button className="auto-close" aria-label="关闭模型设置" disabled={!!busy} onClick={close}>×</button></div>
   <div className="auto-modal-body"><p className="auto-description">连接本机已登录的 Codex，或使用你自己的 API 密钥。换一台电脑后重新检测客户端，密钥由使用者自行填写。</p>
   <div className="auto-discovery"><div><strong>本机模型入口</strong><p>检测安装、登录和目录，不发送生成任务。</p></div><button className="auto-button" disabled={!!busy||locked} onClick={()=>perform('discover')}>{busy==='discover'?'正在检测…':'检测本机 Codex'}</button></div>
   <details className="auto-client-path"><summary>没有检测到？手动指定客户端</summary><label className="auto-field">原生 Codex 路径<input aria-label="本机 Codex 路径" value={clientPath} disabled={!!busy||locked} placeholder="完整 codex.exe 路径；留空恢复自动检测" onChange={e=>setClientPath(e.target.value)}/></label><button className="auto-button" disabled={!!busy||locked} onClick={()=>perform('path')}>{busy==='path'?'保存中…':'保存本机路径'}</button><p className="auto-small">只保存在本机 host.json，不随模型配置或会话共享；不支持脚本或命令参数。</p></details>
+  <div className="auto-discovery antigravity-discovery"><div><strong>Antigravity · 本机登录</strong><p>读取官方 CLI 的可用模型，不发送生成任务。</p>{antigravity&&<p role="status" data-state={antigravity.state}>{antigravity.message}</p>}<a href="https://antigravity.google/docs/getting-started?tab=cli" target="_blank" rel="noreferrer">官方 CLI 安装说明</a></div><button className="auto-button" disabled={!!busy||locked} onClick={()=>perform('antigravity')}>{busy==='antigravity'?'正在检查…':'检查 Antigravity'}</button></div>
   {locked&&<div className="auto-warning">协作运行中，结束后可修改配置或测试连接。</div>}
-  <label className="auto-field">已保存配置<select ref={first} value={draft.id} disabled={!!busy||locked} onChange={e=>choose(e.target.value)}><option value="">＋ 新建配置</option>{profiles.map(p=><option key={p.id} value={p.id}>{p.name} · {p.model}{p.kind==='codex_local'?' · 本机登录':p.has_key?' · 已配置密钥':' · 缺少密钥'}</option>)}</select></label>
-  <div className="auto-form-grid"><label className="auto-field">配置名<input value={draft.name} disabled={!!busy||locked} onChange={e=>change('name',e.target.value)}/></label><label className="auto-field">服务商类型<select aria-label="通道类型" value={draft.kind} disabled={!!busy||locked} onChange={e=>{setDraft({...emptyProfile(),name:e.target.value==='codex_local'?'本机 Codex':'API 配置',kind:e.target.value,base_url:e.target.value==='codex_local'?'codex://local':'https://api.deepseek.com',model:''});setModels([]);setMessage('');setError('');}}><option value="deepseek">DeepSeek API</option><option value="compatible">兼容 API 接口</option><option value="codex_local">本机 Codex</option></select></label></div>
+  <label className="auto-field">已保存配置<select ref={first} value={draft.id} disabled={!!busy||locked} onChange={e=>choose(e.target.value)}><option value="">＋ 新建配置</option>{profiles.map(p=><option key={p.id} value={p.id}>{p.name} · {p.model}{['codex_local','antigravity_local'].includes(p.kind)?' · 本机登录':p.has_key?' · 已配置密钥':' · 缺少密钥'}</option>)}</select></label>
+  <div className="auto-form-grid"><label className="auto-field">配置名<input value={draft.name} disabled={!!busy||locked} onChange={e=>change('name',e.target.value)}/></label><label className="auto-field">服务商类型<select aria-label="通道类型" value={draft.kind} disabled={!!busy||locked} onChange={e=>{setDraft({...emptyProfile(),name:e.target.value==='antigravity_local'?'Antigravity Gemini':e.target.value==='codex_local'?'本机 Codex':'API 配置',kind:e.target.value,base_url:e.target.value==='antigravity_local'?'antigravity://local':e.target.value==='codex_local'?'codex://local':'https://api.deepseek.com',model:''});setModels([]);setMessage('');setError('');}}><option value="deepseek">DeepSeek API</option><option value="compatible">兼容 API 接口</option><option value="codex_local">本机 Codex</option><option value="antigravity_local">本机 Antigravity</option></select></label></div>
   {!local&&<label className="auto-field">接口地址<input aria-label="接口地址" type="url" value={draft.base_url} disabled={!!busy||locked} spellCheck={false} onChange={e=>change('base_url',e.target.value)}/></label>}
   <label className="auto-field">模型 ID<input aria-label="模型 ID" value={draft.model} list="auto-model-options" disabled={!!busy||locked} spellCheck={false} onChange={e=>change('model',e.target.value)}/><datalist id="auto-model-options">{models.map(m=><option key={m} value={m}/>)}</datalist></label>
   {!local&&<label className="auto-field">API 密钥 <span>{saved?.has_key?'已配置 · 留空保留；更换地址需输入新密钥':'尚未配置'}</span><input aria-label="API 密钥" type="password" autoComplete="new-password" value={draft.api_key} disabled={!!busy||locked} placeholder={saved?.has_key?'不会显示已保存的密钥':'输入你自己的 API 密钥'} onChange={e=>change('api_key',e.target.value)}/></label>}
-  <p className="auto-small">{local?'由本机 Codex 管理登录，不读取或复制登录令牌。目录不代表生成权限；请先在 Codex 中登录。':'密钥由使用者手填，不从其他应用提取。保存后测试连接可读取模型列表，也可手填实际模型 ID。'} 检测与连接测试均不发起生成。</p>
+  <p className="auto-small">{local?'由对应本机客户端管理登录，不读取或复制登录令牌。模型目录不代表生成权限。Antigravity 仅文字回复，目标输出长度非硬 Token 上限。':'密钥由使用者手填，不从其他应用提取。保存后测试连接可读取模型列表，也可手填实际模型 ID。'} 检测与连接测试均不发起生成。</p>
   {error&&<div className="auto-warning" role="alert">{error}</div>}{message&&<div className="auto-feedback" role="status">{message}</div>}
   {confirmDelete&&saved&&<div className="auto-warning" role="group" aria-label="删除配置确认"><p>删除“{saved.name} · {saved.model}”及其已保存密钥？历史仍可回看；关联任务如需重新运行，请选择其他配置新建会话。</p><div className="profile-delete-confirm"><button className="auto-button" disabled={!!busy} onClick={()=>setConfirmDelete(false)}>取消</button><button className="auto-button auto-danger-text" disabled={locked||!!busy} onClick={()=>perform('remove')}>{busy==='remove'?'删除中…':'确认删除配置'}</button></div></div>}
   </div><div className="auto-modal-actions"><button className="auto-button auto-danger-text" disabled={locked||!!busy||!saved} onClick={()=>{setConfirmDelete(true);setError('');setMessage('');requestAnimationFrame(()=>dialog.current?.querySelector('[aria-label="删除配置确认"]')?.scrollIntoView({block:'nearest'}));}}>删除配置</button><button className="auto-button auto-danger-text" disabled={locked||!!busy||!saved?.has_key} onClick={()=>perform('delete')}>{busy==='delete'?'删除中…':'删除密钥'}</button><div><button className="auto-button" disabled={locked||!!busy||!draft.id||dirty||!!draft.api_key} onClick={()=>perform('test')}>{busy==='test'?'连接测试中…':'测试连接'}</button><button className="auto-button auto-primary" disabled={locked||!!busy} onClick={()=>perform('save')}>{busy==='save'?'保存中…':'保存配置'}</button></div></div>
@@ -143,7 +146,7 @@ export default function AutoWorkspace({visible=true,pendingBrief,onBriefHandled,
     {display.error&&<div className="auto-warning" role="alert">{display.error}</div>}
 
     {display.status==='completed'&&display.output_format&&display.output_format!=='text'&&!display.files?.length&&<p className="auto-warning" role="status">模型内容已完成，但尚无可用成果文件。可展开过程核对内容；仅在原接口允许时手动重试文件生成。</p>}
-    <CollaborationFiles session={display} disabled={!!busy} onDownload={name=>action('download-file',async()=>{const file=await call('api_collaboration_file',{id:display.id,name});const bytes=Uint8Array.from(atob(file.content_base64),c=>c.charCodeAt(0));const url=URL.createObjectURL(new Blob([bytes],{type:file.mime||'application/octet-stream'}));const link=document.createElement('a');link.href=url;link.download=file.name;document.body.appendChild(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);setNotice('已请求保存原件副本；请在保存窗口选择位置。');})} onOpen={name=>action('open-file',async()=>{await call('api_collaboration_open_file',{id:display.id,name});setNotice('已请求本机软件打开原文件。');})}/>
+    <CollaborationFiles session={display} disabled={!!busy} onDownload={name=>action('download-file',async()=>{saveCollaborationFile(await call('api_collaboration_file',{id:display.id,name}));setNotice('已请求保存原件副本；请在保存窗口选择位置。');})} onOpen={name=>action('open-file',async()=>{await call('api_collaboration_open_file',{id:display.id,name});setNotice('已请求本机软件打开原文件。');})}/>
     <ol className="partner-step-signals" aria-label="本轮协作步骤">{collaborationSignals(display).map(s=><li key={s.label} data-state={s.state} aria-current={s.state==='running'?'step':undefined}><span className="partner-signal-dot" aria-hidden="true"/><strong>{s.label}</strong><small>{s.text}</small></li>)}</ol>
     <details className="partner-execution-details" open={isActive(display)}><summary>{isActive(display)?'任务进度':'预算与执行详情'} · {statusLabel(display.status)}</summary><div className="auto-progress"><div><strong>{display.stage||statusLabel(display.status)}</strong><span>已完成 {progress.completed}/{progress.total||'—'} 步</span></div><progress aria-label="已完成协作步骤" value={progress.completed} max={progress.total||1}/><details className="conversation-details"><summary>预算与用量</summary><p>已尝试 {display.call_count}/{display.call_limit} 次{isActive(display)&&!history?` · 剩余 ${Math.max(0,Math.ceil(display.seconds_left||0))} 秒`:''}</p><small><Usage usage={display.usage}/></small></details></div></details>
     {!history&&active&&<div className="auto-stop-zone"><button className="auto-button auto-stop" disabled={busy==='stop'||display.status==='stopping'} onClick={()=>action('stop',async()=>{const s=await call('api_stop');if(alive.current&&s){setSession(s);remember(s);}})}>{display.status==='stopping'?'正在停止…':'停止协作'}</button><p>停止后不再发起下一次请求。已发送请求可能仍由服务商计费。</p></div>}

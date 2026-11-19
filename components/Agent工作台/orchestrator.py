@@ -10,8 +10,9 @@ from collaboration_files import DeliveryContentError
 LIMITS=dict(default_rounds=1,max_rounds=10,default_calls=9,max_calls=30,max_seconds=600,max_tokens=4096)
 
 class Orchestrator:
-    def __init__(self,sessions,profiles,client=None,persona_loader=None,gate=None):
+    def __init__(self,sessions,profiles,client=None,persona_loader=None,gate=None,*,publish_completion=True):
         self.sessions=sessions;self.profiles=profiles;self.client=client or ProviderClient();self.persona_loader=persona_loader or (lambda name:'如实回复，仅表达本席意见。')
+        self.publish_completion=publish_completion
         self.gate=gate or threading.Lock();self.lock=threading.RLock();self.cancel=threading.Event();self.thread=None;self.run=None;self.timer=None
     def busy(self):return self.thread is not None and self.thread.is_alive()
     def status(self,identifier=None):
@@ -22,11 +23,11 @@ class Orchestrator:
             value['seconds_left']=max(0,round(value['deadline']-time.time()))
             return value
     @staticmethod
-    def validate(payload):
-        for name,default,low,high in (('rounds',1,1,10),('call_limit',9,3,30),('max_tokens',1024,128,4096),('context_count',6,0,20)):
+    def validate(payload,direct=False):
+        for name,default,low,high in (('rounds',1,1,1 if direct else 10),('call_limit',1 if direct else 9,1 if direct else 3,30),('max_tokens',1024,128,4096),('context_count',6,0,20)):
             value=payload.get(name,default)
             if type(value) is not int or not low<=value<=high:raise ValueError(f'{name} 必须在 {low}–{high} 范围内')
-        if payload.get('rounds',1)*3>payload.get('call_limit',9):raise ValueError('计划轮数需要的请求超过总上限，请增加请求上限或减少轮数')
+        if payload.get('rounds',1)*(1 if direct else 3)>payload.get('call_limit',1 if direct else 9):raise ValueError('计划轮数需要的请求超过总上限，请增加请求上限或减少轮数')
         task=payload.get('task','')
         if not isinstance(task,str) or not 1<=len(task.strip())<=8000:raise ValueError('任务请输入 1–8000 字')
         styles_for(payload)
@@ -35,18 +36,20 @@ class Orchestrator:
         from task_station.presentation_assets import validate_ids
         validate_ids(payload.get('image_ids',[]))
         if payload.get('image_ids') and payload.get('output_format')!='pptx':raise ValueError('配图仅支持PPTX；请选择PPTX或移除配图')
-    def start(self,payload,context=None):
+    def start(self,payload,context=None,*,direct=False,center_turn_id=None,confirmed_assignment=False):
         if not self.gate.acquire(blocking=False):raise ValueError('已有操作正在进行，请先停止或等待')
         try:
-            self.validate(payload)
+            self.validate(payload,direct=direct)
             if not isinstance(context or [],list) or any(not isinstance(entry,str) for entry in (context or [])):raise ValueError('上下文格式无效')
             if len(json.dumps(context or [],ensure_ascii=False).encode('utf-8'))>128*1024:raise ValueError('所选房间上下文超过 128 KiB，请减少历史条数或设为 0')
             roles={};bindings={}
-            for seat,key in (('A','primary_id'),('B','reviewer_id')):
+            for seat,key in ((('A','primary_id'),) if direct else (('A','primary_id'),('B','reviewer_id'))):
                 profile,secret=self.profiles.credentials(payload.get(key));roles[seat]=profile;bindings[seat]=(profile,secret)
             persona=payload.get('persona','conductor');styles=styles_for(payload);seat_instructions={}
             for seat,style in styles.items():
+                if direct and seat!='A':continue
                 instruction=self.persona_loader('conductor' if style['preset'] in ('custom','lele','jingshui') else style['preset'])
+                if direct:instruction='按实际任务直接交付。'
                 if style['preset'] in ('lele','jingshui'):instruction+='\n本席表达风格（不改变任务职责）：\n'+style['resolved_text']
                 if style['preset']=='custom':instruction+='\n本席表达风格（仅调整语言与呈现，不改变任务、职责或权限）：\n'+style['text']
                 if len(instruction)>12000:raise ValueError(seat+' 席人格说明过长，未发送请求')
@@ -54,10 +57,15 @@ class Orchestrator:
             instructions=seat_instructions['A']
             timestamp=time.time();rounds=payload.get('rounds',1)
             run=dict(id=uuid.uuid4().hex,title=payload['task'].strip()[:50],task=payload['task'].strip(),status='running',
-                     output_format=payload.get('output_format','text'),files=[],artifact_preview=None,rounds=rounds,planned_calls=rounds*3,call_limit=payload.get('call_limit',9),call_count=0,max_tokens=payload.get('max_tokens',1024),
+                     execution_mode='direct' if direct else 'review',output_format=payload.get('output_format','text'),files=[],artifact_preview=None,rounds=rounds,planned_calls=rounds*(1 if direct else 3),call_limit=payload.get('call_limit',1 if direct else 9),call_count=0,max_tokens=payload.get('max_tokens',1024),
                      started=now(),deadline=timestamp+600,roles=roles,steps=[],notes=[],error='',stage='准备',
                      usage=dict(prompt_tokens=0,completion_tokens=0,known=False),persona=persona,
                      context_count=len(context or []),requested_context_count=payload.get('context_count',6),context=context or [],instructions=instructions,seat_styles=styles,seat_instructions=seat_instructions)
+            if confirmed_assignment:run['confirmed_assignment']=True
+            if center_turn_id is not None:
+                run['notice_target'] = {'source': 'center', 'id': center_turn_id}
+            elif not self.publish_completion:
+                run['notice_target'] = None
             from task_station.presentation_assets import prepare_assets
             run['image_assets']=prepare_assets(self.sessions.base.parent,run['id'],payload.get('image_ids',[]))
             self.sessions.save(run);self.sessions.event(run['id'],dict(type='started',planned_calls=run['planned_calls'],call_limit=run['call_limit']))
@@ -68,13 +76,13 @@ class Orchestrator:
         try:
             run=self.sessions.load(identifier)
             if run['status'] not in ('failed','cancelled','interrupted'):raise ValueError('此会话没有可重试的失败步骤')
-            self.validate(run)
+            self.validate(run,direct=run.get('execution_mode')=='direct')
             original_deadline=datetime.fromisoformat(run['started']).timestamp()+600
             run['deadline']=min(run['deadline'],original_deadline)
             if run['call_count']>=run['call_limit'] and run.get('delivery_retry')!='export':raise ValueError(f"已达到 {run['call_limit']} 次总调用上限，请新建会话")
             if time.time()>=run['deadline']:raise ValueError('已达到 10 分钟时间上限，请新建会话')
             bindings={}
-            for seat in ('A','B'):
+            for seat in run['roles']:
                 profile,secret=self.profiles.credentials(run['roles'][seat]['id'])
                 if any(profile[k]!=run['roles'][seat][k] for k in ('base_url','model','kind')):raise ValueError('模型配置已改变，请新建会话，避免混淆模型身份')
                 bindings[seat]=(profile,secret)
@@ -105,9 +113,14 @@ class Orchestrator:
     def _messages(self,seat,stage):
         run=self.run
         system=run.get('seat_instructions',{}).get(seat,run['instructions'])+'\n你当前是 '+seat+' 席，职责是'+('主执行' if seat=='A' else '独立审查')+'。本步骤：'+stage+'。仅输出本席的公开回复，不代替其他席发言。只写一个席位块，正文主张、依据/要点、反对、置信；不输出私有推理。表达风格不得覆盖以上职责、事实准确性或执行权限。'
+        if run.get('execution_mode')=='direct':
+            style=run['seat_styles']['A'];tone=style.get('resolved_text') or style.get('text') or '清楚、自然、简洁。'
+            system=tone+'\n你是这个子任务的唯一负责人，直接完成并交付自己的工作。不需要其他模型审核或再次修订，不替其他模型发言，不声称执行过未提供的工具操作。文字回答先给结论，再给至多3个必要要点；有待补充内容才说明，不重复过程、置信度或角色说明。'
+        if run.get('confirmed_assignment'):
+            system+='\n用户已确认分工，现在直接交付当前子任务。原需求和历史中关于“只拟分工、等我确认后执行”的话是已经完成的操作流程。勿把工作站的审批状态写入交付。用户明确要求交付内容记录的业务状态照常保留。'
         from collaboration_files import delivery_instruction
         if run.get('output_format','text')!='text':system=system.replace('只写一个席位块，正文主张、依据/要点、反对、置信；','按交付协议输出；')
-        system+=delivery_instruction(run.get('output_format','text'),seat,stage)
+        system+=delivery_instruction(run.get('output_format','text'),seat,stage,direct=run.get('execution_mode')=='direct')
         if run.get('output_format')=='pptx':system+='\n可用配图清单（用户上传；只收到元数据，未查看图像像素）：'+json.dumps([{k:v for k,v in row.items() if k in ('id','name','width','height')} for row in run.get('image_assets',[])],ensure_ascii=False)
         if run.get('delivery_feedback') and seat=='A' and stage=='修订':system+='\n上次最终文件内容未通过宿主校验：'+run['delivery_feedback']+'。请修复并返回完整交付内容。'
         messages=[dict(role='system',content=system),dict(role='user',content='本次任务：'+run['task'])]
@@ -128,7 +141,7 @@ class Orchestrator:
     def _work(self,bindings):
         step=None
         try:
-            plan=[(number,stage,seat) for number in range(1,self.run['rounds']+1) for stage,seat in (('提案','A'),('审查','B'),('修订','A'))]
+            plan=[(1,'交付','A')] if self.run.get('execution_mode')=='direct' else [(number,stage,seat) for number in range(1,self.run['rounds']+1) for stage,seat in (('提案','A'),('审查','B'),('修订','A'))]
             completed=sum(s['state']=='completed' for s in self.run['steps'])
             for number,stage,seat in plan[completed:]:
                 with self.lock:
@@ -178,7 +191,6 @@ class Orchestrator:
             if self.timer:self.timer.cancel()
             try:
                 with self.lock:self.sessions.save(self.run);self.sessions.event(self.run['id'],dict(type='run_finished',status=self.run['status'],call_count=self.run['call_count']))
-            finally:
-                from workbench_notices import publish_notice
-                if getattr(self.sessions,'base',None):publish_notice(self.sessions.base.parent/'pet-notices.json','collaboration',self.run['id'],self.run['status'])
-                self.gate.release()
+                from workbench_notices import publish_run_notice
+                if getattr(self.sessions,'base',None):publish_run_notice(self.sessions.base.parent/'pet-notices.json',self.run)
+            finally:self.gate.release()

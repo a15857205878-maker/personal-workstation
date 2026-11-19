@@ -1,9 +1,57 @@
 from pathlib import Path
 import sys, tempfile, threading, time, unittest, zipfile
+from io import BytesIO
 from xml.etree import ElementTree as ET
 from unittest.mock import patch
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from task_station.core import Service
+from task_station.document_export import TABLE_WIDTH, document_bytes
+
+
+class WordTableTests(unittest.TestCase):
+    def parse_word(self, text):
+        with zipfile.ZipFile(BytesIO(document_bytes(text))) as archive:
+            return ET.fromstring(archive.read('word/document.xml'))
+
+    def test_three_rows_from_original_collaboration_and_headerless_table(self):
+        values = ['周一整理资料', '周三核对进度', '周五提交文档']
+        lines = ['| ' + value + ' |' for value in values]
+        for source, headers in [([lines[0], '| :--- |', *lines[1:]], 1),
+                                (['```word-table', *lines, '```'], 0)]:
+            with self.subTest(headers=headers):
+                document = self.parse_word('\n'.join(['# 示例 · 三步验收安排', '', *source]))
+                tables = document.findall('.//{*}tbl')
+                self.assertEqual(len(tables), 1)
+                rows = tables[0].findall('{*}tr')
+                self.assertEqual([row.findtext('.//{*}t') for row in rows], values)
+                self.assertEqual(len(tables[0].findall('.//{*}tblHeader')), headers)
+
+    def test_table_cells_and_surrounding_prose_preserve_content(self):
+        text = '# 安排\n| 日期 | 要求 |\n| :---: | ---: |\n| 周一 | A \\| B & <说明> |\n\n正文 A | B'
+        document = self.parse_word(text)
+        body = document.find('{*}body')
+        table = body.find('{*}tbl')
+        row = table.findall('{*}tr')[1]
+        self.assertEqual([cell.findtext('.//{*}t') for cell in row.findall('{*}tc')], ['周一', 'A | B & <说明>'])
+        self.assertEqual([node.findtext('.//{*}t') for node in body.findall('{*}p')], ['安排', '', '正文 A | B'])
+
+    def test_unmarked_pipe_prose_and_literal_code_are_not_tables(self):
+        text = '结果 A | B\n\n```text\n| 字段 |\n| --- |\n| 示例 |\n```'
+        document = self.parse_word(text)
+        self.assertIsNone(document.find('.//{*}tbl'))
+        self.assertIn('| 示例 |', ''.join(document.itertext()))
+
+    def test_long_description_gets_more_width_with_fixed_page_grid(self):
+        text = ('| 编号 | 验收说明 | 状态 |\n| :---: | --- | :---: |\n| 01 | '
+                + '核对日期和版本，保留需要确认的材料。' * 5 + ' | 待确认 |')
+        table = self.parse_word(text).find('.//{*}tbl')
+        word_ns = '{http://schemas.openxmlformats.org/wordprocessingml/2006/main}'
+        widths = [int(column.get(word_ns + 'w')) for column in table.findall('.//{*}gridCol')]
+        self.assertEqual(sum(widths), TABLE_WIDTH)
+        self.assertGreater(widths[1], max(widths[0], widths[2]))
+        self.assertEqual(table.find('.//{*}tblLayout').get(word_ns + 'type'), 'fixed')
+        for row in table.findall('{*}tr'):
+            self.assertEqual([int(cell.get(word_ns + 'w')) for cell in row.findall('.//{*}tcW')], widths)
 
 class Fake:
     def __init__(self): self.calls=0

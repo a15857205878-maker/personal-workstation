@@ -12,7 +12,7 @@ class ChromeTests(unittest.TestCase):
             self.assertTrue(b.call('api_appearance_save',{'theme':'lavender','color_scheme':'dark'})['ok'])
             self.assertEqual(b.call('api_appearance_save',{'theme':'blue'})['data']['color_scheme'],'dark')
             other=Bridge(root/'room',data_dir=root/'data')
-            self.assertEqual(other.call('api_appearance_get')['data'],{'theme':'blue','color_scheme':'dark'})
+            self.assertEqual(other.call('api_appearance_get')['data'],{'theme':'blue','color_scheme':'dark','chat_background':'auto','background_strength':35})
             self.assertIsNone(other._auto)
             self.assertFalse(other.call('api_appearance_save',{'color_scheme':'bad'})['ok'])
             self.assertFalse(other.call('api_appearance_save',{'color_scheme':'light','path':'x'})['ok'])
@@ -20,7 +20,7 @@ class ChromeTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as d:
             root=Path(d);root.joinpath('appearance.json').write_text('{"theme":"apricot"}',encoding='utf-8')
             b=Bridge(root/'room',data_dir=root)
-            self.assertEqual(b.call('api_appearance_get')['data'],{'theme':'apricot','color_scheme':'light'})
+            self.assertEqual(b.call('api_appearance_get')['data'],{'theme':'apricot','color_scheme':'light','chat_background':'auto','background_strength':35})
             self.assertEqual(root.joinpath('appearance.json').read_text(),'{"theme":"apricot"}')
     def test_fixed_window_actions_and_close_uses_native_guard(self):
         window=Mock();controls=WindowControls(window)

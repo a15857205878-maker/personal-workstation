@@ -262,6 +262,8 @@ def create_server(host, port, folder, token):
                     from file_review import workbench_sheet
                     self.reply(200,workbench_sheet(self.server.workbench,self.query.get('id',[''])[0],self.query.get('name',[''])[0],self.query.get('kind',['task'])[0]))
                 except (ValueError,KeyError,OSError):self.reply(400,{'error':'无法读取该XLSX，请检查任务与文件状态，或下载原件。'})
+            elif path == '/agent-center':
+                self.ui_page('agent_center.html')
             elif path in ('/collaboration','/mobile'):
                 self.ui_page('collaboration.html')
             elif path=='/' and self.query.get('desktop_embed',[''])[0]!='1':
@@ -439,7 +441,7 @@ def create_server(host, port, folder, token):
                     self.reply(404, {'error': '成果文件不存在'})
             elif path == '/api/info':
                 network=self.server.refresh_network()
-                self.reply(200, {'urls': network['urls'], 'remote_access': network['remote_access'], 'folder': str(folder), 'limit': MAX_BYTES, 'reply_mode': 'native-writer-v1', 'ui_mode': 'unified-only', 'backend_revision':'2026-11-05-deepseek-resume-2', 'capabilities':{'deepseek_resume':True,'workbench_preview':True,'code_collaboration':True,'public_website_reference':True,'web_product_preview':True}})
+                self.reply(200, {'urls': network['urls'], 'remote_access': network['remote_access'], 'folder': str(folder), 'limit': MAX_BYTES, 'reply_mode': 'native-writer-v1', 'ui_mode': 'unified-only', 'backend_revision':'2026-11-12-partner-mobile', 'capabilities':{'partner_group_chat':True,'deepseek_resume':True,'workbench_preview':True,'code_collaboration':True,'public_website_reference':True,'web_product_preview':True}})
             elif path == '/api/files':
                 items = sorted((p for p in folder.iterdir() if p.is_file() and p.suffix.lower() in EXTENSIONS), key=lambda p: p.stat().st_mtime, reverse=True)[:100]
                 self.reply(200, [{'name': p.name, 'size': p.stat().st_size, 'time': p.stat().st_mtime} for p in items])

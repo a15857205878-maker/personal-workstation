@@ -1,0 +1,2 @@
+const {test}=require('node:test');const assert=require('node:assert/strict');const m=require('./mobile-controller.js');
+test('navigation defaults to group and preserves old route semantics',()=>{assert.equal(m.viewFromHash(''),'chat');assert.equal(m.viewFromHash('#home'),'chat');assert.equal(m.viewFromHash('#new'),'chat');assert.equal(m.viewFromHash('#sessions'),'sessions');assert.equal(m.viewFromHash('#tasks'),'tasks');assert.equal(m.viewFromHash('#files'),'files');assert.equal(m.viewFromHash('#connection'),'connection');});

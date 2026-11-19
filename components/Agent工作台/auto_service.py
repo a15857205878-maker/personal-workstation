@@ -17,12 +17,15 @@ class AutoService:
         self.engine=Orchestrator(self.sessions,self.profiles,self.client,self._persona,gate)
         from chat_service import ChatService
         self.chat=ChatService(data_dir,self.profiles,self.client,gate)
+        from agent_center import AgentCenter
+        self.center=AgentCenter(data_dir,self.profiles,self.client,gate,self.engine,lab=self.chat)
     def _persona(self,name):
         conductor='仅表达当前席位的公开意见：主张、依据或要点、反对意见、置信度。如实说明限制，不替其他席位发言。'
         if name=='conductor':return conductor
         text='温和、清醒、有主见，表达自然，幽默适度；先给明确判断，再说明依据与不确定性。不空泛赞美，不迎合，不编造事实或经历。'
         return conductor+'\n保持以上席位与真实来源格式，同时采用以下表达风格：\n'+text
     def call(self,action,payload):
+        if action.startswith('api_center_'):return self.center.call(action,payload)
         if action.startswith('api_chat_'):return self.chat.call(action,payload)
         if action=='api_bootstrap':return dict(profiles=self.profiles.list(),sessions=self.sessions.list(),active=self.engine.status(),limits=LIMITS,personas=['lele','jingshui'],room_available=False)
         if action=='api_collaboration_file':
@@ -32,6 +35,13 @@ class AutoService:
         if action=='api_session':return self.engine.status(payload['id'])
         if action=='api_stop':return self.engine.stop()
         if action=='api_note':return self.engine.note(payload.get('text'))
+        if action=='api_discover_antigravity':
+            if payload:raise ValueError('模型目录检查不接收参数')
+            if not self.gate.acquire(blocking=False):raise ValueError('协作运行中，请结束后再检测')
+            try:
+                from antigravity_channel import AntigravityChannel
+                return (self.client.antigravity if isinstance(self.client,ModelChannels) else AntigravityChannel()).discover()
+            finally:self.gate.release()
         if action=='api_discover_local':
             if not self.gate.acquire(blocking=False):raise ValueError('协作运行中，请结束后再检测本机客户端')
             try:

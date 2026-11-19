@@ -1,0 +1,69 @@
+:root .messenger-shell .ws-polished-page{max-width:1140px}
+:root .messenger-shell .ws-polished-page .ws-page-heading{align-items:start;margin-bottom:18px}
+.ws-section-picker{display:flex;align-items:stretch;flex-wrap:wrap;gap:4px;padding:4px;border:1px solid var(--app-border);border-radius:11px;background:var(--app-surface-2);width:fit-content;max-width:100%;margin-bottom:16px}
+:root .messenger-shell .ws-section-picker button{display:inline-flex;align-items:center;justify-content:center;gap:7px;min-height:40px;padding:7px 12px;border:1px solid transparent;border-radius:7px;background:transparent;color:var(--app-text-2);font-size:13px;font-weight:500;transition:background-color 140ms ease,color 140ms ease,border-color 140ms ease}
+:root .messenger-shell .ws-section-picker button:hover{background:var(--app-surface)}
+:root .messenger-shell .ws-section-picker button:is([aria-pressed=true],[aria-current=page]){background:var(--app-surface);color:var(--app-primary-ink);border-color:var(--app-border);font-weight:650}
+:root .messenger-shell .ws-section-picker button:focus-visible{outline:2px solid var(--app-primary);outline-offset:1px}
+.ws-section-picker svg{flex:none}
+.app-content>.mode-pane.ws-polish-pane:not([hidden]){animation:none}
+.ws-section-motion:not([hidden]),.app-content>.mode-pane.ws-icon-page:not([hidden]){animation:ws-section-enter 170ms ease-out}
+@keyframes ws-section-enter{from{opacity:.7}to{opacity:1}}
+.ws-page-empty{display:flex;align-items:flex-start;gap:13px;min-width:0;padding:20px;background:var(--app-surface);border:1px dashed var(--app-border-strong);border-radius:11px}
+.ws-page-empty.is-compact{gap:10px;padding:12px;background:var(--app-surface-2);border-color:var(--app-border)}
+.ws-empty-symbol{width:35px;height:35px;flex:0 0 35px;display:grid;place-items:center;border-radius:9px;background:var(--app-primary-soft);color:var(--app-primary-ink)}
+.ws-empty-content{min-width:0;overflow-wrap:anywhere}
+.ws-empty-content strong{font-size:14px;color:var(--app-text)}
+.ws-empty-content p{margin:5px 0 0;color:var(--app-muted);font-size:13px}
+.ws-empty-content .ws-actions{margin-top:12px}
+.ws-page-empty.is-compact .ws-empty-symbol{width:29px;height:29px;flex-basis:29px}
+:root .messenger-shell .ws-settings-section>h2{margin:0 0 13px}
+:root .messenger-shell .ws-settings-section .ws-settings-option{display:grid;grid-template-columns:minmax(180px,1fr) minmax(0,1fr);gap:14px;align-items:start;padding:15px 0;margin:0;border-bottom:1px solid var(--app-border)}
+:root .messenger-shell .ws-settings-section .ws-settings-option:last-child{border-bottom:0;padding-bottom:0}
+:root .messenger-shell .ws-settings-section .ws-settings-option h3,:root .messenger-shell .ws-settings-diagnostics h3{margin:0;font-size:14px}
+:root .messenger-shell .ws-settings-section .ws-settings-option p{margin:5px 0 0;font-size:12px;color:var(--app-muted)}
+:root .messenger-shell .ws-settings-section .ws-settings-controls{display:flex;flex-wrap:wrap;align-items:start;justify-content:flex-start;gap:8px;min-width:0}
+@media(min-width:900px){
+ :root .messenger-shell .ws-settings-section .chat-background-controls{grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:center;width:410px}
+ :root .messenger-shell .ws-settings-section .chat-background-preview{grid-column:1/-1;height:85px}
+}
+.ws-connection-state{display:inline-flex;align-items:center;gap:8px;width:fit-content;margin:0;padding:6px 9px;border-radius:6px;background:var(--app-surface-2);color:var(--app-text-2);font-size:12px}
+.ws-connection-state>span{width:7px;height:7px;border-radius:50%;background:var(--app-faint)}
+.ws-connection-state[data-state=online]>span{background:var(--app-jade-ink)}
+.ws-settings-diagnostics{border-bottom:1px solid var(--app-border);padding:0 0 12px}
+.ws-diagnostic-list summary,.ws-artifact-about summary,.ws-artifact-sources summary{cursor:pointer}
+.ws-artifact-toolbar{display:flex;align-items:end;flex-wrap:wrap;gap:10px;margin-bottom:15px}
+.ws-artifact-search{flex:1 1 235px;min-width:0;display:flex;align-items:center;gap:8px;padding-left:10px;background:var(--app-surface);border:1px solid var(--app-border);border-radius:8px;color:var(--app-muted)}
+:root .messenger-shell .ws-artifact-search input[type=search]{min-height:38px;min-width:0;width:100%;border:0;background:transparent;color:var(--app-text);padding-left:0}
+.ws-artifact-search svg{flex:none}
+.ws-artifact-history{display:grid;gap:4px;font-size:12px;color:var(--app-muted)}
+.ws-artifact-history select{min-height:38px;color:var(--app-text);background:var(--app-surface);border:1px solid var(--app-border);border-radius:8px;padding:5px 10px;font:inherit;max-width:100%}
+.ws-artifact-scope{margin-bottom:14px}
+.ws-artifact-count{margin:0 0 10px}
+.ws-artifact-results{display:grid;gap:12px;min-width:0}
+.ws-artifact-results h2{overflow-wrap:anywhere}
+.ws-artifact-sources,.ws-artifact-about{margin-top:16px}
+.ws-artifact-about{padding:0 3px;font-size:12px;color:var(--app-muted)}
+.icon-entry-grid{margin-top:15px}
+.icon-empty-space{margin-top:12px}
+.icon-entry-grid input[type=search]{width:100%;margin-bottom:10px}
+.icon-entry-grid .icon-compare+.ws-actions{margin-top:12px}
+:root .messenger-shell .app-topbar .ws-section-picker{margin:0;padding:2px}
+:root .messenger-shell .app-topbar.has-tools-switch{justify-content:flex-start}
+.app-topbar.has-tools-switch .app-location{flex:0 0 auto}
+:root .messenger-shell .app-topbar .ws-section-picker button{min-height:34px;padding:5px 9px}
+@media(max-width:700px){
+ :root .messenger-shell .ws-settings-section .ws-settings-option{grid-template-columns:minmax(0,1fr);gap:8px}
+ .ws-artifact-row{align-items:flex-start;flex-direction:column}
+}
+@media(max-width:460px){
+ :root .messenger-shell .ws-polished-page{padding-inline:12px}
+ .ws-polished-page .ws-section-picker{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));width:100%}
+ :root .messenger-shell .ws-section-picker button{min-height:44px;padding-inline:6px}
+ .ws-section-picker button svg{display:none}
+ .ws-page-empty{padding:12px;gap:9px}
+ .ws-empty-symbol{width:29px;height:29px;flex-basis:29px}
+ :root .messenger-shell .app-topbar.has-tools-switch{padding-inline:6px;gap:5px}
+ :root .messenger-shell .app-topbar .ws-section-picker button{min-height:40px;font-size:12px;padding-inline:7px}
+}
+@media(prefers-reduced-motion:reduce){.ws-section-motion:not([hidden]){animation:none}}

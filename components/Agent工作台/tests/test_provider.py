@@ -13,7 +13,7 @@ class ProviderTests(unittest.TestCase):
                 self.send_response(200);self.end_headers()
                 self.wfile.write(json.dumps({'data':[{'id':'safe-model'},{'id':'echo-fake-secret-key'}]}).encode())
             def do_POST(self):
-                self.rfile.read(int(self.headers.get('Content-Length','0')))
+                owner.last_payload=json.loads(self.rfile.read(int(self.headers.get('Content-Length','0'))))
                 if owner.mode=='redirect':
                     self.send_response(302);self.send_header('Location','https://should-not-be-contacted.invalid');self.end_headers();return
                 self.send_response(200);self.send_header('Content-Type','text/event-stream');self.end_headers()
@@ -36,6 +36,18 @@ class ProviderTests(unittest.TestCase):
     def test_sse_real_http_and_private_reasoning_not_retained(self):
         response,chunks=self.complete();self.assertEqual(response['content'],'主张：你好。');self.assertEqual(chunks,response['content'])
         self.assertNotIn('PRIVATE-REASONING',json.dumps(response)+chunks)
+    def test_official_deepseek_enables_json_only_for_structured_calls(self):
+        host,port=self.server.server_address
+        client=ProviderClient(connection_factory=lambda _host,_port,timeout:http.client.HTTPConnection(host,port,timeout=timeout))
+        profile=dict(base_url='https://api.deepseek.com/v1',model='deepseek-flash',kind='deepseek')
+        args=([{'role':'system','content':'Return one JSON object.'}],128,threading.Event(),lambda _:None,time.time()+5)
+        client.complete_json(profile,'fake-secret-key',*args)
+        self.assertEqual(self.last_payload.get('response_format'),{'type':'json_object'})
+        self.assertEqual(self.last_payload.get('thinking'),{'type':'disabled'})
+        client.complete(profile,'fake-secret-key',*args)
+        self.assertNotIn('response_format',self.last_payload)
+        client.complete_json({**profile,'base_url':'https://compatible.example/v1'},'fake-secret-key',*args)
+        self.assertNotIn('response_format',self.last_payload)
     def test_redirect_never_followed(self):
         self.mode='redirect'
         with self.assertRaisesRegex(ProviderError,'重定向'):self.complete()

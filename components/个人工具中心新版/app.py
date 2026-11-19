@@ -13,6 +13,9 @@ def configure_logs(base):
     logging.getLogger().setLevel(logging.INFO);logging.getLogger().addHandler(handler)
 
 def main():
+    if '--ui-smoke' not in sys.argv:
+        from workstation_redirect import launch
+        return launch()
     parser=argparse.ArgumentParser();parser.add_argument('--ui-smoke',action='store_true');parser.add_argument('--smoke-result');args=parser.parse_args()
     configure_logs(BASE)
     from backend import Bridge
@@ -74,5 +77,5 @@ if __name__=='__main__':
     except Exception:
         logging.getLogger('toolcenter').exception('Startup failed')
         if sys.stderr is not None:traceback.print_exc()
-        if '--ui-smoke' not in sys.argv:ctypes.windll.user32.MessageBoxW(0,'工具中心启动未完成，请查看新版目录 logs/app.log。旧版入口仍可使用。','启动失败',0x10)
+        if '--ui-smoke' not in sys.argv:ctypes.windll.user32.MessageBoxW(0,'工具中心启动未完成，请查看新版目录 logs/app.log。常用功能已整合到个人工作站，请从个人工作站打开。','启动失败',0x10)
         raise SystemExit(1)

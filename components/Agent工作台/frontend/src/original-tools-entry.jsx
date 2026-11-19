@@ -79,7 +79,7 @@ function OriginalTools() {
     {!center.data ? <ConnectionScreen status={center.connection} error={center.connectionError} onRetry={handleRetry} busy={retryBusy} /> : <>
       {center.refreshError ? <div className="original-tools-banner"><InlineAlert tone="warning" title="刷新数据失败，正在显示上次载入的内容" onDismiss={center.clearRefreshError}>{center.refreshError}</InlineAlert></div> : null}
       <main className="page-scroll" id="main-content" tabIndex={-1}>
-        {navigation.visited.map(page => <div key={page} hidden={navigation.page !== page} className="original-tools-page">
+        {navigation.visited.map(page => <div key={page} hidden={navigation.page !== page} className={`original-tools-page original-tools-${page}`}>
           {page === 'games' ? <GamesPage data={center.data} call={center.call} updateGames={center.updateGames} focusGameId={null} onFocusConsumed={() => {}} onAfterLaunch={handleAfterLaunch} /> : null}
           {page === 'pack' ? <PackPage data={center.data} jobs={center.jobs} jobPollError={center.jobPollError} call={center.call} packDraft={center.packDraft} setPackDraft={center.setPackDraft} updateMaterials={center.updateMaterials} lastPackJobId={center.lastPackJobId} addOrUpdateJob={center.addOrUpdateJob} focusMaterialId={null} onFocusConsumed={() => {}} /> : null}
           {page === 'wheel' ? <WheelPage data={center.data} call={center.call} updateWheel={center.updateWheel} focusWheelId={null} onFocusConsumed={() => {}} /> : null}

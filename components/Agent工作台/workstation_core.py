@@ -11,7 +11,7 @@ import time
 from workstation_zones import catalog, split_tools, validate_module, AREA
 
 TOOL_ACTIONS=frozenset(('icon_studio','bootstrap','game_list','game_favorite','game_save','game_add','game_add_tool','game_open','materials_choose','materials_open','pick_files','pick_output','pack_previous','pack_start','pack_materials','job_status','job_open','wheel_get','wheel_save','wheel_add','wheel_import','wheel_draw','steam_open'))
-INTEGRATION=Path(os.environ.get('WORKSTATION_INTEGRATION_ROOT',str(Path(__file__).resolve().parent.parent/'个人应用联动')))
+INTEGRATION=Path(os.environ.get('WORKSTATION_INTEGRATION_ROOT', str(Path(__file__).resolve().parent.parent / '个人应用联动')))
 
 class ToolProcess:
     def __init__(self,window=lambda:None,test_root=None):
@@ -160,10 +160,16 @@ class WorkstationCore:
         if not result.get('ok'):
             errors.append(result.get('error','读取失败'));return None
         return result.get('data')
-    def overview(self):
+    def overview(self,*,include_today=False):
+        from center_index import read_center
+        from session_store import SessionStore
+        data_dir=getattr(self.bridge,'_data_dir',None);current=read_center(data_dir,include_today=include_today)
         errors=[];tasks=self._read('station_list',{},errors) or []
-        data=self._read('api_bootstrap',{},errors) or {};sessions=data.get('sessions',[])
-        return {'tasks':tasks,'collaborations':sessions,'scope':'最近100个未归档任务与最近100个协作记录；计数仅对应当前范围','limit':100,'counts':{'tasks':len(tasks),'collaborations':len(sessions),'active':sum(t.get('status') in ('running','queued','排队中','执行中') for t in tasks+sessions),'attention':sum(t.get('status') in ('结果待确认','等待交接','需要检查','失败','failed','interrupted') for t in tasks+sessions)},'warnings':errors,'errors':errors}
+        sessions=[r for r in SessionStore(Path(data_dir)/'sessions').list() if r['id'] not in current['run_owners']] if data_dir is not None else []
+        counts=dict(current['counts'],tasks=len(tasks),collaborations=len(sessions))
+        result=dict(tasks=tasks,collaborations=sessions,conversations=current['rows'],counts=counts,scope=current['scope'],limit=100,center_available=not current['warnings'],center_run_ids=list(current['run_owners']),history_scope='旧任务与高级协作仅作历史参考，不计入当前搭档状态',history_warnings=errors,warnings=current['warnings'],errors=current['warnings'])
+        if include_today:result['today']=current['today']
+        return result
     def artifacts(self):
         errors=[];items=[]
         rows=self._read('station_list',{},errors) or []
@@ -180,6 +186,12 @@ class WorkstationCore:
                     from site_materials_api import MaterialsAPI
                     self._materials=MaterialsAPI(self)
             return self._materials.call(action.removeprefix('workstation_materials_'),payload)
+        if action=='workstation_leisure_status':
+            if payload:raise ValueError('休闲概况只接受空参数。')
+            from reading_room import ReadingRoom
+            try:reading=ReadingRoom(self.bridge._data_dir).overview()
+            except (ValueError,OSError):reading=dict(counts=None,resume=None,warnings=['书房概况暂不可读，原文件和设置已保留。'])
+            return dict(reading=reading,focus=self.town.focus_summary())
         if action.startswith('workstation_reading_'):
             from reading_room import ReadingRoom
             with self._artifact_init:
@@ -202,12 +214,19 @@ class WorkstationCore:
             if operation in ('read','open'):
                 if set(payload)!={'id'}:raise ValueError('只能通过书库编号读取。')
                 return self._reading.read(payload['id']) if operation=='read' else self._reading.open_copy(payload['id'],self.bridge.opener)
+            if operation=='export_notes':
+                if set(payload)!={'id'}:raise ValueError('笔记导出只接受书库编号。')
+                return self._reading.export_notes(payload['id'])
+            if operation=='preferences':
+                if payload:raise ValueError('读取偏好不接受额外参数。')
+                return self._reading.preferences()
+            if operation=='preferences_save':return self._reading.preferences_save(payload)
             if operation=='update':return self._reading.update(payload)
             raise ValueError('未知书房操作。')
         if action=='workstation_butler_status':
             if payload:raise ValueError('个人管家只读接口不接收额外参数。')
             from butler_center import ButlerCenter
-            return dict(ButlerCenter(data_dir=self.bridge._data_dir).snapshot(self.overview()),observed_at=time.time(),focus=self.town.focus_summary())
+            return dict(ButlerCenter(data_dir=self.bridge._data_dir).snapshot(self.overview(include_today=True)),observed_at=time.time(),focus=self.town.focus_summary())
         if action in ('workstation_room_view','workstation_room_enter','workstation_room_heartbeat','workstation_room_leave'):
             fields={'token'} if action in ('workstation_room_heartbeat','workstation_room_leave') else set()
             if set(payload)!=fields or (fields and (not isinstance(payload['token'],str) or len(payload['token'])!=32)):

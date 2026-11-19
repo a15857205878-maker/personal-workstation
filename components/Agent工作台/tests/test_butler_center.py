@@ -10,7 +10,7 @@ class CenterTests(unittest.TestCase):
             value=ButlerCenter(root).snapshot({'counts':{'tasks':2,'collaborations':1,'active':1,'attention':0},'tasks':[{'title':'PRIVATE'}],'credentials':'SECRET'})
             self.assertEqual(value['counts']['tasks'],2);self.assertEqual(len(value['notices']),1)
             self.assertNotIn('PRIVATE',json.dumps(value));self.assertNotIn('SECRET',json.dumps(value))
-            self.assertEqual(value['notices'][0]['page'],'tasks')
+            self.assertEqual(value['notices'][0]['page'],'artifacts')
     def test_corrupt_feed_is_reported_without_touching_data(self):
         with tempfile.TemporaryDirectory() as d:
             root=Path(d);(root/'data').mkdir();p=root/'data/pet-notices.json';p.write_text('bad',encoding='utf-8')
@@ -30,11 +30,10 @@ class CenterTests(unittest.TestCase):
         from types import SimpleNamespace
         with tempfile.TemporaryDirectory() as d:
             root=Path(d);(root/'custom-data').mkdir();(root/'custom-data/pet-notices.json').write_text(json.dumps({'version':1,'events':[]}),encoding='utf-8')
-            from town_adapter import TownAdapter
-            from unittest.mock import Mock
-            core=WorkstationCore(SimpleNamespace(_data_dir=root/'custom-data'),tools=Mock(),town=TownAdapter(base=root/'town-fixture'));core.overview=lambda:{'counts':{'active':4}}
+            core=WorkstationCore.__new__(WorkstationCore);core.bridge=SimpleNamespace(_data_dir=root/'custom-data');core.overview=lambda *,include_today=False:{'counts':{'active':4},'today':{'active':{'count':4}} if include_today else None};core.town=SimpleNamespace(focus_summary=lambda:dict(kind='idle'))
             value=core.call('workstation_butler_status',{})
             self.assertEqual(value['counts']['active'],4);self.assertEqual(value['feed_state'],'ready')
+            self.assertEqual(value['today']['active']['count'],4)
             with self.assertRaises(ValueError):core.call('workstation_butler_status',{'path':'arbitrary'})
     def test_partial_overview_is_unknown_and_does_not_leak_errors(self):
         with tempfile.TemporaryDirectory() as d:

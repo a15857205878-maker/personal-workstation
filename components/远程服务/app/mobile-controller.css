@@ -19,18 +19,17 @@
 .mobile-controller{--mc-ink:#24354c;--mc-muted:#647a92;--mc-accent:#3f7fdf}.mobile-controller .mc-hero{background:#f4f8fd;color:#24354c;border:1px solid #d4dfec}.mobile-controller .mc-hero p{color:#647a92}.mobile-controller .mc-hero:after{display:none}.mc-start-actions button{background:#3f7fdf!important;color:#fff}.mc-start-actions .mc-dual{background:#f1ebfb!important;color:#6e53a5;border:1px solid #ded3f1!important}.mc-advanced{border:1px solid #d4dfec;background:#f4f8fd;border-radius:13px;padding:10px 13px;margin:14px 0}.mc-advanced summary{font-size:12px;color:#647a92}.mc-advanced[open]{padding-bottom:15px}.mc-config-summary{font-size:11px;color:#647a92;line-height:1.8;margin:16px 0 8px}.mobile-controller #taskPanel>h2,.mobile-controller #collabPanel>h2{font-size:23px;margin:12px 0}.mobile-controller #instruction,.mobile-controller #collabTask{min-height:155px;font-size:14px;background:#fbfdff}.mobile-controller #taskPanel>details:not(.mc-advanced),.mobile-controller #collabPanel>details:not(.mc-advanced){margin-top:12px;font-size:12px}.mobile-controller #taskPanel>p.muted,.mobile-controller #collabPanel>p.muted{font-size:12px}.mobile-controller #budget{font-size:11px;white-space:pre-line}.mobile-controller .mc-stats button+button{border-color:#d4dfec}
 .mobile-controller[data-mobile-view=new] #message:not(.error){display:none}.mobile-controller[data-mobile-view=new] .mc-top{margin-bottom:12px}.mobile-controller[data-mobile-view=new] .mc-compose-back{margin-bottom:8px}.mobile-controller[data-mobile-view=new] nav.tabs{margin-bottom:14px}.mobile-controller #taskPanel>p.muted,.mobile-controller #collabPanel>p.muted{margin-bottom:12px}.mobile-controller #instruction,.mobile-controller #collabTask{min-height:130px}
 
-/* Use visual viewport while typing; reclaim bottom navigation space for the keyboard. */
-.mobile-controller[data-keyboard=open] .mc-bottom-nav{display:none}.mobile-controller[data-keyboard=open] main{padding-bottom:24px}.mobile-controller .mc-embedded-view{height:calc(var(--mc-viewport-height,100dvh) - 160px - env(safe-area-inset-top) - env(safe-area-inset-bottom))}.mobile-controller #draftConfigNotice{font-size:12px;line-height:1.7}.mobile-controller[data-keyboard=open] .mc-embedded-view{min-height:180px;height:calc(var(--mc-viewport-height,100dvh) - 90px)}
+/* Use the same usable viewport for the mobile shell and top-level dialogs. */
+.mobile-controller[data-keyboard=open] .mc-bottom-nav{display:none}
+.mobile-controller[data-keyboard=open] main{padding-bottom:8px}
+.mobile-controller[data-keyboard=open] dialog[open]{position:fixed;inset-block-start:var(--mc-viewport-top,0px);inset-block-end:auto;margin-block:8px;max-height:calc(var(--mc-viewport-height,100dvh) - 16px)!important;overscroll-behavior:contain}
+.mobile-controller #draftConfigNotice{font-size:12px;line-height:1.7}
+.mobile-controller #mcFiles{height:calc(var(--mc-viewport-height,100dvh) - 160px);min-height:160px}
 
 /* Stable input geometry: prevent focus zoom and do not grow/shrink while typing. */
 .mobile-controller :is(input,textarea,select){font-size:16px!important}
 .mobile-controller textarea{resize:none}
 .mobile-controller #instruction,.mobile-controller #collabTask{height:132px;min-height:132px;max-height:132px;overflow-y:auto}
-.mobile-controller[data-keyboard=open] main{padding-bottom:8px}
-.mobile-controller .mc-embedded-view,.mobile-controller[data-keyboard=open] .mc-embedded-view{height:var(--mc-frame-height,calc(var(--mc-viewport-height,100dvh) - 160px));min-height:160px;transition:none}
-
-/* Child-frame focus is independent of the parent viewport resize on iPhone. */
-.mobile-controller[data-editing=true] .mc-bottom-nav{display:none}.mobile-controller[data-editing=true] main{padding-bottom:8px}
 
 /* Compact goal advice, using only catalog types and no extra service. */
 .mc-compose-advice{margin:8px 0 12px;color:#647a92;font-size:11px;line-height:1.7}
@@ -83,3 +82,31 @@
 /* Small-screen file collaboration: one delivery choice, content first. */
 #sessionCollaborationDialog #collabOutput{font-size:16px;min-height:44px;border-radius:10px;margin-bottom:0}#sessionCollaborationDialog #collabOutputHint{font-size:11px;line-height:1.6;margin:7px 0 12px}#sessionCollaborationDialog #collabPanel>h2{font-size:17px;margin:12px 0 4px}#sessionCollaborationDialog #collabPanel>p:first-of-type{font-size:12px}.mc-delivery-preview{box-sizing:border-box;width:min(620px,calc(100vw - 20px));max-height:88dvh;overflow:auto;padding:18px;border:1px solid #d4dfec;border-radius:16px;background:#f4f8fd;color:#24354c}.mc-delivery-preview h2{font-size:18px;margin:0 0 10px}.mc-preview-close{float:right;min-height:40px;margin-top:-40px}.mc-delivery-slide{padding:17px;margin:12px 0;border:1px solid #d4dfec;border-radius:12px;background:#fff}.mc-delivery-slide small{font-size:11px;color:#647a92}.mc-delivery-slide h3{font-size:17px;margin:8px 0}.mc-delivery-slide p,.mc-delivery-slide li{font-size:14px;line-height:1.7;overflow-wrap:anywhere}.mc-delivery-slide ul{padding-left:20px}.mc-delivery-text{white-space:pre-wrap;font-size:14px;line-height:1.8;overflow-wrap:anywhere}
 .mc-step-history>summary{font-size:13px;color:#647a92;cursor:pointer}.mc-task-diagnostics #detailMeta{font-size:11px;line-height:1.7}.mobile-controller .workbench-artifact>.mc-message-details{margin-top:9px;font-size:11px}.mobile-controller .workbench-artifact>.mc-message-details p{overflow-wrap:anywhere}
+
+.mc-center-entry{display:block;margin:8px 0 12px;padding:12px 16px;min-height:44px;border:1px solid var(--theme-border,#d3dfec);border-radius:12px;background:var(--theme-surface,#fff);color:var(--theme-text,#243246);text-decoration:none;font-weight:600}
+
+/* Unified mobile navigation. Documents stay mounted across tab changes. */
+.mobile-controller .mc-bottom-nav{grid-template-columns:repeat(4,minmax(0,1fr));box-sizing:border-box}
+.mobile-controller .mc-chat-modes,.mobile-controller .mc-file-modes{display:flex;gap:6px;margin:0 0 8px}
+.mobile-controller .mc-chat-modes button,.mobile-controller .mc-file-modes button{flex:1;min-height:44px;background:transparent;color:var(--ink);border:0;border-bottom:2px solid transparent;border-radius:0;font-size:14px}
+.mobile-controller .mc-chat-modes button[aria-pressed=true],.mobile-controller[data-file-mode=library] [data-file-mode=library],.mobile-controller[data-file-mode=transfer] [data-file-mode=transfer]{border-bottom-color:var(--accent);font-weight:600}
+.mobile-controller:not(:is([data-mobile-view=chat],[data-mobile-view=sessions])) #mcChatModes,.mobile-controller:not([data-mobile-view=files]) #mcFileHub,.mobile-controller:not([data-mobile-view=chat]) #mcGroup{display:none}
+.mobile-controller[data-mobile-view=chat] :is(#pending,#message:not(.error)),.mobile-controller[data-file-mode=library] #mcFiles,.mobile-controller[data-file-mode=transfer] #mcFileLibrary{display:none}
+.mobile-controller:is([data-mobile-view=chat],[data-mobile-view=sessions]) .mc-top{display:none}
+.mobile-controller:is([data-mobile-view=chat],[data-mobile-view=sessions]) main{padding:6px 10px;max-width:620px}
+.mobile-controller #mcGroup,.mobile-controller #mcSessions{margin:0!important;border-radius:8px!important;min-height:0}
+.mobile-controller #mcTaskHeading{flex-wrap:wrap;gap:8px}.mobile-controller #mcTaskHeading h1{font-size:21px}
+.mobile-controller:not([data-mobile-view=tasks]) :is(#mcGroupResults,#mcOldResults){display:none}
+.mobile-controller:not([data-old-results=true]) :is(.mc-filters,.mc-search,#recordsSection){display:none}
+.mc-result-group{padding:14px 0!important;border-bottom:1px solid var(--line)!important}.mc-result-group h2{font-size:15px!important;margin:0 0 8px}.mc-result-file{padding:12px 0;overflow-wrap:anywhere}.mc-result-file strong,.mc-result-file small{display:block}.mc-result-file small{color:var(--muted);margin:6px 0;font-size:12px}.mc-result-file button{min-height:44px;margin-right:8px}
+.mobile-controller .mc-today{margin:0 0 14px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+.mc-today h2{font-size:16px;margin:0 0 6px}.mobile-controller .mc-today-group{padding:10px 0;border-top:1px solid var(--line)}
+.mc-today-group h3,.mc-today-group summary{font-size:14px;font-weight:600;margin:0 0 4px}
+.mc-today small{color:var(--muted);font-size:12px}.mc-today-row{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:10px;padding:4px 0}
+.mc-today-row strong,.mc-today-row small{display:block;overflow-wrap:anywhere}.mc-today-row button{min-height:44px}
+.mobile-controller #mcOldResults{margin:18px 0;width:100%;text-align:left;min-height:44px;background:transparent;color:var(--muted)}
+.mobile-controller #mcSettings>h1{display:none}.mobile-controller #mcSettings .mobile-visual-menu{margin:0 0 20px}
+.mobile-controller #pcFileSearch.mc-inline-library{width:100%;max-height:none;padding:0;border:0;border-radius:0;background:var(--bg);color:var(--ink)}
+.mobile-controller #pcFileSearch.mc-inline-library .pc-find-head h2{font-size:15px}
+.mobile-controller #pcFileSearch.mc-inline-library :is(input,select,button){background:var(--surface);color:var(--ink);border-color:var(--line)}
+.mobile-controller #mcFileHub{margin-bottom:14px}

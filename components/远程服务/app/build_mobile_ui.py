@@ -18,12 +18,19 @@ def activity_assets():
     return {key:'data:image/png;base64,'+base64.b64encode((BASE/'ui-assets'/f'activity-{key}.png').read_bytes()).decode('ascii') for key in keys}
 
 def build(check_only=False):
+    center=BASE/'agent_center.html';center_html=center.read_text(encoding='utf-8')
+    for suffix,tag,name in [('style','style','agent_center.css'),('script','script','agent_center.js')]:
+        content=(BASE/name).read_text(encoding='utf-8');content=(partner_styles()+'\n'+content+'\n'+(BASE/'mobile-messenger.css').read_text(encoding='utf-8')) if suffix=='style' else (BASE/'mobile-messenger.js').read_text(encoding='utf-8')+'\n'+content;assert '</'+tag not in content.lower()
+        begin='<!-- agent-center-'+suffix+':start -->';end='<!-- agent-center-'+suffix+':end -->'
+        block=begin+'\n<'+tag+'>\n'+content+'\n</'+tag+'>\n'+end
+        center_html=re.sub(re.escape(begin)+r'.*?'+re.escape(end),lambda _:block,center_html,flags=re.S)
+    if not check_only:center.write_text(center_html,encoding='utf-8')
     page=BASE/'collaboration.html';html=page.read_text(encoding='utf-8')
     for kind,name,tag in [('styles','mobile-controller.css','style'),('script','mobile-controller.js','script')]:
         start=f'<!-- mobile-controller-{kind}:start -->';end=f'<!-- mobile-controller-{kind}:end -->'
         content=(BASE/name).read_text(encoding='utf-8')
-        if kind=='styles':content=partner_styles()+'\n'+(BASE/'mobile-room.css').read_text(encoding='utf-8')+'\n'+content+'\n'+(BASE/'partner-theme.css').read_text(encoding='utf-8')
-        if kind=='script':content=(BASE/'mobile-room.js').read_text(encoding='utf-8').replace('__PET_ACTIVITY_ASSETS__',json.dumps(activity_assets(),ensure_ascii=True,separators=(',',':'))).replace('__ROOM_PREVIEW_DATA__','data:image/png;base64,'+base64.b64encode((BASE/'ui-assets/room-preview.png').read_bytes()).decode('ascii'))+'\n'+(BASE/'partner-theme.js').read_text(encoding='utf-8')+'\n'+(BASE/'keyword-router.js').read_text(encoding='utf-8')+'\n'+(BASE/'pc_file_search.js').read_text(encoding='utf-8')+'\n'+content
+        if kind=='styles':content=partner_styles()+'\n'+(BASE/'mobile-room.css').read_text(encoding='utf-8')+'\n'+content+'\n'+(BASE/'partner-theme.css').read_text(encoding='utf-8')+'\n'+(BASE/'mobile-messenger.css').read_text(encoding='utf-8')
+        if kind=='script':content=(BASE/'mobile-room.js').read_text(encoding='utf-8').replace('__PET_ACTIVITY_ASSETS__',json.dumps(activity_assets(),ensure_ascii=True,separators=(',',':'))).replace('__ROOM_PREVIEW_DATA__','data:image/png;base64,'+base64.b64encode((BASE/'ui-assets/room-preview.png').read_bytes()).decode('ascii'))+'\n'+(BASE/'partner-theme.js').read_text(encoding='utf-8')+'\n'+(BASE/'keyword-router.js').read_text(encoding='utf-8')+'\n'+(BASE/'pc_file_search.js').read_text(encoding='utf-8')+'\n'+content+'\n'+(BASE/'mobile-messenger.js').read_text(encoding='utf-8')
         assert '</'+tag not in content.lower()
         block=start+f'\n<{tag} id="mobile-controller-{kind}">\n'+content+f'\n</{tag}>\n'+end
         if start in html:

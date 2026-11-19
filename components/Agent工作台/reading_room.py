@@ -102,7 +102,7 @@ class ReadingRoom:
             item=self._item(self._load(),identifier);raw=self._path(item).read_bytes()
             return dict(item=self._public(item),**({'text':self._text(raw)} if item['format'] in ('.txt','.md') else {'base64':base64.b64encode(raw).decode('ascii')}))
     def update(self,payload):
-        if not isinstance(payload,dict) or set(payload)-{'id','state','position','page','bookmark','notes','archive'}:raise ValueError('书签参数无效。')
+        if not isinstance(payload,dict) or set(payload)-{'id','state','position','page','bookmark','remove_bookmark','notes','archive'}:raise ValueError('书签参数无效。')
         with self.lock:
             value=self._load();item=self._item(value,payload.get('id'),include_archived=payload.get('archive') is False)
             for key in ('position','page'):
@@ -120,6 +120,11 @@ class ReadingRoom:
                 if payload['bookmark'] is not True:raise ValueError('书签参数无效。')
                 mark={'position':item['position'],'page':item['page']}
                 if mark not in item['bookmarks']:item['bookmarks']=(item['bookmarks']+[mark])[-50:]
+            if 'remove_bookmark' in payload:
+                mark=payload['remove_bookmark']
+                if not isinstance(mark,dict) or set(mark)!={'position','page'} or type(mark['position']) not in (int,float) or not math.isfinite(mark['position']) or not 0<=mark['position']<=1 or type(mark['page']) is not int or not 1<=mark['page']<=100000:raise ValueError('书签标记无效。')
+                if mark not in item['bookmarks']:raise ValueError('书签已变化，请刷新后再整理。')
+                item['bookmarks']=[m for m in item['bookmarks'] if m!=mark]
             if 'archive' in payload:
                 if type(payload['archive']) is not bool:raise ValueError('归档参数无效。')
                 item['archived']=payload['archive']
@@ -127,3 +132,49 @@ class ReadingRoom:
     def open_copy(self,identifier,opener=os.startfile):
         with self.lock:path=self._path(self._item(self._load(),identifier));opener(str(path))
         return {'opened':True}
+
+    @staticmethod
+    def _valid_preferences(value):
+        return (isinstance(value,dict) and set(value)=={'font','paper','volume','last_book_id'}
+                and type(value['font']) is int and 14<=value['font']<=28 and value['paper'] in ('warm','light','dark')
+                and type(value['volume']) in (int,float) and math.isfinite(value['volume']) and 0<=value['volume']<=1
+                and isinstance(value['last_book_id'],str) and (not value['last_book_id'] or re.fullmatch('[a-f0-9]{32}',value['last_book_id'])))
+    def preferences(self):
+        with self.lock:
+            p=self.root/'preferences.json'
+            if not p.exists():return dict(font=18,paper='warm',volume=.18,last_book_id='')
+            try:
+                if p.is_symlink() or p.stat().st_size>4096:raise ValueError()
+                value=json.loads(p.read_text(encoding='utf-8'))
+                if not self._valid_preferences(value):raise ValueError()
+                return value
+            except (ValueError,OSError,TypeError,KeyError):raise ValueError('阅读偏好暂不可读，原设置已保留。') from None
+    def preferences_save(self,payload):
+        with self.lock:
+            if not isinstance(payload,dict) or not payload or set(payload)-{'font','paper','volume','last_book_id'}:raise ValueError('阅读偏好参数无效。')
+            value={**self.preferences(),**payload}
+            if not self._valid_preferences(value):raise ValueError('阅读偏好超出范围。')
+            if payload.get('last_book_id'):
+                if self._item(self._load(),payload['last_book_id'])['kind']!='book':raise ValueError('继续阅读只接受书库中的读物。')
+            from credential_store import atomic_json
+            atomic_json(self.root/'preferences.json',value);return value
+    def overview(self):
+        with self.lock:
+            items=self.listing()['items'];prefs=self.preferences();resume=next((x for x in items if x['id']==prefs['last_book_id'] and x['kind']=='book'),None);warnings=[]
+            if resume:
+                try:self._path(resume)
+                except (OSError,ValueError):resume=None;warnings.append('上次读物的副本暂不可用，请到书房检查或重新选择。')
+            return dict(counts=dict(books=sum(x['kind']=='book' for x in items),reading=sum(x['kind']=='book' and x['state']=='reading' for x in items),audio=sum(x['kind']=='audio' for x in items)),resume={k:resume[k] for k in ('id','title','format','position','page','state')} if resume else None,warnings=warnings)
+
+    def export_notes(self,identifier):
+        with self.lock:
+            item=self._item(self._load(),identifier,include_archived=True)
+            if item['kind']!='book':raise ValueError('只支持导出读物的笔记。')
+            position='第 '+str(item['page'])+' 页' if item['format']=='.pdf' else str(round(item['position']*100))+'%'
+            lines=['# '+item['title']+' · 阅读笔记','','阅读位置：'+position,'','## 笔记','',item['notes'] or '（暂无已保存笔记）','','## 书签','']
+            for mark in item['bookmarks']:lines.append('- '+('第 '+str(mark['page'])+' 页' if item['format']=='.pdf' else str(round(mark['position']*100))+'%'))
+            if not item['bookmarks']:lines.append('（暂无书签）')
+            name=re.sub(r'[\\/:*?"<>|\r\n]','_',item['title']).strip(' .')[:60] or '读物'
+            text='\n'.join(lines)+'\n'
+            if len(text.encode('utf-8'))>65536:raise ValueError('笔记导出超过64KiB上限。')
+            return dict(filename=name+'-阅读笔记.md',text=text)

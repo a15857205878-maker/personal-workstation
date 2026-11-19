@@ -22,9 +22,9 @@ test('embedding accepts only fixed loopback surface and owned preview',()=>{
  assert.ok(previewUrl('http://127.0.0.1:8765/file-viewer?token=private',base));
 });
 test('main navigation consolidates while retaining every original destination',()=>{
- assert.deepEqual(PARTNER_NAV.map(x=>x.label),['搭档','任务','成果','工具','休闲']);
+ assert.deepEqual(PARTNER_NAV.map(x=>x.label),['搭档','成果','工具','休闲']);
  const routes=new Set(PARTNER_NAV.flatMap(x=>[x.id,...x.secondary]));
- for(const id of ['overview','tasks','work','pack','chat','companion','games','wheel','town','remote','artifacts','icons','settings'])assert.ok(routes.has(id)||['remote','settings'].includes(id),id);
+ for(const id of ['overview','work','pack','chat','companion','games','wheel','town','remote','artifacts','icons','settings'])assert.ok(routes.has(id)||['remote','settings'].includes(id),id);
 });
 
 test('progress measures completed steps rather than spent request allowance',()=>{
@@ -51,4 +51,10 @@ test('partner status voice preserves legacy text records and distinguishes absen
 test('starter samples prepare useful goals without overwriting an existing draft',()=>{
  assert.match(starterTask('docx'),/DOCX/);assert.match(starterTask('xlsx'),/公式/);assert.match(starterTask('pptx'),/3页/);
  assert.equal(starterTask('xlsx','我的原草稿'),'我的原草稿');assert.equal(starterTask('unknown',''),'');
+});
+
+test('single model embed opts into the original session and shares its rail with the desktop host',()=>{
+ const query=new URL(sessionEmbedUrl('http://127.0.0.1:8765/?token=fixture')).searchParams;
+ assert.equal(query.get('single_simple'),'1');
+ assert.equal(query.get('host_history'),'1');
 });

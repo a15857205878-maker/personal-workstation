@@ -56,9 +56,14 @@ class ProviderClient:
             except (ValueError,AttributeError):raise ProviderError('接口未返回有效模型列表') from None
             if not isinstance(rows,list):raise ProviderError('接口未返回有效模型列表')
             return [r['id'] for r in rows[:200] if isinstance(r,dict) and isinstance(r.get('id'),str) and len(r['id'])<=200 and (not key or key not in r['id'])]
-    def complete(self,profile,key,messages,max_tokens,cancel,on_chunk,deadline):
+    def complete_json(self,profile,key,*args):
+        official=profile['kind']=='deepseek' and urlsplit(profile['base_url']).hostname=='api.deepseek.com'
+        return self.complete(profile,key,*args,json_output=official)
+
+    def complete(self,profile,key,messages,max_tokens,cancel,on_chunk,deadline,*,json_output=False):
         payload=dict(model=profile['model'],messages=messages,max_tokens=max_tokens,stream=True,stream_options={'include_usage':True})
         if profile['kind']=='deepseek':payload['thinking']={'type':'disabled'}
+        if json_output:payload['response_format']={'type':'json_object'}
         content='';pending='';usage=None;finish=None;model=profile['model'];wire=0
         def accept(value,stream=True):
             nonlocal content,pending,usage,finish,model
@@ -111,5 +116,6 @@ class ProviderClient:
         if cancel.is_set():raise Cancelled('已停止')
         if finish!='stop':raise ProviderError('模型输出被截断或未正常结束，未交给下一席；请调整单次输出上限后新建会话')
         if pending:content+=pending;on_chunk(pending)
-        if not content.strip():raise ProviderError('模型未返回公开文字，已停止交接')
+        if not content.strip():
+            raise ProviderError('DeepSeek 的 JSON 模式返回空白，没有可校验的方案' if json_output else '模型未返回公开文字，已停止交接')
         return dict(content=content,usage=usage,model=model,finish_reason=finish)

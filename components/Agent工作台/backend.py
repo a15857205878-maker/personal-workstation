@@ -11,6 +11,8 @@ class Bridge:
         self._command_lock=threading.Lock();self._state_lock=threading.Lock();self._job=None
         self._data_dir=Path(data_dir) if data_dir is not None else Path(__file__).parent/'data'
         self._api_client=api_client;self._auto=None;self._auto_init=threading.Lock();self.export_saver=None
+        from member_identity import IdentityStore
+        self.identities=IdentityStore(self._data_dir);self.identity_picker=None
         self.ui_actions={};self.quick_window=None;self.attachment_picker=None;self._attachments=None;self._attachment_lock=threading.Lock()
         self._station=None;self._station_init=threading.Lock();self.station_window=None
         self._workstation=None;self._workstation_init=threading.Lock()
@@ -79,7 +81,12 @@ class Bridge:
             api_actions+=('api_collaboration_file','api_collaboration_open_file')
             api_actions+=('api_chat_bootstrap','api_chat_create','api_chat_delete','api_chat_send','api_chat_status','api_chat_stop','api_chat_discuss','api_chat_memory','api_chat_memory_save','api_chat_memory_delete','api_chat_memory_clear')
             api_actions+=('api_chat_continue','api_chat_export','api_chat_export_save')
-            api_actions+=('api_appearance_get','api_appearance_save')
+            api_actions+=('api_center_bootstrap','api_center_create','api_center_status','api_center_send','api_center_confirm','api_center_stop')
+            api_actions+=('api_center_preset_save','api_center_manage','api_center_retry','api_center_accept')
+            api_actions+=('api_center_draft','api_center_edit_plan')
+            api_actions+=('api_center_identity_get','api_center_identity_save','api_center_identity_pick')
+            api_actions+=('api_center_memory','api_center_memory_save','api_center_memory_delete','api_center_memory_clear')
+            api_actions+=('api_appearance_get','api_appearance_save','api_antigravity_status','api_discover_antigravity')
             if not isinstance(action,str) or action not in room_actions+api_actions:raise ValueError('不支持的操作')
             if payload is None:payload={}
             if not isinstance(payload,dict) or len(json.dumps(payload,ensure_ascii=False))>32768:raise ValueError('参数无效或过大')
@@ -92,13 +99,41 @@ class Bridge:
                     if self.busy():raise ValueError('工作台正在执行任务，请稍后接收。')
                     return dict(ok=True,data=api(base,'claim',{'id':payload.get('id')}))
                 return dict(ok=True,data=api(base,'pending'))
+            if action.startswith('api_center_identity_'):
+                if action=='api_center_identity_get':
+                    if payload:raise ValueError('成员资料读取不接收参数')
+                    return dict(ok=True,data=self.identities.get())
+                if not self._command_lock.acquire(blocking=False):raise ValueError('模型或本地操作进行中，请结束后修改成员资料')
+                try:
+                    if action=='api_center_identity_pick':
+                        if payload:raise ValueError('头像选择不接收路径参数')
+                        if self.identity_picker:paths=self.identity_picker()
+                        else:
+                            import webview
+                            if self.station_window is None:raise ValueError('窗口尚未就绪')
+                            paths=self.station_window.create_file_dialog(webview.FileDialog.OPEN,allow_multiple=False,file_types=('头像图片 (*.png;*.jpg;*.jpeg;*.webp)',))
+                        if not paths:return dict(ok=True,data=dict(cancelled=True))
+                        from member_identity import import_avatar
+                        return dict(ok=True,data=dict(cancelled=False,avatar=import_avatar(paths[0])))
+                    if set(payload)!={'id','nickname','avatar'}:raise ValueError('成员资料参数无效')
+                    from credential_store import ProfileStore
+                    identifier=payload['id']
+                    if identifier!='user' and identifier not in {p['id'] for p in ProfileStore(self._data_dir).list()}:
+                        if not (payload['nickname']=='' and payload['avatar']=='' and isinstance(identifier,str) and identifier in self.identities.get()['items']):
+                            raise ValueError('模型配置不存在，请重新选择成员')
+                    return dict(ok=True,data=self.identities.save(identifier,payload['nickname'],payload['avatar']))
+                finally:self._command_lock.release()
+            if action=='api_antigravity_status':
+                if payload:raise ValueError('Antigravity 安装检查不接收参数')
+                from antigravity_probe import snapshot
+                return dict(ok=True,data=snapshot())
             if action=='api_appearance_get':
                 if payload:raise ValueError('界面偏好读取不接收参数')
                 return dict(ok=True,data=self.appearance.get())
             if action=='api_appearance_save':
-                if not payload or not set(payload)<= {'theme','color_scheme'}:raise ValueError('界面偏好参数无效')
+                if not payload or not set(payload)<= {'theme','color_scheme','chat_background','background_strength'}:raise ValueError('界面偏好参数无效')
                 if any(value is None for value in payload.values()):raise ValueError('界面偏好参数无效')
-                values=self.appearance.save(payload.get('theme'),payload.get('color_scheme'))
+                values=self.appearance.save(**payload)
                 handler=self.ui_actions.get('appearance_changed')
                 if handler:handler(values)
                 return dict(ok=True,data=values)
@@ -119,7 +154,7 @@ class Bridge:
             return dict(ok=True,data=getattr(self,'_'+action)(payload))
         except (ValueError,OSError,TypeError,KeyError,UnicodeError) as exc:return dict(ok=False,error=str(exc) or '操作失败')
         except Exception:return dict(ok=False,error='操作未完成，请刷新后重试')
-    def _api_active(self):return (self._auto is not None and (self._auto.engine.busy() or self._auto.chat.busy())) or bool(self._station and self._station.service.jobs)
+    def _api_active(self):return (self._auto is not None and (self._auto.engine.busy() or self._auto.chat.busy() or self._auto.center.busy())) or bool(self._station and self._station.service.jobs)
     def _stop_api(self):
         if self._station:
             for identifier in list(self._station.service.jobs):
@@ -128,6 +163,7 @@ class Bridge:
         if self._auto:
             if self._auto.engine.busy():self._auto.engine.stop('用户关闭窗口')
             if self._auto.chat.busy():self._auto.chat.stop('用户关闭窗口')
+            if self._auto.center.busy():self._auto.center.stop_all('用户关闭窗口')
     def close_station(self):
         if self._station:self._station.service.close()
     def _snapshot(self,payload):return self.store.snapshot()

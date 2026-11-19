@@ -1,6 +1,13 @@
 """Fixed native window controls; close retains the app's existing close guard."""
 import ctypes,json,logging,threading
 
+def show_workstation(window):
+    # pywebview.restore forces Normal even for a maximized WinForms window.
+    if str(window.native.WindowState) == 'Minimized':
+        window.restore()
+    window.show()
+
+
 class WindowControls:
     def __init__(self,window):
         self.window=window;self.maximized=False;self.lock=threading.RLock();self.scheme='light';self.tray=None
@@ -32,8 +39,7 @@ class WindowControls:
             def apply():
                 if hasattr(self,'_room_visibility') and not getattr(self,'_room_visibility_installed',False):
                     def visible_changed(*_):
-                        visible=bool(self.window.native.Visible)
-                        threading.Thread(target=self._room_visibility,args=(visible,),daemon=True).start()
+                        threading.Thread(target=self._room_visibility,daemon=True).start()
                     self.window.native.VisibleChanged+=visible_changed
                     self._room_visibility_installed=True
                 hwnd=int(self.window.native.Handle.ToInt64());user=ctypes.windll.user32
@@ -66,15 +72,21 @@ class WindowControls:
         self.window.events.shown+=self.apply_native_frame
         self.window.events.maximized+=lambda *_:self.changed(True)
         self.window.events.restored+=lambda *_:self.changed(False)
-        def room_visibility(visible):
-            visible=bool(visible and self.window.native.Visible)
+        def room_visibility(*_):
+            native=self.window.native
+            if native is None or native.IsDisposed:return
+            visible=bool(native.Visible and str(native.WindowState)!='Minimized')
             bridge._room_surface_visible=visible
             core=getattr(bridge,'_workstation',None)
             if not visible and core is not None and getattr(core,'_room',None) is not None:core._room.leave()
-            try:self.window.evaluate_js("window.dispatchEvent(new CustomEvent('workstation-room-visibility',{detail:{visible:"+('true' if visible else 'false')+"}}))")
+            value=json.dumps(visible)
+            script=("window.workstationRoomVisible="+value+
+                    ";window.dispatchEvent(new CustomEvent('workstation-room-visibility',{detail:{visible:"+value+"}}))")
+            try:self.window.evaluate_js(script)
             except Exception:pass
-        self.window.events.minimized+=lambda *_:room_visibility(False)
         self._room_visibility=room_visibility
-        self.window.events.restored+=lambda *_:room_visibility(True)
-        self.window.events.shown+=lambda *_:room_visibility(True)
+        self.window.events.loaded+=room_visibility
+        self.window.events.minimized+=room_visibility
+        self.window.events.restored+=room_visibility
+        self.window.events.shown+=room_visibility
         return self

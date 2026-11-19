@@ -27,10 +27,9 @@ export function collaborationSignals(task={}){
 
 export const PARTNER_NAV=[
  {id:'partner',label:'搭档',icon:'chat',secondary:['work','chat','companion','overview']},
- {id:'tasks',label:'任务',icon:'tasks',secondary:[]},
  {id:'artifacts',label:'成果',icon:'artifacts',secondary:['site-materials']},
  {id:'pack',label:'工具',icon:'tools',secondary:['icons']},
- {id:'games',label:'休闲',icon:'leisure',secondary:['wheel','reading','town']},
+ {id:'leisure',label:'休闲',icon:'leisure',secondary:['games','wheel','reading','town']},
 ];
 export function partnerState(session,history=false){return history?'history':!session?'welcome':['running','stopping'].includes(session.status)?'running':'result';}
 export function checkedDraft(plan,attachments=[]){return {plan:JSON.parse(JSON.stringify({...plan,task:plan.task.trim()})),attachments:JSON.parse(JSON.stringify(attachments))};}
@@ -44,7 +43,7 @@ export function revisionDraft(source,text,plan,include={}){
  return {...plan,task};
 }
 const ORIGIN='http://127.0.0.1:8765';
-export function sessionEmbedUrl(value){try{const url=new URL(value);if(url.origin!==ORIGIN||url.username||url.password)return '';url.searchParams.set('desktop_embed','1');return url.href;}catch{return '';}}
+export function sessionEmbedUrl(value){try{const url=new URL(value);if(url.origin!==ORIGIN||url.username||url.password)return '';url.searchParams.set('desktop_embed','1');url.searchParams.set('single_simple','1');url.searchParams.set('host_history','1');return url.href;}catch{return '';}}
 export function previewUrl(value,session){try{const url=new URL(value),base=new URL(session);return url.origin===ORIGIN&&url.origin===base.origin&&!url.username&&!url.password&&['/preview-viewer','/file-viewer'].includes(url.pathname)&&!!base.searchParams.get('token')&&url.searchParams.get('token')===base.searchParams.get('token')?url.href:'';}catch{return '';}}
 
 export function stepProgress(session){const steps=session?.steps||[];const planned=Number(session?.planned_calls)||Number(session?.rounds)*3||steps.length;return {completed:steps.filter(step=>step.state==='completed').length,total:Math.max(0,planned||0)};}
