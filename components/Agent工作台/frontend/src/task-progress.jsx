@@ -18,7 +18,7 @@ function fitPanel(value,space,collapsed){
  return {side:value?.side||'right',top,width,height};
 }
 
-export default function TaskProgress({session,turns,selected,onSelect,opener,onClose,onDelivery,activeId,busy,globalBusy,onConfirm,onEdit,onCancel,onStop,onRetry,retryBlocked,identities,error,notice,geometry,onGeometry,onSaveDraft,onRestorePlanningInput,renderEditor}){
+export default function TaskProgress({session,turns,selected,onSelect,opener,onClose,onDelivery,activeId,busy,globalBusy,onConfirm,onEdit,onCancel,onStop,onRetry,retryBlocked,identities,error,notice,geometry,onGeometry,onSaveDraft,onRestorePlanningInput,renderEditor,example=false}){
  const title=useId(),dialog=useRef(null),closeButton=useRef(null);
  const [collapsed,setCollapsed]=useState(false),[space,setSpace]=useState({width:0,height:0});
  const [editor,setEditor]=useState(null);
@@ -46,6 +46,11 @@ export default function TaskProgress({session,turns,selected,onSelect,opener,onC
   };
  },[opener]);
  const turn=turns.find(item=>item.id===selected)||turns[0];
+ useLayoutEffect(()=>{
+  if(!example||turn?.state!=='running')return;
+  dialog.current.querySelector('.task-progress-body').scrollTop=0;
+  dialog.current.querySelector('h2').focus({preventScroll:true});
+ },[example,turn?.state]);
  const prepared=turn?.state==='prepared',task=isTaskTurn(turn),jobs=turn?.jobs||[];
  const planningRejected=turn?.failures?.some(failure=>failure.code==='plan_rejected');
  const editing=prepared&&turn.id===editor?.id;
@@ -89,7 +94,7 @@ export default function TaskProgress({session,turns,selected,onSelect,opener,onC
   onKeyDown={event=>{if(event.key==='Escape'&&!event.defaultPrevented){event.preventDefault();event.stopPropagation();close();}}}>
   <div className="task-progress-inner">
    <header>
-    <div className="task-progress-title"><ListChecks size={17} aria-hidden="true"/><h2 id={title}>任务进度</h2>{collapsed&&turn&&<span className="feedback-status" data-tone={taskTone(turn.state)}>{progressLabels[turn.state]}</span>}</div>
+    <div className="task-progress-title"><ListChecks size={17} aria-hidden="true"/><h2 id={title} tabIndex={example?-1:undefined}>任务进度</h2>{collapsed&&turn&&<span className="feedback-status" data-tone={taskTone(turn.state)}>{progressLabels[turn.state]}</span>}</div>
     <div className="task-window-actions">
      {!compact&&<button className="auto-button task-window-drag" aria-label="移动任务浮窗" title="拖到左侧或右侧，或用方向键移动" {...grip('move')}><GripHorizontal size={17}/></button>}
      {!compact&&<button className="auto-button" aria-label="恢复浮窗位置和大小" title="恢复位置和大小" onClick={()=>onGeometry(null)}><RotateCcw size={14}/></button>}
@@ -128,7 +133,7 @@ export default function TaskProgress({session,turns,selected,onSelect,opener,onC
        </li>;
       })}</ul>}
       {prepared&&!editing&&<div className="center-approval">
-       <p>确认后计划调用模型 {jobs.length||1} 次。</p>
+       <p>{example?'确认后模拟完成这两步。':`确认后计划调用模型 ${jobs.length||1} 次。`}</p>
        <div className="task-progress-actions">
         <button className="auto-button auto-primary" disabled={!!busy||globalBusy} onClick={()=>onConfirm(turn)}>确认执行</button>
         {turn.drafted&&turn.job_plan?.length>0&&<button className="auto-button" disabled={!!busy} onClick={()=>setEditor({id:turn.id,version:turn.plan_revision,jobs:turn.job_plan.map(job=>({...job}))})}>修改分工</button>}
@@ -153,7 +158,7 @@ export default function TaskProgress({session,turns,selected,onSelect,opener,onC
       {job.run.steps.map(row=><TaskMessage key={row.id} row={row} roles={displayRoles(job.run.roles,identities)}/>)}
      </details>)}
      <details className="task-progress-log center-turn-meta"><summary>本轮详情{turn.call_count?` · ${turn.call_count} 次调用`:''}</summary>
-      <p>本会话已调用 {session.call_count}/{session.call_limit} 次。</p>
+      <p>{example?'示例运行没有产生模型调用。':`本会话已调用 ${session.call_count}/${session.call_limit} 次。`}</p>
       {turn.retry_of&&<p>{turn.retry_label} · 单项重试</p>}
       {turn.context_omitted>0&&<p>历史参考有 {turn.context_omitted} 处省略或节选。</p>}
       {turn.report&&<p>{turn.report}</p>}

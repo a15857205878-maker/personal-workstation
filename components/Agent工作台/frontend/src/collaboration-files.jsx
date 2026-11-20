@@ -20,7 +20,13 @@ export function runFilePreview(run,name){
 export function DeliveryPreview({preview}){
  return <>
    {preview.type==='pptx'&&preview.image_count>0&&<p className="auto-small">PPTX 已嵌入 {preview.image_count} 张配图。请打开原文件检查图文排版。</p>}
-   {preview.type==='docx'&&<div className="auto-delivery-document">{preview.text}</div>}
+   {preview.type==='docx'&&<><div className="auto-delivery-document">{preview.text}</div>
+    {preview.table&&<div className="auto-delivery-table"><table><thead><tr>
+     {preview.table.columns.map((label,index)=><th scope="col" key={index}>{label}</th>)}
+    </tr></thead><tbody>{preview.table.rows.map((row,index)=><tr key={index}>
+     {row.map((cell,column)=><td key={column}>{cell}</td>)}
+    </tr>)}</tbody></table></div>}
+   </>}
    {preview.type==='svg'&&<div><p>{preview.text}</p>{preview.svg&&<img className="center-svg-preview" src={'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(preview.svg)} alt="本任务实际生成的SVG示意图"/>}</div>}
    {preview.type==='xlsx'&&(preview.sheets||[]).map(sheet=><section key={sheet.name}><h4>{sheet.name} · {sheet.total_rows} 行</h4><div className="auto-delivery-table"><table><thead><tr>{sheet.columns.map((c,i)=><th key={i}>{c}</th>)}</tr></thead><tbody>{sheet.rows.map((row,r)=><tr key={r}>{row.map((value,c)=><td key={c}>{value===null?'':String(value)}</td>)}</tr>)}</tbody></table></div>{sheet.total_rows>20&&<small>仅预览前20行，全部数据在原文件中。</small>}</section>)}
    {preview.type==='pptx'&&(preview.slides||[]).map((slide,i)=><article className="auto-delivery-slide" key={i}><small>{i+1} / {preview.slides.length}</small><h3>{slide.title}</h3><p>{slide.subtitle}</p><ul>{slide.bullets.map((line,j)=><li key={j}>{line}</li>)}</ul></article>)}

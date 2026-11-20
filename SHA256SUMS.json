@@ -8,8 +8,8 @@
     },
     {
       "path": "EXPORT_POLICY.json",
-      "bytes": 40481,
-      "sha256": "fa9b1e9a470891840633d833f962db1b56be20d734adf9e455c1d1280c2735fc"
+      "bytes": 40872,
+      "sha256": "4e6191aae4943915e2cb60c7579fc9f838df2880f082d29361df756be7be276f"
     },
     {
       "path": "LICENSE",
@@ -18,8 +18,8 @@
     },
     {
       "path": "README.md",
-      "bytes": 5670,
-      "sha256": "cd5798c4fec77e46b4a68e165e266818f246a6f5e9382b8fd79d556674e7cca7"
+      "bytes": 5870,
+      "sha256": "32f8f3fe36b0017216de22dffb7f1bc960520afea5184010f52d3feb35c4f648"
     },
     {
       "path": "THIRD_PARTY_NOTICES.md",
@@ -88,8 +88,8 @@
     },
     {
       "path": "components/Agent工作台/backend.py",
-      "bytes": 16059,
-      "sha256": "fa924bb834a30c67b5a6ce564580c17b30afb0f01b1a3e1b6892eb0a8356205a"
+      "bytes": 16226,
+      "sha256": "08df35a00caa7cff73fb44b15f48eeb1d5f63225ac5ad7df97bfc01157b533b1"
     },
     {
       "path": "components/Agent工作台/butler_center.py",
@@ -192,6 +192,11 @@
       "sha256": "504561d4dd91c7253d81aa042df6e1806113b3bd95d1268e68c88d80371a3161"
     },
     {
+      "path": "components/Agent工作台/first_run_example.py",
+      "bytes": 1457,
+      "sha256": "d75b6b40089ec4fd159b9ceb3ac81bbab29199ce3d2683133ed5f72ade4b4740"
+    },
+    {
       "path": "components/Agent工作台/focus_summary.py",
       "bytes": 650,
       "sha256": "9e1b1af18eed4e24495e10d50e34ae551f5bf38aace84f38eeb4932b16c8527a"
@@ -213,13 +218,13 @@
     },
     {
       "path": "components/Agent工作台/frontend/dist/assets/app.css",
-      "bytes": 283154,
-      "sha256": "c4fa0553574cb902e0642789709925bca7ccfb8898581a610153d8c79493bcf2"
+      "bytes": 285105,
+      "sha256": "352df2615add50cf4b0bd0c20159b7e7ebf0c6cc2458ed7630898a1e189bbade"
     },
     {
       "path": "components/Agent工作台/frontend/dist/assets/app.js",
-      "bytes": 583432,
-      "sha256": "ab88fc977b8dc60236b976904178e47392b8fdc293b7fa69b0193b061a7a1ce5"
+      "bytes": 591408,
+      "sha256": "dd0c0ce054f275e96213c85206f1f5450dbb7026fabec9ea51387339ea942fcc"
     },
     {
       "path": "components/Agent工作台/frontend/dist/index.html",
@@ -288,8 +293,8 @@
     },
     {
       "path": "components/Agent工作台/frontend/src/agent-center.jsx",
-      "bytes": 33097,
-      "sha256": "f47cf4f138b2f7ad1bd3f639ef27952425548512eb4c74c1a64c7b74fb202165"
+      "bytes": 33799,
+      "sha256": "6ca2a861eb4ac032df84481caf4ff35e71ff86dc355afc5bb967618b56391487"
     },
     {
       "path": "components/Agent工作台/frontend/src/app-interaction.mjs",
@@ -308,8 +313,8 @@
     },
     {
       "path": "components/Agent工作台/frontend/src/artifact-review.jsx",
-      "bytes": 5295,
-      "sha256": "b5a9c5f5a117ae16b98ac1517d05045eeb7f1a79cf8753bf2712bf0c0f3b0ecf"
+      "bytes": 5265,
+      "sha256": "00afe8d87f42bcad6ba3df4f9c3e9feba70c2be78285b55a82a9136ffdb4273e"
     },
     {
       "path": "components/Agent工作台/frontend/src/attachments.jsx",
@@ -398,8 +403,8 @@
     },
     {
       "path": "components/Agent工作台/frontend/src/collaboration-files.jsx",
-      "bytes": 4026,
-      "sha256": "9f6c5132e9107d4e0dfca7b8b49643e65a980b91f5c24bfb9e8b74e78f680dc3"
+      "bytes": 4332,
+      "sha256": "0c58f59f2cdc47021b47fc69cabaf1ed5cf44efb176e9d5ed4ca4396a02f20ea"
     },
     {
       "path": "components/Agent工作台/frontend/src/companion-page.jsx",
@@ -460,6 +465,21 @@
       "path": "components/Agent工作台/frontend/src/finish.css",
       "bytes": 1867,
       "sha256": "b18b69bcadd731b9bb598422e5ccaa085658ecbabe007e88a129ba89f8ffc94f"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/first-run-example.css",
+      "bytes": 2249,
+      "sha256": "286fafb7c31922214297fdf72acd1b2674ec53a6e86bd5027ab8d6c74a3fe69a"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/first-run-example.jsx",
+      "bytes": 5894,
+      "sha256": "3011311410f5287162c2a864fe81e87ea56e0f062694211f963a59362dff2073"
+    },
+    {
+      "path": "components/Agent工作台/frontend/src/first-run-flow.mjs",
+      "bytes": 1244,
+      "sha256": "831809a67f35ef47c6e984342857218c3131a1d7384f0ac4af4f6bf4d0ceae0e"
     },
     {
       "path": "components/Agent工作台/frontend/src/group-chat.css",
@@ -593,8 +613,8 @@
     },
     {
       "path": "components/Agent工作台/frontend/src/partner-start.jsx",
-      "bytes": 3054,
-      "sha256": "0f113bea8ae8cbbc41aa7224d3babf05df8e7cc28d16e41d1aca5e0160e09b30"
+      "bytes": 3232,
+      "sha256": "3ffcc182169e91e79603573558689dc13f5ebd029af063b2fdca0da0146ede1c"
     },
     {
       "path": "components/Agent工作台/frontend/src/partner-ui.css",
@@ -728,8 +748,8 @@
     },
     {
       "path": "components/Agent工作台/frontend/src/task-progress.jsx",
-      "bytes": 12421,
-      "sha256": "dc558869a6ec2a21d2139ffab9810747f63742d2dfe2b935f40f4bbde51cd994"
+      "bytes": 12635,
+      "sha256": "33c274af56b7229d39ccb2d963236210d3617988533a7f716ab5a5b61888e3a1"
     },
     {
       "path": "components/Agent工作台/frontend/src/theme-picker.jsx",
@@ -845,6 +865,11 @@
       "path": "components/Agent工作台/frontend/test/desktop-titlebar.test.mjs",
       "bytes": 3264,
       "sha256": "cab3863a0e98baad972cf2688dd9c435ab9e6c230d4d8e94e3c3c2738f639d8f"
+    },
+    {
+      "path": "components/Agent工作台/frontend/test/first-run-flow.test.mjs",
+      "bytes": 1631,
+      "sha256": "435b9477820e877be7b562b062ccbb6c48420e48a21b5f06fd95062517eadd64"
     },
     {
       "path": "components/Agent工作台/frontend/test/group-members.test.mjs",
@@ -1305,6 +1330,11 @@
       "path": "components/Agent工作台/tests/test_execution_modes.py",
       "bytes": 4959,
       "sha256": "138c729daf4407fcd0a2dc11cc86056e10e0303ca75a4723a75a826b0beeeb28"
+    },
+    {
+      "path": "components/Agent工作台/tests/test_first_run_example.py",
+      "bytes": 2199,
+      "sha256": "f302fa82131be188bcdc58f54909e9ec9a908b4c2dc33b9f6237271cfc3f8c68"
     },
     {
       "path": "components/Agent工作台/tests/test_focus_summary.py",

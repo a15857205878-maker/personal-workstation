@@ -1,0 +1,57 @@
+:root .workstation-studio .first-run-example {
+  inset: 0;
+  width: min(980px, calc(100vw - 32px));
+  height: min(620px, calc(100dvh - 30px));
+  max-width: none;
+  max-height: none;
+  margin: auto;
+  padding: 0;
+  overflow: hidden;
+  box-sizing: border-box;
+  border: 1px solid var(--app-border-strong);
+  border-radius: 16px;
+  background: var(--app-surface);
+  color: var(--app-text);
+  box-shadow: 0 16px 60px #10192c30;
+}
+.first-run-example[open] { display: flex; flex-direction: column; }
+.first-run-example::backdrop { background: #151e3166; }
+.first-run-header,.first-run-footer {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px clamp(14px,3vw,24px);
+}
+.first-run-header { border-bottom: 1px solid var(--app-border); }
+.first-run-header h2 { margin: 0; font-size: 19px; }
+.first-run-header p,.first-run-result p { margin: 3px 0 0; font-size: 13px; color: var(--app-muted); }
+.first-run-header>button { display: grid; place-items: center; min-width: 32px; min-height: 32px; padding: 4px; }
+.first-run-footer { border-top: 1px solid var(--app-border); color: var(--app-muted); font-size: 12px; }
+.first-run-body { background: var(--app-surface-2); }
+.first-run-example .first-run-feed { flex: 1; padding: clamp(12px,3vw,25px); overflow: auto; }
+.first-run-loading { flex: 1; padding: 20px; }
+.first-run-task { max-width: 680px; margin: auto; }
+.first-run-task .center-user-row { margin-top: 0; }
+.first-run-exchange { display: flex; gap: 10px; margin: 16px 0; }
+.first-run-exchange .center-message-bubble>p { margin: 6px 0 11px; }
+.first-run-exchange button { display: inline-flex; align-items: center; gap: 6px; }
+.first-run-result {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 18px 0 0;
+  padding: 14px;
+  border: 1px solid var(--app-border);
+  border-radius: 12px;
+  background: var(--app-surface);
+}
+.first-run-result svg { color: var(--app-primary-ink); }
+.first-run-result>div { flex: 1; min-width: 120px; overflow-wrap: anywhere; }
+.first-run-return { color: var(--app-muted); margin: 10px 0 0; font-size: 13px; }
+@media(max-width:560px){
+ .first-run-header,.first-run-footer { gap: 8px; }
+ .first-run-result { padding: 10px; }
+}

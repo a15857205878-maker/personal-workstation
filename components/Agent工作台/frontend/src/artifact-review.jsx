@@ -15,6 +15,7 @@ export default function ArtifactReview({files,initialFile,opener,onClose,call,on
  const item=loaded?.key===key&&loaded.retry===retry?loaded:null;
  const preview=file.preview||item?.preview;
  const status=feedback?.key===key?feedback:null;
+ const multiple=files.length>1;
  useEffect(()=>{alive.current=true;return()=>{alive.current=false;};},[]);
  useEffect(()=>{
   if(file.preview||!file.catalogId)return;
@@ -59,14 +60,14 @@ export default function ArtifactReview({files,initialFile,opener,onClose,call,on
   finally{actionPending.current=false;if(alive.current)setBusy('');}
  }
  const controls=<div className="artifact-review-controls">
-  <div className="artifact-review-switch">
+  {multiple&&<div className="artifact-review-switch">
    <button className="station-button" aria-label="上一份文件" disabled={index===0} onClick={()=>select(artifactFileKey(files[index-1]))}><ChevronLeft size={16}/></button>
    <select aria-label="选择本轮文件" value={key} onChange={event=>select(event.target.value)}>
     {files.map((entry,i)=><option key={artifactFileKey(entry)} value={artifactFileKey(entry)}>{i+1}. {entry.label}</option>)}
    </select>
    <button className="station-button" aria-label="下一份文件" disabled={index===files.length-1} onClick={()=>select(artifactFileKey(files[index+1]))}><ChevronRight size={16}/></button>
-  </div>
-  <p className="artifact-review-name"><span>{file.name}</span><span>{index+1} / {files.length}</span></p>
+  </div>}
+  <p className="artifact-review-name"><span>{file.name}</span>{multiple&&<span>{index+1} / {files.length}</span>}</p>
  </div>;
  const actions=dismiss=><div className="artifact-review-actions">
   {onConversation&&<button className="station-button" disabled={!!busy} onClick={()=>dismiss(()=>onConversation(file))}>回到对话中的任务</button>}

@@ -19,6 +19,7 @@ import {inputHeight} from './chat-geometry.mjs';
 
 import {taskTone} from './feedback-status.mjs';
 import {ConversationStart,ConversationStarters} from './partner-start.jsx';
+import FirstRunExample from './first-run-example.jsx';
 import {isTaskTurn,taskNeedsAttention,turnFileCount,turnHasDelivery} from './center-replies.mjs';
 const labels={prepared:'等待确认',starting:'正在启动',running:'进行中',stopping:'正在停止',completed:'已完成',failed:'失败，未自动重试',interrupted:'已中断',cancelled:'已取消',queued:'待执行',skipped:'未发送'};
 const formats=[['text','文字'],['docx','文档 DOCX'],['xlsx','表格 XLSX'],['pptx','演示 PPTX'],['svg','绘图 SVG 示意图']];
@@ -35,6 +36,13 @@ function Assignments({jobs,onChange,profiles,disabled}){
 function Center({visible,pendingSetup,onSetupHandled,pendingBrief,onBriefHandled,onLegacy,pendingConversation,onConversationHandled,onTurnArtifacts,historyVisible,historyIntent,onHistoryState,onHistoryIntentHandled}){
  const [profiles,setProfiles]=useState([]),[sessions,setSessions]=useState([]),[session,setSession]=useState(null),[ready,setReady]=useState(false),[error,setError]=useState(''),[notice,setNotice]=useState(''),[busy,setBusy]=useState(''),[globalBusy,setGlobalBusy]=useState(false),[settings,setSettings]=useState(false),[creating,setCreating]=useState(false);
  const [statusError,setStatusError]=useState('');
+ const [exampleOpener,setExampleOpener]=useState(null);
+ useEffect(()=>{if(!visible)setExampleOpener(null);},[visible]);
+ function openExample(event){
+  const button=event.currentTarget,menu=button.closest('.center-settings-menu');
+  if(menu)menu.open=false;
+  setExampleOpener(menu?.querySelector('summary')||button);
+ }
  const [a,setA]=useState(''),[b,setB]=useState(''),[c,setC]=useState(''),[jobs,setJobs]=useState([]),[presetName,setPresetName]=useState('我的分工'),[preset,setPreset]=useState(null),[drafts,setDrafts]=useState({}),[assignments,setAssignments]=useState(false),[draftAttachments,setDraftAttachments]=useState({}),[attachmentBusy,setAttachmentBusy]=useState(false);
  const [managing,setManaging]=useState(false);
  const [manual,setManual]=useState(false),[identities,setIdentities]=useState({}),[identityTarget,setIdentityTarget]=useState(null);
@@ -248,12 +256,12 @@ function Center({visible,pendingSetup,onSetupHandled,pendingBrief,onBriefHandled
    {session&&!creating&&<button ref={progressButton} className="auto-button center-progress-toggle" aria-haspopup="dialog" onClick={event=>openProgress(progressDefault?.id,event.currentTarget)}>
     <ListChecks size={15} aria-hidden="true"/><span>任务进度</span>{progressHint&&<span className="feedback-status" data-tone={taskTone(progressTone)}>{progressHint}</span>}
    </button>}
-   <details className="center-settings-menu"><summary>群聊设置</summary><button className="auto-button" disabled={!session||!!busy||running||!!prepared||globalBusy} onClick={()=>setManaging(true)}>会话管理</button><button className="auto-button" onClick={()=>setMemorySeed({})}>长期记忆</button><button className="auto-button" onClick={()=>setSettings(true)}>模型连接</button><button className="auto-button" onClick={onLegacy}>原高级协作</button><small>点击成员资料可更换头像和昵称。</small></details>
+   <details className="center-settings-menu"><summary>群聊设置</summary><button className="auto-button" disabled={!session||!!busy||running||!!prepared||globalBusy} onClick={()=>setManaging(true)}>会话管理</button><button className="auto-button" onClick={()=>setMemorySeed({})}>长期记忆</button><button className="auto-button" onClick={()=>setSettings(true)}>模型连接</button><button type="button" className="auto-button" aria-haspopup="dialog" onClick={openExample}>体验示例任务</button><button className="auto-button" onClick={onLegacy}>原高级协作</button><small>点击成员资料可更换头像和昵称。</small></details>
   </div>
  </header>
  {sendBlock&&session&&!creating&&!prepared&&!running&&<p className="auto-warning" role="status">{sendBlock}</p>}{displayError&&progressId===null&&<div className="auto-warning" role="alert">{displayError}</div>}{notice&&progressId===null&&<p role="status">{notice}</p>}
  {(!session||creating)&&<ConversationStart ready={ready} error={error} loading={!!busy||globalBusy}
-  hasProfiles={profiles.length>0} members={startMembers} onCreate={create} onModels={()=>setSettings(true)}
+  hasProfiles={profiles.length>0} members={startMembers} onCreate={create} onModels={()=>setSettings(true)} onTryExample={openExample}
   onRetry={()=>action('bootstrap',()=>bootstrap(true))} onBack={session?()=>setCreating(false):undefined}>
   <div className="center-job-grid">{[[a,setA,'聊天成员 A'],[b,setB,'聊天成员 B'],[c,setC,'聊天成员 C（可选）']].map(([value,setter,label])=><label key={label}>{label}<select aria-label={label} value={value} disabled={!!busy||globalBusy} onChange={e=>setter(e.target.value)}><option value="">{label.includes('C')?'不加入第三位':'选择模型'}</option>{profiles.map(p=><option key={p.id} value={p.id}>{modelLabel(p)}</option>)}</select></label>)}</div>
   <details className="center-lab-settings"><summary>成员表达风格</summary><div className="center-job-grid">{(c?['A','B','C']:['A','B']).map(seat=><SeatStyle key={seat} chat seat={seat} style={styles[seat]} locked={!!busy||globalBusy} onChange={patch=>setStyles(old=>({...old,[seat]:{...old[seat],...patch}}))}/>)}</div></details>
@@ -298,6 +306,8 @@ function Center({visible,pendingSetup,onSetupHandled,pendingBrief,onBriefHandled
  </div></div></>}
 
  </section>
+ {visible&&exampleOpener&&<FirstRunExample opener={exampleOpener} call={call} onClose={()=>setExampleOpener(null)}
+  onConnect={()=>{setExampleOpener(null);setSettings(true);}}/>}
  {managing&&session&&<ConversationManager key={session.id} session={session} busy={!!busy||running||globalBusy} error={error} onClose={()=>setManaging(false)} onSave={manage}/>}
  {identityTarget!==null&&<MemberIdentityDialog key={identityTarget} identifier={identityTarget} profile={profiles.find(p=>p.id===identityTarget)} seat={Object.keys(session?.roles||{}).find(s=>session.roles[s].id===identityTarget)||'user'} value={identities[identityTarget]} orphans={Object.entries(identities).filter(([key])=>key!=='user'&&!profiles.some(p=>p.id===key))} locked={running||globalBusy} onClose={()=>setIdentityTarget(null)} onSaved={setIdentities}/>}
  {memorySeed!==null&&<MemoryPanel seed={memorySeed} apiCall={labCall} onClose={()=>setMemorySeed(null)} onUpdated={()=>{}} locked={running||globalBusy}/>}

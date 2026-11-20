@@ -1,12 +1,16 @@
 # 个人工作站
 
+## 首次体验
+
+首次打开可点「体验示例任务」。已有会话可从「搭档 → 群聊设置」进入。示例用内置数据走完确认分工、查看进度、预览和保存 Word。体验后可点「连接自己的模型」，再开始新的对话。
+
 Windows 本地桌面工作站，包含搭档聊天、任务分工、成果、工具、休闲、手机连接与设置。主程序位于 `components/Agent工作台`，运行资料从空状态创建。
 
 ## Windows x64 便携版
 
 下载后完整解压，双击 `PersonalWorkstation.exe`。包内自带 Python 和 Tcl/Tk，使用系统的 WebView2 Evergreen Runtime。缺少 WebView2 时，包内 README 提供微软下载入口。
 
-[下载便携 ZIP](https://github.com/a15857205878-maker/personal-workstation/releases/download/v2026.11.20.1/PersonalWorkstation-2026.11.20.1-portable-win-x64-evergreen.zip) · [查看发布页](https://github.com/a15857205878-maker/personal-workstation/releases/tag/v2026.11.20.1)
+[下载便携 ZIP](https://github.com/a15857205878-maker/personal-workstation/releases/download/v2026.11.20.2/PersonalWorkstation-2026.11.20.2-portable-win-x64-evergreen.zip) · [查看发布页](https://github.com/a15857205878-maker/personal-workstation/releases/tag/v2026.11.20.2)
 
 ## 2026.11.20
 

@@ -46,6 +46,11 @@ class Bridge:
         if self._workstation:self._workstation.close()
     def call(self,action,payload=None):
         try:
+            if action in ('api_example_task','api_example_document'):
+                if payload is not None and (not isinstance(payload,dict) or payload):
+                    raise ValueError('示例入口不接收参数')
+                from first_run_example import document,task
+                return dict(ok=True,data=task() if action=='api_example_task' else document())
             if isinstance(action,str) and action.startswith('workstation_'):
                 if payload is None:payload={}
                 if not isinstance(payload,dict) or len(json.dumps(payload,ensure_ascii=False))>262144:raise ValueError('工作站参数无效或过大')
